@@ -11,7 +11,9 @@ export const createDeployment = async (
     {
       owner: repoOwner,
       repo: repoName,
-      ref: event.pull_request.head.sha
+      ref: "7fc0679cee548d437324a8a55ad91e4b608d81b4",
+      environment: "staging",
+      payload: "from the app"
     },
     status
   );
