@@ -1,22 +1,28 @@
 import { authenticate } from "./githubAuth";
-export const notify = async (
+export const createDeployment = async (
   event,
-  status = { state: "pending", description: "Initializing deployment" }
+  status = { task: "deploy", description: "Initializing deployment" }
 ) => {
   const client = await authenticate(event.installation.id);
-  const repoOwner = event.repository.owner.name;
+  const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
 
   const statusObj = Object.assign(
     {
       owner: repoOwner,
       repo: repoName,
-      sha: event.after,
-      context: "PR deploy"
+      ref: event.pull_request.head.sha
     },
     status
   );
 
-  const result = await client.repos.createStatus(statusObj);
+  let result = "";
+
+  try {
+    result = await client.repos.createDeployment(statusObj);
+  } catch (e) {
+    console.log(e.message);
+  }
+
   return result;
 };

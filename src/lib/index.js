@@ -1,3 +1,3 @@
 import octokit from "@octokit/rest";
-export { notify } from "./githubNotify";
+export { createDeployment } from "./githubNotify";
 export default octokit();
