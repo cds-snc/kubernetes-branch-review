@@ -18,7 +18,8 @@ router.get("/deploy", async (req, res) => {
     await saveReleaseToDB({ sha: "123", cluster_id: "2", state: "ping" });
     // temp to test Github update
     const event = await eventJS("create_a_pr");
-    createDeployment(event.body);
+    const result = await createDeployment(event.body);
+    console.log("result", result);
   } catch (e) {
     console.log(e.message);
   }
