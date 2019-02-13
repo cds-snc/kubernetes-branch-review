@@ -1,6 +1,4 @@
 import { authenticate } from "./githubAuth";
-// const { Model } = require("../db/model");
-
 export const notify = async (
   event,
   status = { state: "pending", description: "Initializing deployment" }
