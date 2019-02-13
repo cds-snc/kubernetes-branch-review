@@ -43,6 +43,7 @@
     "@octokit/rest": "^16.15.0",
     "dotenv-safe": "^6.1.0",
     "esm": "^3.2.4",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "mongoose": "^5.4.11"
   }
 }
