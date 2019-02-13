@@ -39,6 +39,9 @@
     "prettier": "^1.16.4"
   },
   "dependencies": {
+    "@octokit/app": "^2.2.1",
+    "@octokit/rest": "^16.15.0",
+    "dotenv-safe": "^6.1.0",
     "esm": "^3.2.4",
     "express": "^4.16.4"
   }
