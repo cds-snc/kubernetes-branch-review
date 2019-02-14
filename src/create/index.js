@@ -4,15 +4,9 @@ import { dbConnect } from "../db/connect";
 import { saveReleaseToDB } from "../db/queries";
 import { eventJS } from "../__mocks__";
 
-export const router = express.Router();
-
-router.get("/favicon.ico", (req, res) => res.status(204));
+const router = express.Router();
 
 router.get("/", async (req, res) => {
-  res.send("hello");
-});
-
-router.get("/deploy", async (req, res) => {
   try {
     await dbConnect();
     await saveReleaseToDB({ sha: "123", cluster_id: "2", state: "ping" });
@@ -24,5 +18,7 @@ router.get("/deploy", async (req, res) => {
     console.log(e.message);
   }
 
-  res.send("notify");
+  res.send("create");
 });
+
+export default router;
