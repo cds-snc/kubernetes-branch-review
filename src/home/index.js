@@ -5,7 +5,10 @@ const router = express.Router();
 router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.get("/", async (req, res) => {
-  const action = req.action;
+  // console.log("body", req.body);
+  // res.send(req.body.action);
+
+  const action = req.body.action;
   switch (action) {
     case "opened":
       res.redirect("/create");
