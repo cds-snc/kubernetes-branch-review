@@ -2,11 +2,12 @@
   "name": "@cdssnc/elenchos",
   "version": "0.0.1",
   "description": "CDS PR deploys",
-  "main": "dist/logger.js",
+  "main": "index.js",
   "scripts": {
     "dev": "node index",
     "lint": "eslint src/*.js",
-    "test": "jest"
+    "test": "jest",
+    "start": "NODE_ENV=production node index"
   },
   "lint-staged": {
     "*.js": [
