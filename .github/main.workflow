@@ -1,6 +1,13 @@
 workflow "CI/CD" {
   on = "push"
-  resolves = ["Docker Registry", "Push"]
+  resolves = [
+    "Push",
+  ]
+}
+
+action "GCloud Auth" {
+  uses = "actions/gcloud/auth@1a017b23ef5762d20aeb3972079a7bce2c4a8bfe"
+  secrets = ["GCLOUD_AUTH"]
 }
 
 action "Install" {
@@ -8,9 +15,15 @@ action "Install" {
   args = "install"
 }
 
+action "Decrypt ENV" {
+  uses = "actions/gcloud/cli@1a017b23ef5762d20aeb3972079a7bce2c4a8bfe"
+  needs = ["GCloud Auth"]
+  args = "kms decrypt --project=elenchos --plaintext-file=.env --ciphertext-file=.env.enc --location=global --keyring=deploy --key=env"
+}
+
 action "Test" {
   uses = "docker://culturehq/actions-yarn:latest"
-  needs = ["Install"]
+  needs = ["Decrypt ENV", "Install"]
   args = "test"
 }
 
@@ -37,3 +50,4 @@ action "Push" {
   needs = ["Build image", "Docker Registry"]
   args = "[\"push\", \"cdssnc/elenchos\"]"
 }
+
