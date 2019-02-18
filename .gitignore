@@ -64,3 +64,4 @@ typings/
 github.pem
 
 .DS_Store
+.swp
