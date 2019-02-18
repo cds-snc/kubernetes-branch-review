@@ -18,7 +18,7 @@ action "Install" {
 action "Decrypt ENV" {
   uses = "actions/gcloud/cli@1a017b23ef5762d20aeb3972079a7bce2c4a8bfe"
   needs = ["GCloud Auth"]
-  args = "kms decrypt --project=elenchos --plaintext-file=.env --ciphertext-file=.env.enc --location=global --keyring=deploy --key=env"
+  runs = "gcloud kms decrypt --project=elenchos --plaintext-file=.env --ciphertext-file=.env.enc --location=global --keyring=deploy --key=env"
 }
 
 action "Test" {
@@ -50,4 +50,3 @@ action "Push" {
   needs = ["Build image", "Docker Registry"]
   args = "[\"push\", \"cdssnc/elenchos\"]"
 }
-
