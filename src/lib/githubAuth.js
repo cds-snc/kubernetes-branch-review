@@ -6,7 +6,7 @@ const Octokit = require("@octokit/rest");
 
 require("dotenv-safe").config({ allowEmptyValues: true });
 
-const GITHUB_PEM = process.env.GITHUB_PEM;
+const GITHUB_PEM = process.env.PEM;
 const ISSUER_ID = process.env.ISSUER_ID;
 
 const getKey = async () => {
