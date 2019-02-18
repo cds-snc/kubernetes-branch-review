@@ -48,5 +48,5 @@ action "Docker Registry" {
 action "Push" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
   needs = ["Build image", "Docker Registry"]
-  args = "\"push cdssnc/elenchos\""
+  args = "push cdssnc/elenchos"
 }
