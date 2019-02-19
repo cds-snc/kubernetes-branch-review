@@ -1,26 +1,32 @@
+import { server } from "../server";
 import request from "supertest";
-import express from "express";
-import createRouter from "../create";
-import bodyParser from "body-parser";
 import { eventJS } from "../__mocks__/";
+import { createCluster } from "../create/createCluster";
 
-const port = parseInt(process.env.PORT, 10) || 4000;
-const server = express();
+jest.mock("../create/createCluster", () => ({
+  createCluster: jest.fn(() => {
+    return true;
+  })
+}));
 
-server.use(bodyParser.json());
-server.use("/create", createRouter);
+test("returns 302 status code + hits create route", async () => {
+  const event = await eventJS("create_a_pr");
+  const res = await request(server)
+    .get("/")
+    .send(event)
+    .set("Content-Type", "application/json")
+    .expect(302);
 
-server.listen(port, err => {
-  if (err) throw err;
+  expect(res.header.location).toEqual("/create");
 });
 
 test("returns 200 status code", async () => {
   const event = await eventJS("create_a_pr");
-  const res = await request(server)
+  await request(server)
     .get("/create")
     .send(event)
     .set("Content-Type", "application/json")
     .expect(200);
 
-  expect(res.text).toEqual("create");
+  expect(createCluster).toHaveBeenCalledTimes(1);
 });
