@@ -1,4 +1,5 @@
 import express from "express";
+import { createCluster } from "../create/createCluster";
 
 const router = express.Router();
 
@@ -8,7 +9,8 @@ router.get("/", async (req, res) => {
   const action = req.body.action;
   switch (action) {
     case "opened":
-      res.redirect("/create");
+      const result = await createCluster(req);
+      res.send(result);
       break;
     case "push":
       res.redirect("/push");

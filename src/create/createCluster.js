@@ -2,11 +2,13 @@ import { saveReleaseToDB } from "../db/queries";
 import { createDeployment } from "../lib/githubNotify";
 
 export const createCluster = async (req, res) => {
+  const body = req.body;
+
   try {
     await saveReleaseToDB({
-      sha: "123",
-      cluster_id: "2",
-      pr_state: "closed",
+      sha: body.pull_request.head.sha,
+      cluster_id: null,
+      pr_state: body.action,
       cluster_state: "in_progress"
     });
 
@@ -14,6 +16,6 @@ export const createCluster = async (req, res) => {
     // api call to digital ocean ...
     return result;
   } catch (e) {
-    console.log(e.message);
+    console.log("err", e.message);
   }
 };
