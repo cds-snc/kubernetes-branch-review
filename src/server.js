@@ -5,7 +5,8 @@ import createRouter from "./create";
 import pushRouter from "./push";
 
 const port = parseInt(process.env.PORT, 10) || 4000;
-const server = express();
+
+export const server = express();
 
 server.use(bodyParser.json());
 server.use("/", homeRouter);

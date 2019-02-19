@@ -5,9 +5,6 @@ const router = express.Router();
 router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.get("/", async (req, res) => {
-  // console.log("body", req.body);
-  // res.send(req.body.action);
-
   const action = req.body.action;
   switch (action) {
     case "opened":
@@ -17,7 +14,7 @@ router.get("/", async (req, res) => {
       res.redirect("/push");
       break;
     default:
-      res.send("");
+      res.send("no route found");
   }
 });
 
