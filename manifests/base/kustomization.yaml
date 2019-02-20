@@ -1,0 +1,4 @@
+resources:
+  - dind-claim.yaml
+  - app-deployment.yaml
+  - app-service.yaml
