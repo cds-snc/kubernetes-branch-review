@@ -1,5 +1,5 @@
 import { saveReleaseToDB } from "../db/queries";
-// import { createDeployment } from "../lib/githubNotify";
+import { createDeployment } from "../lib/githubNotify";
 import { createCluster, deleteCluster } from "../api";
 import { pollCluster } from "../lib/pollCluster";
 
@@ -14,7 +14,8 @@ export const create = async (req, res) => {
       cluster_state: "in_progress"
     });
 
-    // const result = await createDeployment(req.body);
+    await createDeployment(req.body);
+    /*
     console.log("create cluster");
     const cluster = await createCluster();
     console.log(cluster);
@@ -32,6 +33,7 @@ export const create = async (req, res) => {
       console.log("delete cluster", id);
       console.log("delete result", await deleteCluster(id));
     }
+    */
 
     return ":)";
   } catch (e) {
