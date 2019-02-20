@@ -7,7 +7,9 @@
     "dev": "node index",
     "lint": "eslint src/*.js",
     "test": "jest --forceExit",
-    "start": "NODE_ENV=production node index"
+    "start": "NODE_ENV=production node index",
+    "minikube": "kustomize build manifests/overlays/minikube | kubectl apply -f -",
+    "delete-minikube": "kustomize build manifests/overlays/minikube | kubectl delete -f -"
   },
   "lint-staged": {
     "*.js": [

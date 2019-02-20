@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: elenchos
+  name: elenchos
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: elenchos
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: elenchos
+    spec:
+      containers:
+        - image: cdssnc/elenchos
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          name: elenchose
+          env:
+            - name: DOCKER_HOST
+              value: tcp://localhost:2375
+            - name: PORT
+              value: "3000"
+          volumeMounts:
+            - name: dind-storage
+              mountPath: /var/lib/docker
+          resources: {}
+      volumes:
+        - name: dind-storage
+          emptyDir: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}
