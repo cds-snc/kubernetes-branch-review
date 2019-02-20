@@ -1,8 +1,9 @@
 import { saveReleaseToDB } from "../db/queries";
 // import { createDeployment } from "../lib/githubNotify";
-import { create } from "../api";
+import { createCluster, deleteCluster } from "../api";
+import { pollCluster } from "../lib/pollCluster";
 
-export const createCluster = async (req, res) => {
+export const create = async (req, res) => {
   const body = req.body;
 
   try {
@@ -14,11 +15,25 @@ export const createCluster = async (req, res) => {
     });
 
     // const result = await createDeployment(req.body);
-    create();
-    const result = "hello";
+    console.log("create cluster");
+    const cluster = await createCluster();
+    console.log(cluster);
 
-    // api call to digital ocean ...
-    return result;
+    if (cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
+      console.log("cluster created");
+      console.log("poll if cluster is running...");
+      const result = await pollCluster(
+        cluster.kubernetes_cluster.id,
+        "running"
+      );
+
+      const id = result.kubernetes_cluster.id;
+
+      console.log("delete cluster", id);
+      console.log("delete result", await deleteCluster(id));
+    }
+
+    return ":)";
   } catch (e) {
     console.log(e);
     console.log("err", e.message);
