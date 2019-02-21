@@ -1,7 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
 import homeRouter from "./home";
-import pushRouter from "./push";
 
 const port = parseInt(process.env.PORT, 10) || 4000;
 
@@ -9,7 +8,6 @@ export const server = express();
 
 server.use(bodyParser.json());
 server.use("/", homeRouter);
-server.use("/push", pushRouter);
 
 server.listen(port, err => {
   if (err) throw err;
