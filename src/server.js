@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import homeRouter from "./home";
+import homeRouter from "./routes";
 
 const port = parseInt(process.env.PORT, 10) || 4000;
 

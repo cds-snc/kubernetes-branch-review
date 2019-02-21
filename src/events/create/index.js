@@ -1,7 +1,7 @@
-import { saveReleaseToDB } from "../db/queries";
-import { createDeployment } from "../lib/githubNotify";
-import { createCluster } from "../api";
-import { pollCluster } from "../lib/pollCluster";
+import { saveReleaseToDB } from "../../db/queries";
+import { createDeployment } from "../../lib/githubNotify";
+import { createCluster } from "../../api";
+import { pollCluster } from "../../lib/pollCluster";
 
 export const create = async (req, res) => {
   const body = req.body;
@@ -44,7 +44,7 @@ export const create = async (req, res) => {
       });
     }
 
-    return "!!";
+    return "create";
   } catch (e) {
     console.log(e);
     console.log("err", e.message);
