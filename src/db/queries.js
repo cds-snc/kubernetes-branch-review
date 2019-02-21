@@ -4,7 +4,7 @@ const { Model } = require("./model");
 
 export const saveReleaseToDB = async obj => {
   await dbConnect();
-  const query = { sha: obj.sha };
+  const query = { refId: obj.refId };
   const options = { upsert: true, new: true, setDefaultsOnInsert: true };
   // find and update or insert new
   try {

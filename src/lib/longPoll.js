@@ -6,10 +6,12 @@ export const longPoll = {
   delay: 5000,
   eventEmitter: new events.EventEmitter(),
   check: () => {},
-  handle: function() {
+  result: {},
+  handle: async function() {
     this.counter++;
-    if (this.check()) {
-      this.eventEmitter.emit("done");
+    const result = await this.check();
+    if (result) {
+      this.eventEmitter.emit("done", result);
       this.clear();
     }
   },
