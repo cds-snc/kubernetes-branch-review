@@ -1,6 +1,7 @@
 import express from "express";
-import { create } from "../events/create/";
+import { create } from "../events/create";
 import { update } from "../events/update";
+import { close } from "../events/close";
 
 const router = express.Router();
 
@@ -13,9 +14,13 @@ router.get("/", async (req, res) => {
       const opened = await create(req);
       res.send(opened);
       break;
-    case "push":
-      const push = await update(req);
-      res.send(push);
+    case "updated":
+      const updated = await update(req);
+      res.send(updated);
+      break;
+    case "closed":
+      const closed = await close(req);
+      res.send(closed);
       break;
     default:
       res.send("no route found");
