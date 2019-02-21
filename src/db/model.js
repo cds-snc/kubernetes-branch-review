@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const schema = new mongoose.Schema(
   {
-    sha: String,
+    refId: String,
+    sha: String, // of the push
     cluster_id: String,
     pr_state: {
       type: String,

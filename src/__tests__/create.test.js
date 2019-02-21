@@ -1,9 +1,9 @@
 import { server } from "../server";
 import request from "supertest";
 import { eventJS } from "../__mocks__/";
-import { create } from "../create/createCluster";
+import { create } from "../create";
 
-jest.mock("../create/createCluster", () => ({
+jest.mock("../create", () => ({
   create: jest.fn(() => {
     return true;
   })

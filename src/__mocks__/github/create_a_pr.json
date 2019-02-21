@@ -1,4 +1,4 @@
-{"body": {
+{
   "action": "opened",
   "number": 12,
   "pull_request": {
@@ -40,18 +40,10 @@
     "merged_at": null,
     "merge_commit_sha": null,
     "assignee": null,
-    "assignees": [
-
-    ],
-    "requested_reviewers": [
-
-    ],
-    "requested_teams": [
-
-    ],
-    "labels": [
-
-    ],
+    "assignees": [],
+    "requested_reviewers": [],
+    "requested_teams": [],
+    "labels": [],
     "milestone": null,
     "commits_url": "https://api.github.com/repos/cds-snc/etait-ici/pulls/12/commits",
     "review_comments_url": "https://api.github.com/repos/cds-snc/etait-ici/pulls/12/comments",
@@ -484,4 +476,4 @@
     "id": 666060,
     "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uNjY2MDYw"
   }
-}}
+}

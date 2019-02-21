@@ -1,21 +1,25 @@
 import { saveReleaseToDB } from "../db/queries";
 import { createDeployment } from "../lib/githubNotify";
-import { createCluster, deleteCluster } from "../api";
+import { createCluster } from "../api";
 import { pollCluster } from "../lib/pollCluster";
 
 export const create = async (req, res) => {
   const body = req.body;
+  const refId = body.repository.full_name;
+  const sha = body.pull_request.head.sha;
+  const prState = body.action;
 
   try {
     await saveReleaseToDB({
-      sha: body.pull_request.head.sha,
+      refId,
+      sha,
       cluster_id: null,
-      pr_state: body.action,
+      pr_state: prState,
       cluster_state: "in_progress"
     });
 
-    await createDeployment(req.body);
-    /*
+    await createDeployment(body);
+
     console.log("create cluster");
     const cluster = await createCluster();
     console.log(cluster);
@@ -29,13 +33,18 @@ export const create = async (req, res) => {
       );
 
       const id = result.kubernetes_cluster.id;
+      const state = result.kubernetes_cluster.status.state;
 
-      console.log("delete cluster", id);
-      console.log("delete result", await deleteCluster(id));
+      await saveReleaseToDB({
+        refId,
+        sha,
+        cluster_id: id,
+        pr_state: prState,
+        cluster_state: state
+      });
     }
-    */
 
-    return ":)";
+    return "!!";
   } catch (e) {
     console.log(e);
     console.log("err", e.message);
