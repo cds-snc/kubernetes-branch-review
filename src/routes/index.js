@@ -8,7 +8,16 @@ const router = express.Router();
 router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.get("/", async (req, res) => {
-  const action = req.body.action;
+  let action;
+
+  if (req.body.action) {
+    // create
+    // close
+    action = req.body.action;
+  } else {
+    // get action from other type of event
+  }
+
   switch (action) {
     case "opened":
       const opened = await create(req);
