@@ -1,5 +1,6 @@
 import express from "express";
-import { createCluster } from "../create/createCluster";
+import { create } from "../create/";
+import { update } from "../update";
 
 const router = express.Router();
 
@@ -9,11 +10,12 @@ router.get("/", async (req, res) => {
   const action = req.body.action;
   switch (action) {
     case "opened":
-      const result = await createCluster(req);
-      res.send(result);
+      const opened = await create(req);
+      res.send(opened);
       break;
     case "push":
-      res.redirect("/push");
+      const push = await update(req);
+      res.send(push);
       break;
     default:
       res.send("no route found");
