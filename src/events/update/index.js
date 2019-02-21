@@ -1,4 +1,4 @@
-import { updateDeployment } from "../lib/githubNotify";
+import { updateDeployment } from "../../lib/githubNotify";
 
 export const update = async (req, res) => {
   const body = req.body;

@@ -1,6 +1,6 @@
 import express from "express";
-import { create } from "../create/";
-import { update } from "../update";
+import { create } from "../events/create/";
+import { update } from "../events/update";
 
 const router = express.Router();
 
