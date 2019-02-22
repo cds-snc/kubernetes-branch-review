@@ -1,5 +1,4 @@
 {
-  "body": {
   "ref": "refs/heads/elenchos_demo",
   "before": "0000000000000000000000000000000000000000",
   "after": "91a8142e7f7456944b69bb2e982fb15dafb640ce",
@@ -26,15 +25,9 @@
         "email": "max@neuvians.net",
         "username": "maxneuvians"
       },
-      "added": [
-
-      ],
-      "removed": [
-
-      ],
-      "modified": [
-
-      ]
+      "added": [],
+      "removed": [],
+      "modified": []
     }
   ],
   "head_commit": {
@@ -54,15 +47,9 @@
       "email": "max@neuvians.net",
       "username": "maxneuvians"
     },
-    "added": [
-
-    ],
-    "removed": [
-
-    ],
-    "modified": [
-
-    ]
+    "added": [],
+    "removed": [],
+    "modified": []
   },
   "repository": {
     "id": 170416435,
@@ -210,5 +197,4 @@
     "id": 666060,
     "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uNjY2MDYw"
   }
-}
 }
