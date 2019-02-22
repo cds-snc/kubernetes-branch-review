@@ -2,12 +2,12 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    io.kompose.service: mongo-claim
-  name: mongo-claim
+    io.kompose.service: git-storage
+  name: git-storage
 spec:
   storageClassName: ssd
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 10Gi
