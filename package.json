@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node index",
     "lint": "eslint src/*.js",
-    "test": "jest --forceExit",
+    "test": "CODE_DIR=/tmp jest --forceExit",
     "start": "NODE_ENV=production node index",
     "minikube": "kustomize build manifests/overlays/minikube | kubectl apply -f -",
     "delete-minikube": "kustomize build manifests/overlays/minikube | kubectl delete -f -",
