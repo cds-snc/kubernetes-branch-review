@@ -7,7 +7,7 @@ export const close = async req => {
   const refId = getRefId(body);
   const record = await getRelease({ refId });
 
-  if (!record || record.cluster_id) {
+  if (!record || !record.cluster_id) {
     return "failed to find record or id not set";
   }
 

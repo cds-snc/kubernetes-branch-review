@@ -19,12 +19,15 @@ export const create = async req => {
       cluster_state: "in_progress"
     });
 
+    /* 
+    @todo - thinking this should be split out as it's a long running task and the response resonds too slowly
+    */
+
     // notify github
     await createDeployment(body);
 
     console.log("create cluster");
     const cluster = await createCluster();
-    console.log(cluster);
 
     if (cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
       console.log("cluster created");
@@ -46,7 +49,7 @@ export const create = async req => {
       });
     }
 
-    return "create";
+    return cluster;
   } catch (e) {
     console.log(e);
     console.log("err", e.message);
