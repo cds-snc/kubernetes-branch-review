@@ -1,7 +1,7 @@
 workflow "CI" {
   on = "push"
   resolves = [
-    "Test",
+    "Push",
   ]
 }
 
@@ -25,4 +25,34 @@ action "Test" {
   uses = "docker://culturehq/actions-yarn:latest"
   needs = ["Decrypt ENV", "Install"]
   args = "test"
+}
+
+action "Master filter" {
+  uses = "actions/bin/filter@46ffca7632504e61db2d4cb16be1e80f333cb859"
+  needs = ["Test"]
+  args = "branch master"
+}
+
+action "Build image" {
+  uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
+  needs = ["Master filter"]
+  args = "build -t cdssnc/elenchos ."
+}
+action "Tag image for GCR" {
+  needs = ["Build image"]
+  uses = "actions/docker/tag@master"
+  args = ["cdssnc/elenchos", "gcr.io/elenchos/app"]
+}
+
+action "Set Credential Helper for Docker" {
+  needs = ["Tag image for GCR"]
+  uses = "actions/gcloud/cli@master"
+  args = ["auth", "configure-docker", "--quiet"]
+}
+
+action "Push" {
+  needs = ["Set Credential Helper for Docker"]
+  uses = "actions/gcloud/cli@master"
+  runs = "sh -c"
+  args = ["docker push gcr.io/elenchos/app"]
 }
