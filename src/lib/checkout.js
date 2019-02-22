@@ -1,5 +1,5 @@
 const { spawnSync } = require("child_process");
-const DIR = process.env.CODE_DIR || "/code";
+const DIR = process.env.CODE_DIR || "/tmp";
 
 export const cleanup = name => {
   const cleanup = spawnSync("rm", ["-rf", name], {
