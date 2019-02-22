@@ -4,17 +4,17 @@ metadata:
   name: traefik-ingress-service
   namespace: kube-system
 spec:
-  loadBalancerIP: 35.238.150.238 
+  loadBalancerIP: 34.73.112.143
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
-  - name: https
-    port: 443
-    protocol: TCP
-  - name: admin
-    port: 8080
-    protocol: TCP
+    - name: http
+      port: 80
+      protocol: TCP
+    - name: https
+      port: 443
+      protocol: TCP
+    - name: admin
+      port: 8080
+      protocol: TCP
   selector:
     k8s-app: traefik-ingress-lb
   type: LoadBalancer
