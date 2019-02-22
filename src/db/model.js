@@ -17,7 +17,8 @@ const schema = new mongoose.Schema(
         "in_progress",
         "error",
         "failure",
-        "success"
+        "success",
+        "deleted"
       ]
     },
     branch: String,

@@ -14,3 +14,14 @@ export const saveReleaseToDB = async obj => {
     console.log(e.message);
   }
 };
+
+export const getRelease = async obj => {
+  await dbConnect();
+  const query = { refId: obj.refId };
+  try {
+    const record = await Model.findOne(query).exec();
+    return record;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
