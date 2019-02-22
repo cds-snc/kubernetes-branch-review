@@ -1,6 +1,7 @@
 resources:
   - ssd-storageclass.yaml
   - dind-claim.yaml
+  - code-claim.yaml
   - mongo-claim.yaml
   - mongo-deployment.yaml
   - mongo-service.yaml
