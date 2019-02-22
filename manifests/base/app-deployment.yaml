@@ -21,7 +21,7 @@ spec:
         app: elenchos
     spec:
       containers:
-        - image: cdssnc/elenchos
+        - image: gcr.io/elenchos/app
           resources:
             requests:
               memory: "2Gi"
