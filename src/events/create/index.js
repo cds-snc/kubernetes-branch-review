@@ -1,11 +1,12 @@
 import { saveReleaseToDB } from "../../db/queries";
-import { createDeployment } from "../../lib/githubNotify";
 import { createCluster } from "../../api";
+import { createDeployment } from "../../lib/githubNotify";
 import { pollCluster } from "../../lib/pollCluster";
+import { getRefId } from "../../lib/getRefId";
 
-export const create = async (req, res) => {
+export const create = async req => {
   const body = req.body;
-  const refId = body.repository.full_name;
+  const refId = getRefId(body);
   const sha = body.pull_request.head.sha;
   const prState = body.action;
 
@@ -18,6 +19,7 @@ export const create = async (req, res) => {
       cluster_state: "in_progress"
     });
 
+    // notify github
     await createDeployment(body);
 
     console.log("create cluster");
