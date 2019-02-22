@@ -2,6 +2,11 @@ resources:
   - dind-claim.yaml
   - mongo-claim.yaml
   - mongo-deployment.yaml
-	- mongo-service.yaml
+  - mongo-service.yaml
   - app-deployment.yaml
   - app-service.yaml
+  - traefik-ingress-controller-cluster-role-binding.yaml
+  - traefik-ingress-controller-cluster-role.yaml
+  - traefik-ingress-controller-deployment.yaml
+  - traefik-ingress-controller-service-account.yaml
+  - traefik-ingress.yaml
