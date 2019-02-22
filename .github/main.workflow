@@ -16,7 +16,7 @@ action "Install" {
 }
 
 action "Decrypt ENV" {
-  uses = "actions/gcloud/cli@1a017b23ef5762d20aeb3972079a7bce2c4a8bfe"
+  uses = "actions/gcloud/cli@master"
   needs = ["GCloud Auth"]
   runs = "gcloud kms decrypt --project=elenchos --plaintext-file=.env --ciphertext-file=.env.enc --location=global --keyring=deploy --key=env"
 }
@@ -33,11 +33,19 @@ action "Master filter" {
   args = "branch master"
 }
 
+action "Decrypt PEM" {
+  uses = "actions/gcloud/cli@master"
+  needs = ["Master filter"]
+  args = "gcloud kms decrypt --project=elenchos --plaintext-file=github.pem --ciphertext-file=github.pem.enc --location=global --keyring=deploy --key=github"
+}
+
+
 action "Build image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
-  needs = ["Master filter"]
+  needs = ["Decrypt PEM"]
   args = "build -t cdssnc/elenchos ."
 }
+
 action "Tag image for GCR" {
   needs = ["Build image"]
   uses = "actions/docker/tag@master"
