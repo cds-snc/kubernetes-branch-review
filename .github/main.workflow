@@ -36,7 +36,7 @@ action "Master filter" {
 action "Decrypt PEM" {
   uses = "actions/gcloud/cli@master"
   needs = ["Master filter"]
-  args = "gcloud kms decrypt --project=elenchos --plaintext-file=github.pem --ciphertext-file=github.pem.enc --location=global --keyring=deploy --key=github"
+  runs = "gcloud kms decrypt --project=elenchos --plaintext-file=github.pem --ciphertext-file=github.pem.enc --location=global --keyring=deploy --key=github"
 }
 
 
