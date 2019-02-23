@@ -22,9 +22,12 @@ action "Decrypt ENV" {
 }
 
 action "Test" {
-  uses = "docker://culturehq/actions-yarn:latest"
+  uses = "docker://globegitter/alpine-yarn:0.27.5-node-8.1.3-ssh"
   needs = ["Decrypt ENV", "Install"]
-  args = "test"
+  env = {
+    CODE_DIR = "/github/home"
+  }
+  runs = "yarn test"
 }
 
 action "Master filter" {
@@ -38,7 +41,6 @@ action "Decrypt PEM" {
   needs = ["Master filter"]
   runs = "gcloud kms decrypt --project=elenchos --plaintext-file=github.pem --ciphertext-file=github.pem.enc --location=global --keyring=deploy --key=github"
 }
-
 
 action "Build image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
