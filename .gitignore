@@ -62,6 +62,6 @@ typings/
 
 
 github.pem
-
+gcloud.json
 .DS_Store
 *.swp

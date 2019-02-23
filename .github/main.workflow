@@ -42,9 +42,15 @@ action "Decrypt PEM" {
   runs = "gcloud kms decrypt --project=elenchos --plaintext-file=github.pem --ciphertext-file=github.pem.enc --location=global --keyring=deploy --key=github"
 }
 
+action "Decrypt gcloud" {
+  uses = "actions/gcloud/cli@master"
+  needs = ["Master filter"]
+  runs = "gcloud kms decrypt --project=elenchos --plaintext-file=gcloud.json --ciphertext-file=gcloud.json.enc --location=global --keyring=deploy --key=gcloud"
+}
+
 action "Build image" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
-  needs = ["Decrypt PEM"]
+  needs = ["Decrypt PEM","Decrypt gcloud"]
   args = "build -t cdssnc/elenchos ."
 }
 
