@@ -17,7 +17,7 @@ describe("checkoutRepo", () => {
     expect(
       await checkout("cds-snc/dns", "686880e3ba2b2d782de57ff1540cdb00c7eb774a")
     ).toEqual(true);
-    spawnSync("rm", ["-rf", "dns"], {
+    spawnSync("rm", ["-rf", "686880e3ba2b2d782de57ff1540cdb00c7eb774a"], {
       cwd: process.env.CODE_DIR
     });
   });
