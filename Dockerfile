@@ -16,7 +16,6 @@ RUN chmod +x /usr/local/bin/kustomize
 
 # Add Git
 RUN apk add --no-cache \
-  openssh-client \
   git
 
 # Add Node
