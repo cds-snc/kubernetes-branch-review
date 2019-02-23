@@ -1,4 +1,4 @@
-import { checkout } from "../lib/checkout";
+import { checkout } from "../lib/git";
 const { spawnSync } = require("child_process");
 
 describe("checkoutRepo", () => {
