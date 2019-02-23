@@ -22,12 +22,12 @@ action "Decrypt ENV" {
 }
 
 action "Test" {
-  uses = "docker://culturehq/actions-yarn:latest"
+  uses = "docker://globegitter/alpine-yarn:0.27.5-node-8.1.3-ssh"
   needs = ["Decrypt ENV", "Install"]
-  args = "test"
   env = {
     CODE_DIR = "/github/home"
   }
+  runs = "yarn test"
 }
 
 action "Master filter" {
