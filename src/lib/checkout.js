@@ -13,10 +13,10 @@ export const cleanup = name => {
   return true;
 };
 
-const clone = fullName => {
+const clone = (fullName, sha) => {
   const clone = spawnSync(
     "git",
-    ["clone", `https://github.com/${fullName}`, "--quiet"],
+    ["clone", `https://github.com/${fullName}`, `${sha}`, "--quiet"],
     {
       cwd: DIR
     }
@@ -31,14 +31,12 @@ const clone = fullName => {
 };
 
 export const checkout = async (fullName, sha) => {
-  const name = fullName.split("/")[1];
-
-  if (!cleanup(name) || !clone(fullName)) {
+  if (!cleanup(sha) || !clone(fullName, sha)) {
     return false;
   }
 
   const checkout = spawnSync("git", ["checkout", sha, "--quiet"], {
-    cwd: `${DIR}/${name}`
+    cwd: `${DIR}/${sha}`
   });
 
   if (checkout.stderr && checkout.stderr.toString()) {
