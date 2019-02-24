@@ -3,6 +3,7 @@ import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
 import { deploy } from "../lib/deploy";
+import { buildAndPush } from "../lib/docker";
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.get("/", async (req, res) => {
     action = req.body.action;
   } else {
     // get action from other type of event
+    buildAndPush("cdssnc/etait-ici", ".", "etait-ici");
   }
 
   switch (action) {
