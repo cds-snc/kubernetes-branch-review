@@ -42,7 +42,6 @@ export const create = async req => {
 
       await saveReleaseToDB({
         refId,
-        sha,
         cluster_id: id,
         pr_state: prState,
         cluster_state: state

@@ -1,6 +1,8 @@
 export const getRefId = event => {
-  const repoName = event.repository.full_name;
-  const prNumber = event.number;
-  const refId = `${repoName}/${prNumber}`;
+  let refId;
+  if (event && event.action) {
+    refId = pull_request.head.ref;
+  }
+
   return refId;
 };

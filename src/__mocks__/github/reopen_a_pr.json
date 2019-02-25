@@ -51,8 +51,8 @@
     "comments_url": "https://api.github.com/repos/cds-snc/etait-ici/issues/1/comments",
     "statuses_url": "https://api.github.com/repos/cds-snc/etait-ici/statuses/9916fb8c155af5694cd6b1b7ce57dcef6930683d",
     "head": {
-      "label": "cds-snc:docker",
-      "ref": "docker",
+      "label": "cds-snc:elenchos_demo",
+      "ref": "elenchos_demo",
       "sha": "9916fb8c155af5694cd6b1b7ce57dcef6930683d",
       "user": {
         "login": "cds-snc",
