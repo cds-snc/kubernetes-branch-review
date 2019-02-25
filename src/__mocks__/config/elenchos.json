@@ -1,0 +1,6 @@
+{
+  "dockerfiles": {
+    "cdssnc/etait-ici": "."
+  },
+  "overlay": "manifests/overlays/elenchos"
+}
