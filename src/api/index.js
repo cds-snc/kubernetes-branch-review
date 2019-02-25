@@ -84,3 +84,26 @@ export const deleteCluster = async id => {
   const result = await res.json();
   return result;
 };
+
+export const getConfig = async id => {
+  const endpoint = `${baseUrl}/clusters/${id}/kubeconfig`;
+
+  console.log(endpoint);
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`
+      }
+    });
+
+    // response is in yaml format
+    return await res.text();
+  } catch (e) {
+    console.log(e.message);
+  }
+
+  return "hey";
+};
