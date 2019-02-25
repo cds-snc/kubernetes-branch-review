@@ -15,9 +15,8 @@ export const saveReleaseToDB = async obj => {
   }
 };
 
-export const getRelease = async obj => {
+export const getRelease = async (obj, query = { refId: obj.refId }) => {
   await dbConnect();
-  const query = { refId: obj.refId };
   try {
     const record = await Model.findOne(query).exec();
     return record;

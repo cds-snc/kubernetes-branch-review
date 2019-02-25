@@ -1,12 +1,12 @@
 import { updateDeployment } from "../../lib/githubNotify";
+import { getRelease, saveReleaseToDB } from "../../db/queries";
 
-export const update = async (req, res) => {
+export const update = async req => {
   const body = req.body;
-  // "ref": "refs/heads/elenchos_demo",
-  const result = await updateDeployment(body);
-
-  // tell db new sha
-
-  // kick to step 2 to redeploy
-  console.log(result);
+  const nodeId = body.repository.node_id;
+  console.log("nodeId", nodeId);
+  const model = await getRelease({ nodeId }, { nodeId: nodeId });
+  console.log(model);
+  return "hey";
+  //const result = await updateDeployment(body);
 };
