@@ -1,5 +1,5 @@
 import { saveReleaseToDB } from "../../db/queries";
-import { createCluster } from "../../api";
+import { createCluster, getConfig } from "../../api";
 import { createDeployment } from "../../lib/githubNotify";
 import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
@@ -45,6 +45,14 @@ export const create = async req => {
         cluster_id: id,
         pr_state: prState,
         cluster_state: state
+      });
+
+      const config = await getConfig(id);
+
+      // save config to the database
+      await saveReleaseToDB({
+        refId,
+        config
       });
     }
 
