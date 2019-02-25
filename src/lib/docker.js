@@ -25,6 +25,9 @@ const build = (name, dirPath, sha) => {
 };
 
 const push = imgName => {
+  if (!imgName) {
+    return false;
+  }
   console.log("PUSH ", imgName);
 
   const push = spawnSync("docker", ["push", `${imgName}`]);
@@ -34,7 +37,7 @@ const push = imgName => {
     return false;
   }
 
-  return push;
+  return imgName;
 };
 
 export const buildAndPush = (name, path, sha) => {
