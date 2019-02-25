@@ -8,5 +8,5 @@ export const update = async req => {
   const model = await getRelease({ nodeId }, { nodeId: nodeId });
   console.log(model);
   return "hey";
-  //const result = await updateDeployment(body);
+  // const result = await updateDeployment(body);
 };
