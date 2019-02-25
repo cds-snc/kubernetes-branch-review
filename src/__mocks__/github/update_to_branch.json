@@ -1,20 +1,74 @@
 {
   "ref": "refs/heads/elenchos_demo",
-  "before": "91a8142e7f7456944b69bb2e982fb15dafb640ce",
-  "after": "8742ac2c1d1b4e3b2e1a09b21e187ce84fc0c225",
+  "before": "8742ac2c1d1b4e3b2e1a09b21e187ce84fc0c225",
+  "after": "0769ba5797e6f47f90be049042418af67958d516",
   "created": false,
   "deleted": false,
   "forced": false,
   "base_ref": null,
-  "compare": "https://github.com/cds-snc/etait-ici/compare/91a8142e7f74...8742ac2c1d1b",
+  "compare": "https://github.com/cds-snc/etait-ici/compare/8742ac2c1d1b...0769ba5797e6",
   "commits": [
     {
-      "id": "8742ac2c1d1b4e3b2e1a09b21e187ce84fc0c225",
-      "tree_id": "7ca92e3d2dc84ab33b00c4574d3d3d1cd758262f",
+      "id": "8183328849beb7510a0c1fb922b0076fb43ab355",
+      "tree_id": "84578f035f6a3aacf1bc64315ab37f15b76a46da",
+      "distinct": false,
+      "message": "Added elenchos config file",
+      "timestamp": "2019-02-24T09:07:21-05:00",
+      "url": "https://github.com/cds-snc/etait-ici/commit/8183328849beb7510a0c1fb922b0076fb43ab355",
+      "author": {
+        "name": "Max Neuvians",
+        "email": "max@neuvians.net",
+        "username": "maxneuvians"
+      },
+      "committer": {
+        "name": "Max Neuvians",
+        "email": "max@neuvians.net",
+        "username": "maxneuvians"
+      },
+      "added": [
+        "elenchos.json"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+
+      ]
+    },
+    {
+      "id": "99855cd7dc0c906dc699f59d0602c458432f91c1",
+      "tree_id": "148c2d723155c212c00d660bb7465b9d13940db0",
+      "distinct": false,
+      "message": "Update elenchos.json",
+      "timestamp": "2019-02-24T14:29:53-05:00",
+      "url": "https://github.com/cds-snc/etait-ici/commit/99855cd7dc0c906dc699f59d0602c458432f91c1",
+      "author": {
+        "name": "Max Neuvians",
+        "email": "max@neuvians.net",
+        "username": "maxneuvians"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "username": "web-flow"
+      },
+      "added": [
+
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+        "elenchos.json"
+      ]
+    },
+    {
+      "id": "0769ba5797e6f47f90be049042418af67958d516",
+      "tree_id": "148c2d723155c212c00d660bb7465b9d13940db0",
       "distinct": true,
-      "message": "Bump",
-      "timestamp": "2019-02-20T14:46:47-05:00",
-      "url": "https://github.com/cds-snc/etait-ici/commit/8742ac2c1d1b4e3b2e1a09b21e187ce84fc0c225",
+      "message": "Merge branch 'master' into elenchos_demo",
+      "timestamp": "2019-02-25T09:01:38-05:00",
+      "url": "https://github.com/cds-snc/etait-ici/commit/0769ba5797e6f47f90be049042418af67958d516",
       "author": {
         "name": "Max",
         "email": "max@neuvians.net",
@@ -25,18 +79,24 @@
         "email": "max@neuvians.net",
         "username": "maxneuvians"
       },
-      "added": [],
-      "removed": [],
-      "modified": []
+      "added": [
+        "elenchos.json"
+      ],
+      "removed": [
+
+      ],
+      "modified": [
+
+      ]
     }
   ],
   "head_commit": {
-    "id": "8742ac2c1d1b4e3b2e1a09b21e187ce84fc0c225",
-    "tree_id": "7ca92e3d2dc84ab33b00c4574d3d3d1cd758262f",
+    "id": "0769ba5797e6f47f90be049042418af67958d516",
+    "tree_id": "148c2d723155c212c00d660bb7465b9d13940db0",
     "distinct": true,
-    "message": "Bump",
-    "timestamp": "2019-02-20T14:46:47-05:00",
-    "url": "https://github.com/cds-snc/etait-ici/commit/8742ac2c1d1b4e3b2e1a09b21e187ce84fc0c225",
+    "message": "Merge branch 'master' into elenchos_demo",
+    "timestamp": "2019-02-25T09:01:38-05:00",
+    "url": "https://github.com/cds-snc/etait-ici/commit/0769ba5797e6f47f90be049042418af67958d516",
     "author": {
       "name": "Max",
       "email": "max@neuvians.net",
@@ -47,9 +107,15 @@
       "email": "max@neuvians.net",
       "username": "maxneuvians"
     },
-    "added": [],
-    "removed": [],
-    "modified": []
+    "added": [
+      "elenchos.json"
+    ],
+    "removed": [
+
+    ],
+    "modified": [
+
+    ]
   },
   "repository": {
     "id": 170416435,
@@ -120,14 +186,14 @@
     "releases_url": "https://api.github.com/repos/cds-snc/etait-ici/releases{/id}",
     "deployments_url": "https://api.github.com/repos/cds-snc/etait-ici/deployments",
     "created_at": 1550019964,
-    "updated_at": "2019-02-15T21:49:24Z",
-    "pushed_at": 1550692011,
+    "updated_at": "2019-02-24T19:29:55Z",
+    "pushed_at": 1551103352,
     "git_url": "git://github.com/cds-snc/etait-ici.git",
     "ssh_url": "git@github.com:cds-snc/etait-ici.git",
     "clone_url": "https://github.com/cds-snc/etait-ici.git",
     "svn_url": "https://github.com/cds-snc/etait-ici",
     "homepage": "",
-    "size": 182,
+    "size": 183,
     "stargazers_count": 1,
     "watchers_count": 1,
     "language": "JavaScript",
