@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import yaml from "js-yaml";
 
 const baseUrl = "https://api.digitalocean.com/v2/kubernetes";
 const { K8_API_KEY: TOKEN } = process.env;
@@ -100,7 +101,10 @@ export const getConfig = async id => {
     });
 
     // response is in yaml format
-    return await res.text();
+    const ymlStr = await res.text();
+    // convert to json
+    const doc = yaml.safeLoad(ymlStr, "utf8");
+    return doc;
   } catch (e) {
     console.log(e.message);
   }

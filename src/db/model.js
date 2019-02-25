@@ -8,6 +8,7 @@ const schema = new mongoose.Schema(
       type: String,
       enum: ["open", "closed"]
     },
+    config: String,
     cluster_state: {
       type: String,
       enum: [
