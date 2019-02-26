@@ -3,7 +3,6 @@ import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
 import { deploy } from "../lib/deploy";
-import { buildAndPush } from "../lib/docker";
 import { isMaster } from "../lib/isMaster";
 import { getConfig } from "../api";
 
@@ -23,7 +22,6 @@ router.get("/", async (req, res) => {
     action = body.action;
   } else {
     // get action from other type of event
-    // buildAndPush("cdssnc/etait-ici", ".", "etait-ici");
     if (!isMaster()) {
       action = "updated";
     }
@@ -50,7 +48,7 @@ router.get("/config/:id", async (req, res) => {
   const id = req.params.id;
 
   const result = await getConfig(id);
-  console.log(result)
+  console.log(result);
   res.send("hello");
 });
 
