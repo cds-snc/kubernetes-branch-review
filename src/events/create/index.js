@@ -4,11 +4,16 @@ import { createDeployment } from "../../lib/githubNotify";
 import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
 
-export const create = async req => {
+export const create = async (req, release) => {
   const body = req.body;
   const refId = getRefId(body);
   const sha = body.pull_request.head.sha;
   const prState = body.action;
+
+  if (!release.cluster_id) {
+    // @todo define what steps need to happen if this is the case
+    return;
+  }
 
   try {
     await saveReleaseToDB({

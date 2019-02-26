@@ -2,7 +2,9 @@ import express from "express";
 import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
+import { getRefId } from "../lib/getRefId";
 import { deploy } from "../lib/deploy";
+import { getRelease } from "../db/queries";
 import { isMaster } from "../lib/isMaster";
 import { getConfig } from "../api";
 import { Logger, StackDriverNode } from "@cdssnc/logdriver";
@@ -32,15 +34,18 @@ router.get("/", async (req, res) => {
     }
   }
 
+  const refId = getRefId(body);
+  const release = await getRelease({ refId });
+
   switch (action) {
     case "opened":
-      status = await deploy(await create(req));
+      status = await deploy(await create(req, release));
       break;
     case "updated":
-      status = await deploy(await update(req));
+      status = await deploy(await update(req, release));
       break;
     case "closed":
-      status = await close(req);
+      status = await close(req, release);
       break;
     default:
       status = "no route found";

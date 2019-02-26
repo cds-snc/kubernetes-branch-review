@@ -2,7 +2,7 @@ import { getRefId } from "../../lib/getRefId";
 import { getRelease, saveReleaseToDB } from "../../db/queries";
 import { deleteCluster } from "../../api";
 
-export const close = async req => {
+export const close = async (req, release) => {
   const body = req.body;
   const sha = body.pull_request.head.sha;
   const refId = getRefId(body);
