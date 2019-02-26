@@ -5,6 +5,11 @@ import { close } from "../events/close";
 import { deploy } from "../lib/deploy";
 import { isMaster } from "../lib/isMaster";
 import { getConfig } from "../api";
+import { Logger, StackDriverNode } from "@cdssnc/logdriver";
+
+Logger.subscribe("error", StackDriverNode.log);
+
+// Logger.debug("=> The message from the server...");
 
 const router = express.Router();
 

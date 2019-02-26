@@ -65,3 +65,5 @@ github.pem
 gcloud.json
 .DS_Store
 *.swp
+
+.gcloud.json
