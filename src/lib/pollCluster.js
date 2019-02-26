@@ -4,7 +4,7 @@
 import { longPoll } from "../lib/longPoll";
 import { getCluster } from "../api";
 
-export const pollCluster = async (clusterId, checkState = "running") => {
+export const pollCluster = async (clusterId, checkState = "running", cb) => {
   return new Promise(resolve => {
     const poll = longPoll;
     poll.delay = 20000;
@@ -13,7 +13,7 @@ export const pollCluster = async (clusterId, checkState = "running") => {
       const result = await getCluster(clusterId);
       const clusterState = result.kubernetes_cluster.status.state;
 
-      console.log("current cluster state", clusterState);
+      console.log(`current cluster state ... ${clusterState}`);
 
       if (clusterState === checkState) {
         return result;
@@ -27,8 +27,7 @@ export const pollCluster = async (clusterId, checkState = "running") => {
 
     poll.eventEmitter.on("done", result => {
       const clusterState = result.kubernetes_cluster.status.state;
-      console.log("current cluster state", clusterState);
-      console.log("done polling");
+      console.log(`done polling ${clusterState}`);
       resolve(result);
     });
 

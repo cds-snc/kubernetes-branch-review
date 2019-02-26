@@ -103,7 +103,7 @@ export const getConfig = async id => {
     // response is in yaml format
     const ymlStr = await res.text();
     // convert to json
-    const doc = yaml.safeLoad(ymlStr, "utf8");
+    const doc = JSON.stringify(yaml.safeLoad(ymlStr, "utf8"));
     return doc;
   } catch (e) {
     console.log(e.message);
