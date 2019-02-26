@@ -15,6 +15,6 @@ export const update = async req => {
     });
   }
 
-  const result = await updateDeployment(body);
+  const result = await updateDeployment(body, sha);
   return result;
 };

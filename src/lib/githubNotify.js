@@ -32,12 +32,12 @@ export const createDeployment = async (
 
 export const updateDeployment = async (
   event,
+  sha,
   status = { task: "deploy", description: "Updating deployment" }
 ) => {
   const client = await authenticate(event.installation.id);
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
-  const sha = event.pull_request.head.sha;
 
   const statusObj = Object.assign(
     {
