@@ -19,7 +19,7 @@ const loadKustomization = async (sha, overlayPath) => {
 
 const writeKustomization = (sha, overlayPath, config) => {
   const filePath = `${DIR}/${sha}/${overlayPath}/kustomization.yaml`;
-  return fs.writeFile(filePath, config, function(e) {
+  return fs.writeFile(filePath, yaml.safeDump(config), function(e) {
     if (e) {
       console.error(e.message);
       return false;
