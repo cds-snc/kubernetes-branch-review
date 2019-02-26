@@ -2,7 +2,7 @@ import { getRefId } from "../../lib/getRefId";
 import { updateDeployment } from "../../lib/githubNotify";
 import { getRelease, saveReleaseToDB } from "../../db/queries";
 
-export const update = async req => {
+export const update = async (req, release) => {
   const body = req.body;
   const sha = body.after;
   const refId = getRefId(body);
