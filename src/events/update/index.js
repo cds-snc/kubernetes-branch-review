@@ -1,12 +1,10 @@
 import { updateDeployment } from "../../lib/githubNotify";
+import { getRelease } from "../../db/queries";
 
-export const update = async (req, res) => {
+export const update = async req => {
   const body = req.body;
-  // "ref": "refs/heads/elenchos_demo",
-  const result = await updateDeployment(body);
 
-  // tell db new sha
-
-  // kick to step 2 to redeploy
-  console.log(result);
+  const refId = getRefId(body);
+  //const record = await getRelease({ refId });
+  //const result = await updateDeployment(body);
 };

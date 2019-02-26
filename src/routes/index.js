@@ -3,23 +3,28 @@ import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
 import { deploy } from "../lib/deploy";
-import { buildAndPush } from "../lib/docker";
+import { isMaster } from "../lib/isMaster";
+import { getConfig } from "../api";
 
 const router = express.Router();
 
 router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.get("/", async (req, res) => {
+  const body = req.body;
   let action;
   let status;
 
-  if (req.body.action) {
+  if (body.action) {
     // create
     // close
-    action = req.body.action;
+    // reopen
+    action = body.action;
   } else {
     // get action from other type of event
-    buildAndPush("cdssnc/etait-ici", ".", "etait-ici");
+    if (!isMaster()) {
+      action = "updated";
+    }
   }
 
   switch (action) {
@@ -37,6 +42,14 @@ router.get("/", async (req, res) => {
   }
 
   res.send(status);
+});
+
+router.get("/config/:id", async (req, res) => {
+  const id = req.params.id;
+
+  const result = await getConfig(id);
+  console.log(result);
+  res.send("hello");
 });
 
 export default router;

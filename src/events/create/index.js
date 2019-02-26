@@ -1,5 +1,5 @@
 import { saveReleaseToDB } from "../../db/queries";
-import { createCluster } from "../../api";
+import { createCluster, getConfig } from "../../api";
 import { createDeployment } from "../../lib/githubNotify";
 import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
@@ -19,10 +19,6 @@ export const create = async req => {
       cluster_state: "in_progress"
     });
 
-    /* 
-    @todo - thinking this should be split out as it's a long running task and the response resonds too slowly
-    */
-
     // notify github
     await createDeployment(body);
 
@@ -31,7 +27,8 @@ export const create = async req => {
 
     if (cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
       console.log("cluster created");
-      console.log("poll if cluster is running...");
+      console.log("polling cluster...");
+
       const result = await pollCluster(
         cluster.kubernetes_cluster.id,
         "running"
@@ -42,10 +39,17 @@ export const create = async req => {
 
       await saveReleaseToDB({
         refId,
-        sha,
         cluster_id: id,
         pr_state: prState,
         cluster_state: state
+      });
+
+      const config = await getConfig(id);
+
+      // save config to the database
+      await saveReleaseToDB({
+        refId,
+        config
       });
     }
 
