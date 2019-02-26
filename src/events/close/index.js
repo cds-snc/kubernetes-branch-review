@@ -9,6 +9,13 @@ export const close = async req => {
   const record = await getRelease({ refId });
 
   if (!record || !record.cluster_id) {
+    await saveReleaseToDB({
+      refId,
+      sha,
+      pr_state: "closed",
+      cluster_state: "deleted",
+      config: ""
+    });
     return "failed to find record or id not set";
   }
 
@@ -21,7 +28,8 @@ export const close = async req => {
     sha,
     cluster_id: null,
     pr_state: "closed",
-    cluster_state: "deleted"
+    cluster_state: "deleted",
+    config: ""
   });
 
   return refId;
