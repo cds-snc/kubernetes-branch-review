@@ -4,6 +4,7 @@ import { deleteCluster } from "../../api";
 
 export const close = async req => {
   const body = req.body;
+  const sha = body.pull_request.head.sha;
   const refId = getRefId(body);
   const record = await getRelease({ refId });
 
@@ -17,7 +18,7 @@ export const close = async req => {
 
   await saveReleaseToDB({
     refId,
-    sha: null,
+    sha,
     cluster_id: null,
     pr_state: "closed",
     cluster_state: "deleted"
