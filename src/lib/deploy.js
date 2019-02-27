@@ -1,3 +1,4 @@
+import { applyConfig } from "./kubectl";
 import { buildAndPush } from "./docker";
 import { editKustomization } from "./kustomize";
 import { elenchosConfig } from "./elenchosConfig";
@@ -9,15 +10,23 @@ async function asyncForEach(array, callback) {
   }
 }
 
-export const deploy = async (req, release) => {
+export const deploy = async release => {
   let refId, sha, config, dockerfiles, overlay;
   ({ refId, sha, config } = release);
 
   // Checkout the code
-  await checkout(refId, sha);
+  if (!(await checkout(refId, sha))) {
+    console.error(`Could not checkout repo ${refId}`);
+    return false;
+  }
 
   // Parse the repo specific config file
   ({ dockerfiles, overlay } = await elenchosConfig(sha));
+  
+  if (!dockerfiles || !overlay) {
+    console.error(`Could not get repo config ${refId}`);
+    return false;
+  }
 
   // Build all the modified docker images
   let images = [];
@@ -27,15 +36,23 @@ export const deploy = async (req, release) => {
       dockerfiles[dockerfile],
       sha
     );
-    images.push({ name: dockerfile, newName: newName });
+    if (!newName) {
+      console.error(`Could not build ${dockerfile}`);
+    } else {
+      images.push({ name: dockerfile, newName: newName });
+    }
   });
 
   // Update the kustomize file
-  if (!editKustomization(sha, overlay, images)) {
+  if (!(await editKustomization(sha, overlay, images))) {
     console.error("Could not edit kustomize file");
     return false;
   }
 
   // Apply the kubernetes configuration
+  if (!applyConfig(sha, overlay, config)) {
+    console.error("Could not apply kubectl config");
+    return false;
+  }
   return true;
 };

@@ -48,7 +48,6 @@ router.get("/", async (req, res) => {
       status = await close(req, release);
       break;
     default:
-      deploy(req, release);
       status = "no route found";
   }
 
