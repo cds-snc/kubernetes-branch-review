@@ -27,9 +27,13 @@ export const applyConfig = (sha, overlayPath, config) => {
     return false;
   }
 
-  const kubectl = spawnSync("kubectl", ["apply", "-f", "-"], {
-    input: kustomize.stdout
-  });
+  const kubectl = spawnSync(
+    "kubectl",
+    ["apply", "--kubeconfig", `${DIR}/${sha}/kubeconfig.yaml`, "-f", "-"],
+    {
+      input: kustomize.stdout
+    }
+  );
 
   if (kubectl.stderr && kubectl.stderr.toString()) {
     console.log(kubectl.stderr.toString());
