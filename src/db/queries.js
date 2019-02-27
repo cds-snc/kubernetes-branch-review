@@ -18,7 +18,10 @@ export const saveReleaseToDB = async obj => {
 export const getRelease = async (obj, query = { refId: obj.refId }) => {
   await dbConnect();
   try {
-    const record = await Model.findOne(query).exec();
+    let record = await Model.findOne(query).exec();
+
+    // record.full_name= record
+
     return record;
   } catch (e) {
     console.log(e.message);

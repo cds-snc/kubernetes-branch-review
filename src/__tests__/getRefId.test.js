@@ -1,7 +1,8 @@
 import { eventJS } from "../__mocks__/";
 import { getRefId } from "../lib/getRefId";
 
-const repoName = "cds-snc/etait-ici/elenchos_demo";
+const fullName = "cds-snc/etait-ici";
+const repoName = `${fullName}/elenchos_demo`;
 
 test("returns refId for create event", async () => {
   const event = await eventJS("create_a_pr");
@@ -34,6 +35,12 @@ test("returns refId when pr is reopened", async () => {
 });
 
 test("returns refId when a branch is updated", async () => {
+  const event = await eventJS("update_to_branch");
+  const result = getRefId(event);
+  expect(result).toEqual(repoName);
+});
+
+test("returns fullName", async () => {
   const event = await eventJS("update_to_branch");
   const result = getRefId(event);
   expect(result).toEqual(repoName);
