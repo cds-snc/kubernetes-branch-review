@@ -1,6 +1,8 @@
 import { isMaster } from "../lib/isMaster";
 export const getRefId = event => {
   let refId = false;
+  let fullName = event.repository.full_name;
+
   if (event && event.action) {
     refId = event.pull_request.head.ref;
   } else if (event && event.ref) {
@@ -10,5 +12,8 @@ export const getRefId = event => {
     }
   }
 
-  return refId;
+  if (!refId) {
+    return false;
+  }
+  return `${fullName}/${refId}`;
 };

@@ -35,11 +35,11 @@ router.get("/", async (req, res) => {
   }
 
   const refId = getRefId(body);
-  const release = await getRelease({ refId });
-
+  let release = getRelease(refId);
   switch (action) {
     case "opened":
-      status = await deploy(await create(req, release));
+      release = await create(req, release);
+      status = await deploy(release);
       break;
     case "updated":
       status = await deploy(await update(req, release));

@@ -5,9 +5,7 @@ const baseUrl = "https://api.digitalocean.com/v2/kubernetes";
 const { K8_API_KEY: TOKEN } = process.env;
 
 const body = {
-  name: "stage-cluster-01",
   region: "nyc1",
-  version: "1.12.1-do.2",
   tags: ["stage"],
   node_pools: [
     {
@@ -19,12 +17,14 @@ const body = {
   ]
 };
 
-export const createCluster = async () => {
+export const createCluster = async (options = { name: "", version: "" }) => {
   const endpoint = `${baseUrl}/clusters`;
+  const clusterOptions = Object.assign({}, body, options.name, options.version);
+
   try {
     const res = await fetch(endpoint, {
       method: "post",
-      body: JSON.stringify(body),
+      body: JSON.stringify(clusterOptions),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${TOKEN}`
