@@ -1,4 +1,4 @@
-import { saveReleaseToDB } from "../../db/queries";
+import { saveReleaseToDB, getRelease } from "../../db/queries";
 import { createCluster, getConfig } from "../../api";
 import { createDeployment } from "../../lib/githubNotify";
 import { pollCluster } from "../../lib/pollCluster";
@@ -9,11 +9,6 @@ export const create = async (req, release) => {
   const refId = getRefId(body);
   const sha = body.pull_request.head.sha;
   const prState = body.action;
-
-  if (!release.cluster_id) {
-    // @todo define what steps need to happen if this is the case
-    return;
-  }
 
   try {
     await saveReleaseToDB({
@@ -28,7 +23,7 @@ export const create = async (req, release) => {
     await createDeployment(body);
 
     console.log("create cluster");
-    const cluster = await createCluster();
+    const cluster = await createCluster({ name: refId, version: "1.0" });
 
     if (cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
       console.log("cluster created");
@@ -58,7 +53,7 @@ export const create = async (req, release) => {
       });
     }
 
-    return cluster;
+    return await getRelease({ refId });
   } catch (e) {
     console.log(e);
     console.log("err", e.message);
