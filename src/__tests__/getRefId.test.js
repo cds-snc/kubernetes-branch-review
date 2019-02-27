@@ -1,5 +1,5 @@
 import { eventJS } from "../__mocks__/";
-import { getRefId } from "../lib/getRefId";
+import { getFullNameFromRefId, getRefId } from "../lib/getRefId";
 
 const fullName = "cds-snc/etait-ici";
 const repoName = `${fullName}/elenchos_demo`;
@@ -44,4 +44,10 @@ test("returns fullName", async () => {
   const event = await eventJS("update_to_branch");
   const result = getRefId(event);
   expect(result).toEqual(repoName);
+});
+
+test("getFullNameFromRefId returns the name of the repo", async () => {
+  const event = await eventJS("update_to_branch");
+  const result = getRefId(event);
+  expect(getFullNameFromRefId(result)).toEqual(fullName);
 });

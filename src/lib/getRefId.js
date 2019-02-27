@@ -21,6 +21,7 @@ export const getRefId = event => {
 };
 
 export const getFullNameFromRefId = refId => {
-  const ref = refId.split("/");
-  return ref[ref.length - 1];
+  let ref = refId.split("/");
+  ref.pop();
+  return ref.join("/");
 };
