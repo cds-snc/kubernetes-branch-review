@@ -1,5 +1,5 @@
 import { dbConnect } from "./connect";
-
+import { getFullNameFromRefId } from "../lib/getRefId";
 const { Model } = require("./model");
 
 export const saveReleaseToDB = async obj => {
@@ -11,16 +11,17 @@ export const saveReleaseToDB = async obj => {
     await Model.findOneAndUpdate(query, obj, options).exec();
     return;
   } catch (e) {
-    console.log(e.message);
+    console.error(e.message);
   }
 };
 
 export const getRelease = async (obj, query = { refId: obj.refId }) => {
   await dbConnect();
   try {
-    const record = await Model.findOne(query).exec();
+    let record = await Model.findOne(query).exec();
+    record.full_name = getFullNameFromRefId(record.refId);
     return record;
   } catch (e) {
-    console.log(e.message);
+    console.error(e.message);
   }
 };
