@@ -4,8 +4,10 @@ import yaml from "js-yaml";
 const baseUrl = "https://api.digitalocean.com/v2/kubernetes";
 const { K8_API_KEY: TOKEN } = process.env;
 
-const body = {
+const clusterOptions = {
+  name: "stage-cluster-01",
   region: "nyc1",
+  version: "1.12.1-do.2",
   tags: ["stage"],
   node_pools: [
     {
@@ -19,9 +21,17 @@ const body = {
 
 export const createCluster = async (options = { name: "", version: "" }) => {
   const endpoint = `${baseUrl}/clusters`;
-  const clusterOptions = Object.assign({}, body, options.name, options.version);
+  /*
+  const clusterOptions = Object.assign({}, body, {
+    name: options.name,
+    version: options.version
+  });
+
+  console.log(clusterOptions)
+  */
 
   try {
+    console.log("fetch");
     const res = await fetch(endpoint, {
       method: "post",
       body: JSON.stringify(clusterOptions),
@@ -29,12 +39,15 @@ export const createCluster = async (options = { name: "", version: "" }) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${TOKEN}`
       }
+    }).catch(e => {
+      console.log("message");
+      console.log(e.message);
     });
 
     const result = await res.json();
     return result;
   } catch (e) {
-    console.log(e.message);
+    console.log("createCluster error", e.message);
     return { error: true };
   }
 };

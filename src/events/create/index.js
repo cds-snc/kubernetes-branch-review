@@ -6,7 +6,9 @@ import { getRefId } from "../../lib/getRefId";
 
 export const create = async (req, release) => {
   const body = req.body;
+
   const refId = getRefId(body);
+
   const sha = body.pull_request.head.sha;
   const prState = body.action;
 
