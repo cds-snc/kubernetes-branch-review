@@ -5,6 +5,11 @@ const fullName = "cds-snc/etait-ici";
 const repoName = `${fullName}/elenchos_demo`;
 
 test("returns refId for create event", async () => {
+  const result = getRefId({});
+  expect(result).toEqual(false);
+});
+
+test("returns refId for create event", async () => {
   const event = await eventJS("create_a_pr");
   const result = getRefId(event);
   expect(result).toEqual(repoName);

@@ -3,6 +3,10 @@ mongoose.set("useFindAndModify", false);
 mongoose.set("bufferCommands", false);
 
 const connect = async (uri, user = "", password = "") => {
+  if (!uri) {
+    throw new Error("no uri passed to connect");
+  }
+
   const mongodbUri = uri;
   let connect = null;
   try {
@@ -17,9 +21,7 @@ const connect = async (uri, user = "", password = "") => {
       };
     }
 
-    connect = await mongoose
-      .connect(mongodbUri, options)
-      .then(() => console.log("⚡ Database connected"));
+    connect = await mongoose.connect(mongodbUri, options);
   } catch (err) {
     console.error("⚠ Database connection error:", err.message);
     return false;
@@ -30,6 +32,7 @@ const connect = async (uri, user = "", password = "") => {
 
 const dbConnect = async () => {
   const { DB_URI, DB_USER, DB_PASS } = process.env;
+
   const db = await connect(
     DB_URI,
     DB_USER,
