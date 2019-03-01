@@ -26,7 +26,9 @@ describe("editKustomization", () => {
 
   it("returns false if there is a  config file but the write fails", async () => {
     getFile.mockReturnValueOnce(yaml);
-    writeFile.mockReturnValueOnce(false);
+    writeFile.mockImplementation(() => {
+      throw new Error("Bad file");
+    });
     expect(await editKustomization(sha, overlayPath, images)).toEqual(false);
   });
 

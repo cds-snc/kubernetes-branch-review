@@ -11,8 +11,8 @@ async function asyncForEach(array, callback) {
 }
 
 export const deploy = async release => {
-  let refId, sha, config, dockerfiles, overlay;
-  ({ refId, sha, config } = release);
+  let fullName, refId, sha, config, dockerfiles, overlay;
+  ({ fullName, refId, sha, config } = release);
 
   if (!refId) {
     console.error(`refIfd is not set`);
@@ -20,7 +20,7 @@ export const deploy = async release => {
   }
 
   // Checkout the code
-  if (!(await checkout(refId, sha))) {
+  if (!(await checkout(fullName, sha))) {
     console.error(`Could not checkout repo ${refId}`);
     return false;
   }

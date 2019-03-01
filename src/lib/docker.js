@@ -7,10 +7,10 @@ const build = (name, dirPath, sha) => {
   const imgName = `gcr.io/elenchos/${name}:${sha}`;
 
   console.log("BUILD ", buildPath, imgName);
-
+  console.log("build", "-t", `${imgName}`, `${dirPath}`);
   const build = spawnSync(
     "docker",
-    ["build", "-t", `${imgName}`, `${buildPath}`],
+    ["build", "-t", `${imgName}`, `${dirPath}`],
     {
       cwd: `${DIR}/${sha}`
     }
