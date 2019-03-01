@@ -6,7 +6,6 @@ import { getRefId } from "../lib/getRefId";
 import { deploy } from "../lib/deploy";
 import { getRelease } from "../db/queries";
 import { isMaster } from "../lib/isMaster";
-import { getConfig } from "../api";
 import { Logger, StackDriverNode } from "@cdssnc/logdriver";
 
 Logger.subscribe("error", StackDriverNode.log);
@@ -19,8 +18,9 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.get("/", async (req, res) => {
   const body = req.body;
-  let action;
   let status;
+
+  let action;
 
   if (body.action) {
     // create
@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
     action = body.action;
   } else {
     // get action from other type of event
-    if (!isMaster()) {
+    if (!isMaster() && body.repository) {
       action = "updated";
     }
   }
@@ -53,14 +53,6 @@ router.get("/", async (req, res) => {
   }
 
   res.send(status);
-});
-
-router.get("/config/:id", async (req, res) => {
-  const id = req.params.id;
-
-  const result = await getConfig(id);
-  console.log(result);
-  res.send("hello");
 });
 
 export default router;

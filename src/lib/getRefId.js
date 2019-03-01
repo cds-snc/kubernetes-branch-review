@@ -2,6 +2,11 @@ import { isMaster } from "../lib/isMaster";
 
 export const getRefId = event => {
   let refId = false;
+
+  if (!event || !event.repository || !event.repository.full_name) {
+    return false;
+  }
+
   let fullName = event.repository.full_name;
 
   if (event && event.action) {
@@ -21,6 +26,7 @@ export const getRefId = event => {
 };
 
 export const getFullNameFromRefId = refId => {
+  if (!refId) return false;
   let ref = refId.split("/");
   ref.pop();
   return ref.join("/");
