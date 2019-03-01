@@ -55,7 +55,7 @@ export const deploy = async release => {
   }
 
   // Apply the kubernetes configuration
-  if (!applyConfig(sha, overlay, config)) {
+  if (!(await applyConfig(sha, overlay, config))) {
     console.error("Could not apply kubectl config");
     return false;
   }

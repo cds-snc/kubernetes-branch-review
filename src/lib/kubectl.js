@@ -1,7 +1,8 @@
 import yaml from "js-yaml";
 const { spawnSync } = require("child_process");
 const fs = require("fs");
-
+const { promisify } = require("util");
+const execAsync = promisify(require("child_process").exec);
 const DIR = process.env.CODE_DIR || "/tmp";
 
 const writeKubeconfig = (sha, config) => {
@@ -18,28 +19,23 @@ const writeKubeconfig = (sha, config) => {
   }
 };
 
-export const applyConfig = (sha, overlayPath, config) => {
+export const applyConfig = async (sha, overlayPath, config) => {
   const result = writeKubeconfig(sha, config);
   if (!result) {
     return false;
   }
 
-  const kustomize = spawnSync("kustomize", ["build", overlayPath], {
-    cwd: `${DIR}/${sha}`
+  await execAsync(`kustomize build > ${sha}.yaml`, {
+    cwd: `${DIR}/${sha}/${overlayPath}`
   });
 
-  if (kustomize.stderr && kustomize.stderr.toString()) {
-    console.log(kustomize.stderr.toString());
-    return false;
-  }
-
-  const kubectl = spawnSync(
-    "kubectl",
-    ["apply", "--kubeconfig", `${DIR}/${sha}/kubeconfig.yaml`, "-f", "-"],
-    {
-      input: kustomize.stdout
-    }
-  );
+  const kubectl = spawnSync("kubectl", [
+    "apply",
+    "--kubeconfig",
+    `${DIR}/${sha}/kubeconfig.yaml`,
+    "-f",
+    `${DIR}/${sha}/${overlayPath}/${sha}.yaml`
+  ]);
 
   if (kubectl.stderr && kubectl.stderr.toString()) {
     console.log(kubectl.stderr.toString());
