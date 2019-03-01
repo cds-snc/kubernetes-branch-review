@@ -12,14 +12,13 @@ jest.mock("fs", () => ({
 
 const sha = "abcd";
 const overlayPath = "foo";
-const config = `
-bases:
-  - ../../base
-`;
+const config = '{"foo": "bar"}';
 
 describe("applyConfig", () => {
   it("returns false if config file write fails", () => {
-    writeFile.mockReturnValueOnce(false);
+    writeFile.mockImplementation(() => {
+      throw new Error("Error");
+    });
     expect(applyConfig(sha, overlayPath, config)).toEqual(false);
   });
 
