@@ -1,4 +1,74 @@
 import { create } from "../events/create";
+import { eventJS } from "../__mocks__";
+import { pollCluster } from "../lib/pollCluster";
+import { getConfig } from "../api/";
+
+jest.mock("../lib/pollCluster", () => ({
+  pollCluster: jest.fn(() => {
+    const clusterResult = {
+      kubernetes_cluster: {
+        id: "6852836d-d150-4187-be50-861c62b0ffe0",
+        name: "stage-cluster-01",
+        region: "nyc1",
+        version: "1.12.1-do.2",
+        cluster_subnet: "10.244.0.0/16",
+        service_subnet: "10.245.0.0/16",
+        ipv4: "68.183.135.145",
+        endpoint:
+          "https://6852836d-d150-4187-be50-861c62b0ffe0.k8s.ondigitalocean.com",
+        tags: ["stage", "k8s", "k8s:6852836d-d150-4187-be50-861c62b0ffe0"],
+        node_pools: [
+          {
+            id: "b0316731-32ff-47f4-88c4-04d98bf1c514",
+            name: "frontend-pool",
+            size: "s-1vcpu-2gb",
+            count: 1,
+            tags: [
+              "frontend",
+              "k8s",
+              "k8s:6852836d-d150-4187-be50-861c62b0ffe0",
+              "k8s:worker"
+            ],
+            nodes: [
+              {
+                id: "d1cefeb9-4186-4784-a31b-aa3b45422b73",
+                name: "romantic-jepsen-uk62",
+                status: { state: "running" },
+                created_at: "2019-02-28T14:11:59Z",
+                updated_at: "2019-02-28T14:14:18Z"
+              }
+            ]
+          }
+        ],
+        status: { state: "running" },
+        created_at: "2019-02-28T14:11:59Z",
+        updated_at: "2019-02-28T14:14:18Z"
+      }
+    };
+    return clusterResult;
+  })
+}));
+
+jest.mock("../db/queries", () => ({
+  saveReleaseToDB: jest.fn(() => {
+    return true;
+  }),
+  getRelease: jest.fn(() => {
+    return {};
+  })
+}));
+
+jest.mock("../api", () => ({
+  createCluster: jest.fn(() => {
+    // cluster.kubernetes_cluster && cluster.kubernetes_cluster.id
+    return { kubernetes_cluster: { id: "123" } };
+  }),
+  getConfig: jest.fn(() => {
+    return true;
+  })
+}));
+
+// cluster.kubernetes_cluster && cluster.kubernetes_cluster.id
 
 test("throws error if bad event sent", async () => {
   try {
@@ -33,3 +103,20 @@ test("throws error if no sha", async () => {
     expect(e.message).toEqual("sha or prState not defined");
   }
 });
+
+test("fails database", async () => {
+  const event = await eventJS("create_a_pr");
+  await create({ body: event });
+  expect(pollCluster).toHaveBeenCalledTimes(1);
+  expect(getConfig).toHaveBeenCalledTimes(1);
+});
+
+// saveReleaseToDB
+// createDeployment git
+// createCluster
+// if (cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
+// console.log("cluster created");
+// pollCluster
+// getConfig
+// saveReleaseToDB
+// getRelease
