@@ -14,6 +14,11 @@ export const deploy = async release => {
   let fullName, refId, sha, config, dockerfiles, overlay;
   ({ fullName, refId, sha, config } = release);
 
+  if (!refId) {
+    console.error(`refIfd is not set`);
+    return false;
+  }
+
   // Checkout the code
   if (!(await checkout(fullName, sha))) {
     console.error(`Could not checkout repo ${refId}`);

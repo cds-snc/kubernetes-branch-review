@@ -19,6 +19,7 @@ export const getRelease = async (obj, query = { refId: obj.refId }) => {
   await dbConnect();
   try {
     let record = await Model.findOne(query).exec();
+    if (!record || !record.refId) return false;
     record.fullName = getFullNameFromRefId(record.refId);
     return record;
   } catch (e) {
