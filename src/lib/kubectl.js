@@ -6,13 +6,16 @@ const DIR = process.env.CODE_DIR || "/tmp";
 
 const writeKubeconfig = (sha, config) => {
   const filePath = `${DIR}/${sha}/kubeconfig.yaml`;
-  return fs.writeFile(filePath, yaml.safeDump(config), function(e) {
-    if (e) {
-      console.error(e.message);
-      return false;
-    }
+  const configObj = JSON.parse(config);
+  try {
+    fs.writeFile(filePath, yaml.safeDump(configObj), "utf8", e =>
+      console.error(e)
+    );
     return true;
-  });
+  } catch (e) {
+    console.error(e.message);
+    return false;
+  }
 };
 
 export const applyConfig = (sha, overlayPath, config) => {
@@ -20,7 +23,10 @@ export const applyConfig = (sha, overlayPath, config) => {
   if (!result) {
     return false;
   }
-  const kustomize = spawnSync("kustomize", ["build", overlayPath]);
+
+  const kustomize = spawnSync("kustomize", ["build", overlayPath], {
+    cwd: `${DIR}/${sha}`
+  });
 
   if (kustomize.stderr && kustomize.stderr.toString()) {
     console.log(kustomize.stderr.toString());

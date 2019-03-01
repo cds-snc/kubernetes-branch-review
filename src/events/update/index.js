@@ -6,15 +6,16 @@ export const update = async (req, release) => {
   const body = req.body;
   const sha = body.after;
   const refId = getRefId(body);
-  const record = await getRelease({ refId });
+  let record = await getRelease({ refId });
 
   if (record) {
     await saveReleaseToDB({
       refId,
       sha
     });
+    record = await getRelease({ refId });
   }
 
-  const result = await updateDeployment(body, sha);
-  return result;
+  await updateDeployment(body, sha);
+  return record;
 };

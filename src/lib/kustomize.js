@@ -17,15 +17,17 @@ const loadKustomization = async (sha, overlayPath) => {
   }
 };
 
-const writeKustomization = (sha, overlayPath, config) => {
+const writeKustomization = async (sha, overlayPath, config) => {
   const filePath = `${DIR}/${sha}/${overlayPath}/kustomization.yaml`;
-  return fs.writeFile(filePath, yaml.safeDump(config), function(e) {
-    if (e) {
-      console.error(e.message);
-      return false;
-    }
+  try {
+    fs.writeFile(filePath, yaml.safeDump(config), "utf8", e =>
+      console.error(e)
+    );
     return true;
-  });
+  } catch (e) {
+    console.error(e.message);
+    return false;
+  }
 };
 
 export const editKustomization = async (sha, overlayPath, images) => {
