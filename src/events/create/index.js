@@ -19,6 +19,10 @@ export const create = async (req, release) => {
   const sha = body.pull_request.head.sha;
   const prState = body.action;
 
+  if (!sha || !prState) {
+    throw new Error("sha or prState not defined");
+  }
+
   try {
     await saveReleaseToDB({
       refId,
