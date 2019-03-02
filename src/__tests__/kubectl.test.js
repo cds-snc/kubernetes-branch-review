@@ -1,21 +1,29 @@
-import { applyConfig } from "../lib/kubectl";
+import { applyConfig, execAsync } from "../lib/kubectl";
 import { writeFile } from "fs";
-require("child_process");
+const { spawnSync } = require("child_process");
+require("util");
 
-jest.mock("child_process", () => ({
-  exec: jest.fn(),
-  spawnSync: jest.fn()
-}));
+jest.mock("child_process", () => {
+  const actualLib = require.requireActual("child_process");
+  return {
+    ...actualLib,
+    spawnSync: jest.fn()
+  };
+});
 
 jest.mock("fs", () => ({
   writeFile: jest.fn()
+}));
+
+jest.mock("util", () => ({
+  promisify: () => jest.fn()
 }));
 
 jest.mock("../lib/kubectl", () => {
   const actualLib = require.requireActual("../lib/kubectl");
   return {
     ...actualLib,
-    execAsync: jest.fn()
+    execAsync: jest.fn().mockResolvedValue("default")
   };
 });
 
@@ -32,26 +40,19 @@ describe("applyConfig", () => {
     done();
   });
 
-  // it("returns false kustomize fails to build", async done => {
-  //   writeFile.mockReturnValueOnce(true);
-  //   execAsync.mockResolvedValueOnce(false);
-  //   expect(await applyConfig(sha, overlayPath, config)).toEqual(false);
-  //   done();
-  // });
+  it("returns false kubectl fails to apply", async done => {
+    writeFile.mockReturnValueOnce(true);
+    execAsync.mockReturnValueOnce(true);
+    spawnSync.mockReturnValueOnce({ stderr: "Bad apply" });
+    expect(await applyConfig(sha, overlayPath, config)).toEqual(false);
+    done();
+  });
 
-  // it("returns false kubectl fails to apply", async done => {
-  //   writeFile.mockReturnValueOnce(true);
-  //   execAsync.mockResolvedValueOnce(true);
-  //   spawnSync.mockReturnValueOnce({ stderr: "Bad apply" });
-  //   expect(await applyConfig(sha, overlayPath, config)).toEqual(false);
-  //   done();
-  // });
-
-  // it("returns true if build and apply pass", async done => {
-  //   writeFile.mockReturnValueOnce(true);
-  //   execAsync.mockResolvedValueOnce(true);
-  //   spawnSync.mockReturnValueOnce({ stderr: null });
-  //   expect(await applyConfig(sha, overlayPath, config)).toEqual(true);
-  //   done();
-  // });
+  it("returns true if build and apply pass", async done => {
+    writeFile.mockReturnValueOnce(true);
+    execAsync.mockReturnValueOnce(true);
+    spawnSync.mockReturnValueOnce({ stderr: null });
+    expect(await applyConfig(sha, overlayPath, config)).toEqual(true);
+    done();
+  });
 });

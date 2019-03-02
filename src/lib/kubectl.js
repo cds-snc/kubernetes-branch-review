@@ -1,8 +1,8 @@
 import yaml from "js-yaml";
-const { spawnSync } = require("child_process");
+const { exec, spawnSync } = require("child_process");
 const fs = require("fs");
 const { promisify } = require("util");
-const execAsync = promisify(require("child_process").exec);
+export const execAsync = promisify(exec);
 const DIR = process.env.CODE_DIR || "/tmp";
 
 const writeKubeconfig = (sha, config) => {
