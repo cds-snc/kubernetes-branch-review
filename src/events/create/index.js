@@ -5,12 +5,23 @@ import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
 
 export const create = async (req, release) => {
+  if (!req || !req.body) {
+    throw new Error("invalid event passed");
+  }
   const body = req.body;
 
   const refId = getRefId(body);
 
+  if (!refId) {
+    throw new Error("refId not defined");
+  }
+
   const sha = body.pull_request.head.sha;
   const prState = body.action;
+
+  if (!sha || !prState) {
+    throw new Error("sha or prState not defined");
+  }
 
   try {
     await saveReleaseToDB({
