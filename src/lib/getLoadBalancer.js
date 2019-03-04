@@ -1,6 +1,6 @@
 import { getDroplets, getLoadBalancers, getCluster } from "../api";
 
-const getDropletByName = async name => {
+export const getDropletByName = async name => {
   const result = await getDroplets();
   let clusterDroplet = false;
   if (result) {
@@ -14,7 +14,7 @@ const getDropletByName = async name => {
   return clusterDroplet;
 };
 
-const getLoadBalancerById = async id => {
+export const getLoadBalancerById = async id => {
   const result = await getLoadBalancers();
 
   let clusterLoadBalancer = false;
@@ -41,6 +41,7 @@ export const getLoadBalancer = async name => {
 export const getLoadBalancerIp = async clusterId => {
   const cluster = await getCluster(clusterId);
   const name = cluster.kubernetes_cluster.node_pools[0].nodes[0].name;
+  console.log("name", name);
   const balancer = await getLoadBalancer(name);
   if (balancer && balancer.id && balancer.ip) {
     console.log("ip", balancer.ip);
