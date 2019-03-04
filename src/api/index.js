@@ -1,7 +1,10 @@
 import fetch from "node-fetch";
 import yaml from "js-yaml";
+require("dotenv-safe").config({ allowEmptyValues: true });
 
-const baseUrl = "https://api.digitalocean.com/v2/kubernetes";
+const baseUrl = "https://api.digitalocean.com/v2";
+const baseUrlKubernetes = `${baseUrl}/kubernetes`;
+
 const { K8_API_KEY: TOKEN } = process.env;
 
 const clusterOptions = {
@@ -20,7 +23,7 @@ const clusterOptions = {
 };
 
 export const createCluster = async (options = { name: "", version: "" }) => {
-  const endpoint = `${baseUrl}/clusters`;
+  const endpoint = `${baseUrlKubernetes}/clusters`;
   /*
   const clusterOptions = Object.assign({}, body, {
     name: options.name,
@@ -53,7 +56,7 @@ export const createCluster = async (options = { name: "", version: "" }) => {
 };
 
 export const getAllClusters = async () => {
-  const endpoint = `${baseUrl}/clusters`;
+  const endpoint = `${baseUrlKubernetes}/clusters`;
   const res = await fetch(endpoint, {
     method: "get",
     headers: {
@@ -67,7 +70,7 @@ export const getAllClusters = async () => {
 };
 
 export const getCluster = async id => {
-  const endpoint = `${baseUrl}/clusters/${id}`;
+  const endpoint = `${baseUrlKubernetes}/clusters/${id}`;
 
   try {
     const res = await fetch(endpoint, {
@@ -86,7 +89,7 @@ export const getCluster = async id => {
 };
 
 export const deleteCluster = async id => {
-  const endpoint = `${baseUrl}/clusters/${id}`;
+  const endpoint = `${baseUrlKubernetes}/clusters/${id}`;
   const res = await fetch(endpoint, {
     method: "delete",
     headers: {
@@ -100,9 +103,8 @@ export const deleteCluster = async id => {
 };
 
 export const getConfig = async id => {
-  const endpoint = `${baseUrl}/clusters/${id}/kubeconfig`;
+  const endpoint = `${baseUrlKubernetes}/clusters/${id}/kubeconfig`;
   let doc = "";
-  console.log(endpoint);
 
   try {
     const res = await fetch(endpoint, {
@@ -118,6 +120,44 @@ export const getConfig = async id => {
     // convert to json
     doc = JSON.stringify(yaml.safeLoad(ymlStr, "utf8"));
     return doc;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+export const getDroplets = async () => {
+  const endpoint = `${baseUrl}/droplets`;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`
+      }
+    });
+
+    const result = await res.json();
+    return result;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+export const getLoadBalancers = async () => {
+  const endpoint = `${baseUrl}/load_balancers`;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`
+      }
+    });
+
+    const result = await res.json();
+    return result;
   } catch (e) {
     console.log(e.message);
   }
