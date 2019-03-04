@@ -21,9 +21,15 @@ action "Decrypt ENV" {
   runs = "gcloud kms decrypt --project=elenchos --plaintext-file=.env --ciphertext-file=.env.enc --location=global --keyring=deploy --key=env"
 }
 
+action "Decrypt PEM" {
+  uses = "actions/gcloud/cli@master"
+  needs = ["GCloud Auth"]
+  runs = "gcloud kms decrypt --project=elenchos --plaintext-file=github.pem --ciphertext-file=github.pem.enc --location=global --keyring=deploy --key=github"
+}
+
 action "Test" {
   uses = "docker://globegitter/alpine-yarn:0.27.5-node-8.1.3-ssh"
-  needs = ["Decrypt ENV", "Install"]
+  needs = ["Decrypt ENV", "Install", "Decrypt PEM"]
   env = {
     CODE_DIR = "/github/home"
   }
@@ -34,12 +40,6 @@ action "Master filter" {
   uses = "actions/bin/filter@46ffca7632504e61db2d4cb16be1e80f333cb859"
   needs = ["Test"]
   args = "branch master"
-}
-
-action "Decrypt PEM" {
-  uses = "actions/gcloud/cli@master"
-  needs = ["Master filter"]
-  runs = "gcloud kms decrypt --project=elenchos --plaintext-file=github.pem --ciphertext-file=github.pem.enc --location=global --keyring=deploy --key=github"
 }
 
 action "Decrypt gcloud" {
