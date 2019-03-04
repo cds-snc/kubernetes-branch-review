@@ -8,8 +8,8 @@ export const saveReleaseToDB = async obj => {
   const options = { upsert: true, new: true, setDefaultsOnInsert: true };
   // find and update or insert new
   try {
-    await Model.findOneAndUpdate(query, obj, options).exec();
-    return;
+    const release = await Model.findOneAndUpdate(query, obj, options).exec();
+    return release;
   } catch (e) {
     console.error(e.message);
   }

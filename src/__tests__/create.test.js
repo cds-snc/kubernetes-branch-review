@@ -1,7 +1,8 @@
 import { create } from "../events/create";
 import { eventJS } from "../__mocks__";
+import { saveReleaseToDB, getRelease } from "../db/queries";
 import { pollCluster } from "../lib/pollCluster";
-import { getConfig } from "../api/";
+import { getConfig, createCluster } from "../api/";
 
 jest.mock("../lib/pollCluster", () => ({
   pollCluster: jest.fn(() => {
@@ -104,19 +105,12 @@ test("throws error if no sha", async () => {
   }
 });
 
-test("fails database", async () => {
+test("creates cluster and saves to the database", async () => {
   const event = await eventJS("create_a_pr");
   await create({ body: event });
+  expect(createCluster).toHaveBeenCalledTimes(1);
   expect(pollCluster).toHaveBeenCalledTimes(1);
   expect(getConfig).toHaveBeenCalledTimes(1);
+  expect(saveReleaseToDB).toHaveBeenCalledTimes(3);
+  expect(getRelease).toHaveBeenCalledTimes(1);
 });
-
-// saveReleaseToDB
-// createDeployment git
-// createCluster
-// if (cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
-// console.log("cluster created");
-// pollCluster
-// getConfig
-// saveReleaseToDB
-// getRelease

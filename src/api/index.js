@@ -101,7 +101,7 @@ export const deleteCluster = async id => {
 
 export const getConfig = async id => {
   const endpoint = `${baseUrl}/clusters/${id}/kubeconfig`;
-
+  let doc = "";
   console.log(endpoint);
 
   try {
@@ -116,11 +116,9 @@ export const getConfig = async id => {
     // response is in yaml format
     const ymlStr = await res.text();
     // convert to json
-    const doc = JSON.stringify(yaml.safeLoad(ymlStr, "utf8"));
+    doc = JSON.stringify(yaml.safeLoad(ymlStr, "utf8"));
     return doc;
   } catch (e) {
     console.log(e.message);
   }
-
-  return "hey";
 };
