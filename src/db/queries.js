@@ -4,6 +4,11 @@ const { Model } = require("./model");
 
 export const saveReleaseToDB = async obj => {
   await dbConnect();
+
+  if (!obj || !obj.refId) {
+    throw new Error("no refId passed");
+  }
+
   const query = { refId: obj.refId };
   const options = { upsert: true, new: true, setDefaultsOnInsert: true };
   // find and update or insert new
