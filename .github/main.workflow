@@ -1,7 +1,7 @@
 workflow "CI" {
   on = "push"
   resolves = [
-    "Push",
+    "Verify deployment"
   ]
 }
 
@@ -77,4 +77,25 @@ action "Push" {
   uses = "actions/gcloud/cli@master"
   runs = "sh -c"
   args = ["docker push gcr.io/elenchos/app"]
+}
+
+action "Load GKE kube credentials" {
+  needs = ["Push"]
+  uses = "actions/gcloud/cli@master"
+  args = "container clusters get-credentials elenchos --zone us-central1-a --project elenchos"
+}
+
+action "Deploy" {
+  needs = ["Load GKE kube credentials"]
+  uses = "docker://gcr.io/cloud-builders/kubectl"
+  args = "delete pod $(kubectl get pods | awk '/elenchos/ {print $1;exit}')"
+}
+
+action "Verify deployment" {
+  needs = ["Deploy"]
+  uses = "docker://gcr.io/cloud-builders/kubectl"
+  env = {
+    DEPLOYMENT_NAME = "elenchos"
+  }
+  args = "rollout status deployment/elenchos"
 }
