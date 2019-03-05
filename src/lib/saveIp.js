@@ -20,7 +20,7 @@ export const saveIpAndUpdate = async (req, sha, refId) => {
 
   await updateDeploymentStatus(req, {
     log_url: `http://${ip}`,
-    target_url: `http://${ip}`,
+    environment_url: `http://${ip}`,
     deployment_id: deployment.data.id
   });
 };
