@@ -27,6 +27,12 @@ jest.mock("../events/close", () => ({
   })
 }));
 
+jest.mock("../lib/saveIp", () => ({
+  saveIpAndUpdate: jest.fn(() => {
+    return true;
+  })
+}));
+
 // create event
 test("returns 302 status code + hits create route", async () => {
   const event = await eventJS("create_a_pr");
