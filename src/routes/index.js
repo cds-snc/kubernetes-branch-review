@@ -40,10 +40,15 @@ router.get("/", async (req, res) => {
   switch (action) {
     case "opened":
       release = await create(req, release);
-      // status = await deploy(release);
+      status = await deploy(release);
+      // await load balancer IP
+      // update object with load balancer IP
+      // saveIP()
+      // notify github with IP that deploy is complete
       break;
     case "updated":
       status = await deploy(await update(req, release));
+      // notify github with IP that deploy is complete
       break;
     case "closed":
       status = await close(req, release);
