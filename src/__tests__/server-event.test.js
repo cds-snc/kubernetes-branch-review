@@ -31,7 +31,7 @@ jest.mock("../events/close", () => ({
 test("returns 302 status code + hits create route", async () => {
   const event = await eventJS("create_a_pr");
   await request(server)
-    .get("/")
+    .post("/")
     .send(event)
     .set("Content-Type", "application/json")
     .expect(200);
@@ -43,7 +43,7 @@ test("returns 302 status code + hits create route", async () => {
 test("returns 302 status code + hits update route", async () => {
   const event = await eventJS("update_to_branch");
   await request(server)
-    .get("/")
+    .post("/")
     .send(event)
     .set("Content-Type", "application/json")
     .expect(200);
@@ -55,7 +55,7 @@ test("returns 302 status code + hits update route", async () => {
 test("returns 302 status code + hits update route", async () => {
   const event = await eventJS("closed_a_pr");
   await request(server)
-    .get("/")
+    .post("/")
     .send(event)
     .set("Content-Type", "application/json")
     .expect(200);
@@ -66,7 +66,7 @@ test("returns 302 status code + hits update route", async () => {
 test("returns 302 status code + hits update route", async () => {
   const event = {};
   const result = await request(server)
-    .get("/")
+    .post("/")
     .send(event)
     .set("Content-Type", "application/json")
     .expect(200);

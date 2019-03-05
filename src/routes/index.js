@@ -17,7 +17,7 @@ const router = express.Router();
 
 router.get("/favicon.ico", (req, res) => res.status(204));
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   const body = req.body;
   let status;
   /*
