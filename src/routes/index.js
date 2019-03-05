@@ -2,11 +2,12 @@ import express from "express";
 import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
+import { Logger, StackDriverNode } from "@cdssnc/logdriver";
 import { getRefId } from "../lib/getRefId";
 import { deploy } from "../lib/deploy";
 import { getRelease } from "../db/queries";
 import { isMaster } from "../lib/isMaster";
-import { Logger, StackDriverNode } from "@cdssnc/logdriver";
+import { saveIpAndUpdate } from "../lib/saveIp";
 
 Logger.subscribe("error", StackDriverNode.log);
 
@@ -19,6 +20,19 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 router.get("/", async (req, res) => {
   const body = req.body;
   let status;
+
+  /*
+  let idTemp = getRefId(body);
+  let releaseTemp = await getRelease({ refId: idTemp });
+
+  await saveIpAndUpdate(req.body, releaseTemp.sha, {
+    refId: idTemp,
+    release: releaseTemp
+  });
+
+  res.send("hey");
+  return;
+  */
 
   let action;
 
@@ -41,14 +55,11 @@ router.get("/", async (req, res) => {
     case "opened":
       release = await create(req, release);
       status = await deploy(release);
-      // await load balancer IP
-      // update object with load balancer IP
-      // saveIP()
-      // notify github with IP that deploy is complete
+      await saveIpAndUpdate(req.body, release.sha, refId);
       break;
     case "updated":
       status = await deploy(await update(req, release));
-      // notify github with IP that deploy is complete
+      await saveIpAndUpdate(req.body, release.sha, refId);
       break;
     case "closed":
       status = await close(req, release);

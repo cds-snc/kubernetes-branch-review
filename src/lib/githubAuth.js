@@ -26,7 +26,8 @@ export const authenticate = async installationId => {
   });
 
   const octokit = new Octokit({
-    auth: `token ${installationAccessToken}`
+    auth: `token ${installationAccessToken}`,
+    previews: ["ant-man-preview"]
   });
 
   return octokit;

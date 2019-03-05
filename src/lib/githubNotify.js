@@ -60,3 +60,39 @@ export const updateDeployment = async (
 
   return result;
 };
+
+export const updateDeploymentStatus = async (
+  event,
+  status = { target_url: "" }
+) => {
+  const client = await authenticate(event.installation.id);
+  const repoOwner = event.repository.owner.login;
+  const repoName = event.repository.name;
+
+  const statusObj = Object.assign(
+    {
+      owner: repoOwner,
+      repo: repoName,
+      state: "success",
+      environment: "staging",
+      description: "deployment updated"
+    },
+    status
+  );
+
+  console.log("***************");
+  console.log(statusObj);
+  console.log("***************");
+
+  let result = "";
+
+  try {
+    result = await client.repos.createDeploymentStatus(statusObj);
+    console.log("====== deployment status =====");
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+
+  return result;
+};
