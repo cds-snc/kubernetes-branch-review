@@ -30,6 +30,19 @@ router.get("/", async (req, res) => {
   return;
   */
 
+  /*
+  let idTemp = getRefId(body);
+  let releaseTemp = await getRelease({ refId: idTemp });
+
+  await saveIpAndUpdate(req.body, releaseTemp.sha, {
+    refId: idTemp,
+    release: releaseTemp
+  });
+
+  res.send("hey");
+  return;
+  */
+
   let action;
 
   if (body.action) {
