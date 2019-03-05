@@ -20,6 +20,15 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 router.get("/", async (req, res) => {
   const body = req.body;
   let status;
+  /*
+  let idTemp = getRefId(body);
+  let releaseTemp = await getRelease({ refId: idTemp });
+
+  await saveIpAndUpdate(req.body, releaseTemp.sha, idTemp);
+
+  res.send("hey");
+  return;
+  */
 
   /*
   let idTemp = getRefId(body);
