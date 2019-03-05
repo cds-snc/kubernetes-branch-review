@@ -88,7 +88,8 @@ action "Load GKE kube credentials" {
 action "Deploy" {
   needs = ["Load GKE kube credentials"]
   uses = "docker://gcr.io/cloud-builders/kubectl"
-  args = "delete pod $(kubectl get pods | awk '/elenchos/ {print $1;exit}')"
+  runs = "sh -c"
+  args = "kubectl delete pod $(kubectl get pods | awk '/elenchos/ {print $1;exit}')"
 }
 
 action "Verify deployment" {
