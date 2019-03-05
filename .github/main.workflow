@@ -1,7 +1,7 @@
 workflow "CI" {
   on = "push"
   resolves = [
-    "Verify deployment"
+    "Verify deployment",
   ]
 }
 
