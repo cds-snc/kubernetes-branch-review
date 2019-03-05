@@ -51,7 +51,7 @@ action "Decrypt gcloud" {
 action "Decrypt Docker" {
   uses = "actions/gcloud/cli@master"
   needs = ["Master filter"]
-  runs = "gcloud kms decrypt --project=elenchos --plaintext-file=docker.json --ciphertext-file=docker.json.enc --location=global --keyring=deploy --key=docker"
+  runs = "gcloud kms decrypt --project=elenchos --plaintext-file=docker.txt --ciphertext-file=docker.txt.enc --location=global --keyring=deploy --key=docker"
 }
 
 action "Build image" {

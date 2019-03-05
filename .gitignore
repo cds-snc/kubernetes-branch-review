@@ -64,6 +64,7 @@ typings/
 github.pem
 gcloud.json
 docker.json
+docker.txt
 .DS_Store
 *.swp
 
