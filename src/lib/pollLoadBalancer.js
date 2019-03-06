@@ -13,7 +13,7 @@ export const pollLoadBalancer = async (clusterId, checkState = "active") => {
 
     poll.check = async () => {
       const result = await getLoadBalancer(name);
-      console.log(result);
+      // console.log(result);
       const loadBalancerState = result.status;
 
       console.log(`current load balancer state ... ${loadBalancerState}`);
