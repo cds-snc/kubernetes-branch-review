@@ -23,7 +23,7 @@ describe("buildAndPush", () => {
       .mockReturnValueOnce({ stderr: null })
       .mockReturnValueOnce({ stderr: null });
     expect(buildAndPush("cds-snc/dns", "abcd", "efgh")).toEqual(
-      "registry:5000/cds-snc-dns:efgh"
+      "gcr.io/elenchos-registry/cds-snc/dns:efgh"
     );
   });
 });
