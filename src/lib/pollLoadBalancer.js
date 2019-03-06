@@ -23,7 +23,7 @@ export const pollLoadBalancer = async (clusterId, checkState = "active") => {
         return result;
       }
 
-      if (poll.counter >= 20) {
+      if (poll.counter >= 120) {
         // bail
         return result;
       }
