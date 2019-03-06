@@ -5,7 +5,8 @@ export const pollCluster = async (clusterId, checkState = "running", cb) => {
   return new Promise(resolve => {
     const poll = Object.assign({}, longPoll);
     const prefix = "cluster";
-    poll.id = `${prefix}-${clusterId}`;
+    const id = `${prefix}-${clusterId}`;
+    poll.id = id;
     poll.delay = 20000;
 
     poll.check = async () => {
@@ -24,7 +25,8 @@ export const pollCluster = async (clusterId, checkState = "running", cb) => {
       }
     };
 
-    poll.eventEmitter.on("done", result => {
+    poll.eventEmitter.on(`done-${id}`, result => {
+      console.log("done pollCluster", result);
       if (poll.id === `${prefix}-${clusterId}`) {
         const clusterState = result.kubernetes_cluster.status.state;
         console.log(`done polling ${clusterState}`);
