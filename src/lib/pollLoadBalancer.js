@@ -3,7 +3,7 @@ import { getClusterName, getLoadBalancer } from "../lib/getLoadBalancer";
 
 export const pollLoadBalancer = async (clusterId, checkState = "active") => {
   return new Promise(async resolve => {
-    const poll = longPoll;
+    const poll = Object.assign({}, longPoll);
     poll.delay = 2000;
 
     const name = await getClusterName(clusterId);
