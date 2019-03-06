@@ -4,7 +4,7 @@ import { getCluster } from "../api";
 export const pollCluster = async (clusterId, checkState = "running", cb) => {
   return new Promise(resolve => {
     const poll = Object.assign({}, longPoll);
-    const prefix = "load-balancer";
+    const prefix = "cluster";
     poll.id = `${prefix}-${clusterId}`;
     poll.delay = 20000;
 
