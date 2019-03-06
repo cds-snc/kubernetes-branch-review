@@ -12,7 +12,7 @@ export const longPoll = {
     this.counter++;
     const result = await this.check();
     if (result) {
-      this.eventEmitter.emit("done", result);
+      this.eventEmitter.emit(`done-${this.id}`, result);
       this.clear();
     }
   },
