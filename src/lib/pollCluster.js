@@ -3,7 +3,7 @@ import { getCluster } from "../api";
 
 export const pollCluster = async (clusterId, checkState = "running", cb) => {
   return new Promise(resolve => {
-    const poll = longPoll;
+    const poll = Object.assign({}, longPoll);
     poll.delay = 20000;
 
     poll.check = async () => {
