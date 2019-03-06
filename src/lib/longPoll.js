@@ -4,6 +4,7 @@ export const longPoll = {
   interval: null,
   counter: 0,
   delay: 5000,
+  id: "",
   eventEmitter: new events.EventEmitter(),
   check: () => {},
   result: {},

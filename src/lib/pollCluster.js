@@ -4,6 +4,8 @@ import { getCluster } from "../api";
 export const pollCluster = async (clusterId, checkState = "running", cb) => {
   return new Promise(resolve => {
     const poll = Object.assign({}, longPoll);
+    const prefix = "load-balancer";
+    poll.id = `${prefix}-${clusterId}`;
     poll.delay = 20000;
 
     poll.check = async () => {
@@ -23,9 +25,11 @@ export const pollCluster = async (clusterId, checkState = "running", cb) => {
     };
 
     poll.eventEmitter.on("done", result => {
-      const clusterState = result.kubernetes_cluster.status.state;
-      console.log(`done polling ${clusterState}`);
-      resolve(result);
+      if (poll.id === `${prefix}-${clusterId}`) {
+        const clusterState = result.kubernetes_cluster.status.state;
+        console.log(`done polling ${clusterState}`);
+        resolve(result);
+      }
     });
 
     poll.start();
