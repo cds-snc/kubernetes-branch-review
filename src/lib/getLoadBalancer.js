@@ -33,15 +33,29 @@ export const getLoadBalancerById = async id => {
 
 export const getLoadBalancer = async name => {
   const droplet = await getDropletByName(name);
-  if (!droplet || !droplet.id) return false;
+  if (!droplet || !droplet.id) {
+    throw new Error(`droplet not found ${name}`);
+  }
   const balancer = await getLoadBalancerById(droplet.id);
   return balancer;
 };
 
-export const getLoadBalancerIp = async clusterId => {
+export const getClusterName = async clusterId => {
   const cluster = await getCluster(clusterId);
+  if (
+    !cluster ||
+    !cluster.kubernetes_cluster ||
+    !cluster.kubernetes_cluster.node_pools
+  ) {
+    throw new Error(`Cluster not found ${clusterId}`);
+  }
+
   const name = cluster.kubernetes_cluster.node_pools[0].nodes[0].name;
-  console.log("name", name);
+  return name;
+};
+
+export const getLoadBalancerIp = async clusterId => {
+  const name = await getClusterName(clusterId);
   const balancer = await getLoadBalancer(name);
   if (balancer && balancer.id && balancer.ip) {
     console.log("ip", balancer.ip);
