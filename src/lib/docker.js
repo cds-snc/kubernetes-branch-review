@@ -4,7 +4,7 @@ const DIR = process.env.CODE_DIR || "/tmp";
 
 const build = (name, dirPath, sha) => {
   const buildPath = path.resolve(`${DIR}/${sha}`, dirPath);
-  const imgName = `elenchos/${name.replace("/", "-")}:${sha}`;
+  const imgName = `registry:5000/${name.replace("/", "-")}:${sha}`;
 
   console.log("BUILD ", buildPath, imgName);
   console.log("build", "-t", `${imgName}`, `${dirPath}`);

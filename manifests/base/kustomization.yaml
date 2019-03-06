@@ -1,10 +1,13 @@
 resources:
   - ssd-storageclass.yaml
+  - registry-claim.yaml
   - dind-claim.yaml
   - code-claim.yaml
   - mongo-claim.yaml
   - mongo-deployment.yaml
   - mongo-service.yaml
+  - registry-deployment.yaml
+  - registry-service.yaml
   - app-deployment.yaml
   - app-service.yaml
   - traefik-ingress-controller-cluster-role-binding.yaml
