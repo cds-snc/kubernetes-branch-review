@@ -4,6 +4,7 @@ import { eventJS } from "../__mocks__";
 import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
+import { getRelease } from "../db/queries";
 require("dotenv-safe").config({ allowEmptyValues: true });
 
 // mock create
@@ -33,6 +34,12 @@ jest.mock("../lib/saveIp", () => ({
   })
 }));
 
+jest.mock("../db/queries", () => ({
+  getRelease: jest.fn(() => {
+    return true;
+  })
+}));
+
 // create event
 test("returns 302 status code + hits create route", async () => {
   const event = await eventJS("create_a_pr");
@@ -54,7 +61,9 @@ test("returns 302 status code + hits update route", async () => {
     .set("Content-Type", "application/json")
     .expect(200);
 
+  expect(getRelease).toHaveBeenCalledTimes(1);
   expect(update).toHaveBeenCalledTimes(1);
+  //
 });
 
 // closed event
