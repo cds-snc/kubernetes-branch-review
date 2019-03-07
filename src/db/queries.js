@@ -33,9 +33,9 @@ export const getRelease = async (obj, query = { refId: obj.refId }) => {
 };
 
 export const getDeployment = async ({ refId }) => {
-  const release = getRelease({ refId });
+  const release = await getRelease({ refId });
   if (!release || !release.deployment_id) {
-    console.log("no release or deployment found");
+    console.log("no release or deployment found", release);
     return false;
   }
   return { id: release.deployment_id, ip: release.load_balancer_ip };
