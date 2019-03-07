@@ -162,3 +162,17 @@ export const getLoadBalancers = async () => {
     console.log(e.message);
   }
 };
+
+export const deleteLoadBalancer = async id => {
+  const endpoint = `${baseUrl}/load_balancers/${id}`;
+  const res = await fetch(endpoint, {
+    method: "delete",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${TOKEN}`
+    }
+  });
+
+  const result = await res.json();
+  return result;
+};
