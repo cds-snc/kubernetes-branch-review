@@ -20,7 +20,6 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 router.post("/", async (req, res) => {
   const body = req.body;
   let status;
-
   let action;
 
   if (body.action) {

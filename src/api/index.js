@@ -7,10 +7,10 @@ const baseUrlKubernetes = `${baseUrl}/kubernetes`;
 
 const { K8_API_KEY: TOKEN } = process.env;
 
-const clusterOptions = {
+const defaultOptions = {
   name: "stage-cluster-01",
-  region: "nyc1",
-  version: "1.12.1-do.2",
+  region: "tor1",
+  version: "1",
   tags: ["stage"],
   node_pools: [
     {
@@ -22,16 +22,11 @@ const clusterOptions = {
   ]
 };
 
-export const createCluster = async (options = { name: "", version: "" }) => {
+export const createCluster = async (options = {}) => {
   const endpoint = `${baseUrlKubernetes}/clusters`;
-  /*
-  const clusterOptions = Object.assign({}, body, {
-    name: options.name,
-    version: options.version
+  const clusterOptions = Object.assign({}, defaultOptions, {
+    ...options
   });
-
-  console.log(clusterOptions)
-  */
 
   try {
     console.log("fetch");
