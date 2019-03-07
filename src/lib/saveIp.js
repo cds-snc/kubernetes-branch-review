@@ -9,7 +9,7 @@ export const saveIp = async ({ refId }) => {
   await pollLoadBalancer(clusterId);
 
   const ip = await getLoadBalancerIp(clusterId);
-  await saveReleaseToDB({ refId }, { load_balancer_ip: ip });
+  await saveReleaseToDB({ refId, load_balancer_ip: ip });
   return ip;
 };
 
