@@ -21,7 +21,6 @@ export const close = async (req, release) => {
   }
 
   const clusterId = record.cluster_id;
-  const result = await deleteCluster(clusterId);
 
   try {
     const name = await getClusterName(clusterId);
@@ -33,7 +32,7 @@ export const close = async (req, release) => {
     console.log(e.message);
   }
 
-  console.log(result);
+  await deleteCluster(clusterId);
 
   await saveReleaseToDB({
     refId,
