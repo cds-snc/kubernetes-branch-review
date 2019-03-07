@@ -28,6 +28,8 @@ export const createCluster = async (options = {}) => {
     ...options
   });
 
+  console.log("CLUSTER OPTIONS", clusterOptions);
+
   try {
     console.log("fetch");
     const res = await fetch(endpoint, {
