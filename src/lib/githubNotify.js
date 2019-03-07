@@ -15,7 +15,8 @@ export const createDeployment = async (
       repo: repoName,
       ref: sha,
       environment: "staging",
-      payload: "from the app"
+      payload: "from the app",
+      auto_merge: false
     },
     status
   );
@@ -25,10 +26,11 @@ export const createDeployment = async (
   try {
     result = await client.repos.createDeployment(statusObj);
   } catch (e) {
-    console.log(e.message);
+    // console.log(e);
+    console.log("createDeployment", e.message);
   }
 
-  return result;
+  return result.data;
 };
 
 export const updateDeploymentStatus = async (
