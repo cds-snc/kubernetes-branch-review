@@ -1,6 +1,6 @@
 import { getRefId } from "../../lib/getRefId";
-import { updateDeployment } from "../../lib/githubNotify";
 import { getRelease, saveReleaseToDB } from "../../db/queries";
+import { updateDeploymentStatus } from "../../lib/githubNotify";
 
 export const update = async (req, release) => {
   const body = req.body;
@@ -16,6 +16,11 @@ export const update = async (req, release) => {
     record = await getRelease({ refId });
   }
 
-  await updateDeployment(body, sha);
+  await updateDeploymentStatus(
+    req,
+    { state: "in_progress", description: "updating deployment..." },
+    refId
+  );
+
   return record;
 };

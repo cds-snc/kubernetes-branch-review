@@ -3,6 +3,7 @@ import { eventJS } from "../__mocks__";
 import { saveReleaseToDB, getRelease } from "../db/queries";
 import { pollCluster } from "../lib/pollCluster";
 import { getConfig, createCluster } from "../api/";
+import { createDeployment } from "../lib/githubNotify";
 
 jest.mock("../lib/pollCluster", () => ({
   pollCluster: jest.fn(() => {
@@ -69,7 +70,11 @@ jest.mock("../api", () => ({
   })
 }));
 
-// cluster.kubernetes_cluster && cluster.kubernetes_cluster.id
+jest.mock("../lib/githubNotify", () => ({
+  createDeployment: jest.fn(() => {
+    return { id: "123", ip: "192.168.2.10" };
+  })
+}));
 
 test("throws error if bad event sent", async () => {
   try {
@@ -110,6 +115,7 @@ test("creates cluster and saves to the database", async () => {
   await create({ body: event });
   expect(createCluster).toHaveBeenCalledTimes(1);
   expect(pollCluster).toHaveBeenCalledTimes(1);
+  expect(createDeployment).toHaveBeenCalledTimes(1);
   expect(getConfig).toHaveBeenCalledTimes(1);
   expect(saveReleaseToDB).toHaveBeenCalledTimes(3);
   expect(getRelease).toHaveBeenCalledTimes(1);
