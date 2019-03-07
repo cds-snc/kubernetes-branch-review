@@ -32,8 +32,8 @@ export const getRelease = async (obj, query = { refId: obj.refId }) => {
   }
 };
 
-export const getDeployment = async ({ refId }) => {
-  const release = await getRelease({ refId });
+export const getDeployment = async query => {
+  const release = await getRelease(query);
   if (!release || !release.deployment_id) {
     console.log("no release or deployment found", release);
     return false;
