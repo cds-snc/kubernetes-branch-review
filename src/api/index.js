@@ -10,7 +10,7 @@ const { K8_API_KEY: TOKEN } = process.env;
 const defaultOptions = {
   name: "stage-cluster-01",
   region: "nyc1",
-  version: "1",
+  version: "1.12.1-do.2",
   tags: ["stage"],
   node_pools: [
     {

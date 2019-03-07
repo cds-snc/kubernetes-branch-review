@@ -38,7 +38,7 @@ export const create = async (req, release) => {
     console.log("create cluster");
     const cluster = await createCluster({
       name: refId.replace(/\//g, "-"),
-      version: "1.0"
+      version: "1.12.1-do.2"
     });
 
     if (cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
