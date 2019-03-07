@@ -50,8 +50,12 @@ router.post("/", async (req, res) => {
       await saveIpAndUpdate(req.body, release.sha, refId);
       break;
     case "updated":
-      status = await deploy(await update(req, release));
-      await saveIpAndUpdate(req.body, release.sha, refId);
+      if (release) {
+        status = await deploy(await update(req, release));
+        await saveIpAndUpdate(req.body, release.sha, refId);
+      } else {
+        status = "no release found";
+      }
       break;
     case "closed":
       status = await close(req, release);
