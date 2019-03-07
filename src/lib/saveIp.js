@@ -15,5 +15,5 @@ export const saveIp = async ({ refId }) => {
 
 export const saveIpAndUpdate = async (req, sha, refId) => {
   await saveIp({ refId });
-  await updateDeploymentStatus(req, {}, refId);
+  await updateDeploymentStatus(req, { state: "success" }, refId);
 };
