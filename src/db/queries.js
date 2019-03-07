@@ -31,3 +31,12 @@ export const getRelease = async (obj, query = { refId: obj.refId }) => {
     console.error(e.message);
   }
 };
+
+export const getDeployment = async ({ refId }) => {
+  const release = getRelease({ refId });
+  if (!release || !release.deployment_id) {
+    console.log("no release or deployment found");
+    return false;
+  }
+  return { id: release.deployment_id, ip: release.load_balancer_ip };
+};

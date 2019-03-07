@@ -4,7 +4,7 @@ import { createDeployment } from "../../lib/githubNotify";
 import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
 
-export const create = async (req, release) => {
+export const create = async req => {
   if (!req || !req.body) {
     throw new Error("invalid event passed");
   }
@@ -33,7 +33,8 @@ export const create = async (req, release) => {
     });
 
     // notify github
-    await createDeployment(body);
+    const deployment = await createDeployment(body);
+    console.log("deployment", deployment);
 
     console.log("create cluster");
     const cluster = await createCluster({
@@ -57,7 +58,8 @@ export const create = async (req, release) => {
         refId,
         cluster_id: id,
         pr_state: prState,
-        cluster_state: state
+        cluster_state: state,
+        deployment_id: deployment.id
       });
 
       const config = await getConfig(id);
