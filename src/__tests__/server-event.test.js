@@ -77,5 +77,5 @@ test("returns 302 status code + hits update route", async () => {
     .set("Content-Type", "application/json")
     .expect(200);
 
-  expect(result.res.text).toEqual("no route found");
+  expect(result.res.text).toEqual("no refId found");
 });
