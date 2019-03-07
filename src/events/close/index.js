@@ -1,6 +1,7 @@
 import { getRefId } from "../../lib/getRefId";
 import { getRelease, saveReleaseToDB } from "../../db/queries";
-import { deleteCluster } from "../../api";
+import { deleteCluster, deleteLoadBalancer } from "../../api";
+import { getClusterName, getLoadBalancer } from "../../lib/getLoadBalancer";
 
 export const close = async (req, release) => {
   const body = req.body;
@@ -19,8 +20,19 @@ export const close = async (req, release) => {
     return "failed to find record or id not set";
   }
 
-  const result = await deleteCluster(record.cluster_id);
-  console.log("delete cluster");
+  const clusterId = record.cluster_id;
+  const result = await deleteCluster(clusterId);
+
+  try {
+    const name = await getClusterName(clusterId);
+    const balancer = await getLoadBalancer(name);
+    const result = await deleteLoadBalancer(balancer.id);
+    console.log(result);
+  } catch (e) {
+    console.log("delete load balancer");
+    console.log(e.message);
+  }
+
   console.log(result);
 
   await saveReleaseToDB({
