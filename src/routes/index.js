@@ -36,6 +36,12 @@ router.post("/", async (req, res) => {
   }
 
   const refId = getRefId(body);
+
+  if (!refId) {
+    res.send("no refId found");
+    return false;
+  }
+
   let release = await getRelease({ refId });
 
   switch (action) {
