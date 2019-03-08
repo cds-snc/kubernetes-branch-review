@@ -34,7 +34,6 @@ export const create = async req => {
 
     // notify github
     const deployment = await createDeployment(body);
-    console.log("deployment", deployment);
 
     console.log("create cluster");
     const cluster = await createCluster({

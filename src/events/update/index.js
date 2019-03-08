@@ -17,7 +17,7 @@ export const update = async (req, release) => {
   }
 
   await updateDeploymentStatus(
-    req,
+    body,
     { state: "in_progress", description: "updating deployment..." },
     refId
   );
