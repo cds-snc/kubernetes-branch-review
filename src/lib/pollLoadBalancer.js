@@ -30,8 +30,6 @@ export const pollLoadBalancer = async (clusterId, checkState = "active") => {
     };
 
     poll.eventEmitter.on(`done-${id}`, result => {
-      console.log("done pollLoadBalancer", result);
-
       if (poll.id === `${prefix}-${clusterId}`) {
         const loadBalancerState = result.status;
         console.log(`done polling ${loadBalancerState}`);
