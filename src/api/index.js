@@ -28,8 +28,6 @@ export const createCluster = async (options = {}) => {
     ...options
   });
 
-  console.log("CLUSTER OPTIONS", clusterOptions);
-
   try {
     console.log("fetch");
     const res = await fetch(endpoint, {
@@ -87,7 +85,7 @@ export const getCluster = async id => {
 
 export const deleteCluster = async id => {
   const endpoint = `${baseUrlKubernetes}/clusters/${id}`;
-  const res = await fetch(endpoint, {
+  await fetch(endpoint, {
     method: "delete",
     headers: {
       "Content-Type": "application/json",
@@ -95,8 +93,7 @@ export const deleteCluster = async id => {
     }
   });
 
-  const result = await res.json();
-  return result;
+  return true;
 };
 
 export const getConfig = async id => {
@@ -162,7 +159,7 @@ export const getLoadBalancers = async () => {
 
 export const deleteLoadBalancer = async id => {
   const endpoint = `${baseUrl}/load_balancers/${id}`;
-  const res = await fetch(endpoint, {
+  await fetch(endpoint, {
     method: "delete",
     headers: {
       "Content-Type": "application/json",
@@ -170,6 +167,5 @@ export const deleteLoadBalancer = async id => {
     }
   });
 
-  const result = await res.json();
-  return result;
+  return true;
 };

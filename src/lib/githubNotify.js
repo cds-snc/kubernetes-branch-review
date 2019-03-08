@@ -56,16 +56,10 @@ export const updateDeploymentStatus = async (
     status
   );
 
-  console.log("***************");
-  console.log(statusObj);
-  console.log("***************");
-
   let result = "";
 
   try {
     result = await client.repos.createDeploymentStatus(statusObj);
-    console.log("====== deployment status =====");
-    console.log(result);
   } catch (e) {
     console.log(e);
   }
