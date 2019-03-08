@@ -4,11 +4,11 @@ ENV HOME=/config
 
 RUN set -x && \
     apk add --no-cache \
-    curl=7.61.1-r2 \
-    ca-certificates=20171114-r3 \
-    git=2.18.1-r0 \
-    nodejs=8.14.0-r0 \
-    yarn=1.7.0-r0
+    curl=7.64.0-r1 \
+    ca-certificates=20190108-r0 \
+    git=2.20.1-r0 \
+    nodejs=10.14.2-r0 \
+    yarn=1.12.3-r0
 
 # Clean up
 RUN rm -rf /var/cache/apk/*
