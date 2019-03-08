@@ -24,7 +24,7 @@ export const update = async req => {
   // https://octokit.github.io/rest.js/#api-Repos-createDeploymentStatus
 
   await updateDeploymentStatus(
-    req,
+    body,
     { state: "inactive", description: "closed deployment" },
     refId
   );
