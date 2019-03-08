@@ -7,7 +7,13 @@ export const createDeployment = async (
   const client = await authenticate(event.installation.id);
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
-  const sha = event.pull_request.head.sha;
+  let sha;
+
+  if (event.pull_request) {
+    sha = event.pull_request.head.sha;
+  } else {
+    sha = event.after;
+  }
 
   const statusObj = Object.assign(
     {
