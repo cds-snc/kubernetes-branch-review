@@ -1,4 +1,4 @@
-FROM docker:dind
+FROM docker:18.09.3-dind
 
 ENV HOME=/config
 
