@@ -67,5 +67,6 @@ docker.json
 docker.txt
 .DS_Store
 *.swp
+.vscode
 
 .gcloud.json
