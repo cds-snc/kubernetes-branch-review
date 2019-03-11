@@ -2,7 +2,7 @@
 
 [![Phase](https://img.shields.io/badge/Phase-Alpha-f90277.svg)](https://digital.canada.ca/products/) [![Maintainability](https://api.codeclimate.com/v1/badges/9a136d7466cf164780f3/maintainability)](https://codeclimate.com/github/cds-snc/elenchos/maintainability) [![Total alerts](https://img.shields.io/lgtm/alerts/g/cds-snc/elenchos.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cds-snc/elenchos/alerts/)
 
-### Warning: This tool is a proof-of-concept, do not use for important workloads
+### :exclamation: This tool is a proof-of-concept, do not use for important workloads
 
 ### Purpose
 
@@ -48,13 +48,13 @@ We always dreamed of having a process similar to [Heroku review apps](https://de
 
 Pull requests in GitHub have three stages in their life-cycle:
 
-- Created
+- Opened
 - Updated
 - Closed
 
 As a result we have broken down how the code handles each of these events:
 
-##### Created
+##### Opened
 
 1. User creates new pull request
 2. Application requests a new cluster instance is created
@@ -78,7 +78,7 @@ As a result we have broken down how the code handles each of these events:
 7. Kubectl deploys the new overlay
 8. Application posts success state back to GitHub
 
-##### Deleted
+##### Closed
 
 1. Application deletes all local checked out code
 2. Application deletes all docker images
