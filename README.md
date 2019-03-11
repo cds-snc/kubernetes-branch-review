@@ -8,6 +8,11 @@
 
 The purpose of this tool is to create Kubernetes review (also known as staging) applications that reflect the code on a Git branch using an isolated Kubernetes cluster. This allows you to test and review your application in an interactive environment without solely relying on interpreting the code changes in a branch. We also want all this information to be easily accessible through GitHub.
 
+It will show up something like this in your UI:
+
+![Screenshot](https://user-images.githubusercontent.com/867334/54133651-d405bf00-43ec-11e9-8817-ab41ec839286.png)
+
+
 ### How do I use this?
 
 All you need is to include an `elenchos.json` configuration file (See Configuration below) in your repositories root and install the GitHub application found here: _Coming soon!_
