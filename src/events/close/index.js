@@ -1,3 +1,4 @@
+import { cleanup } from "../../lib/git";
 import { getRefId } from "../../lib/getRefId";
 import { getRelease, saveReleaseToDB } from "../../db/queries";
 import { deleteCluster, deleteLoadBalancer } from "../../api";
@@ -20,6 +21,7 @@ export const close = async (req, release) => {
     return "failed to find record or id not set";
   }
 
+  cleanup(sha);
   const clusterId = record.cluster_id;
 
   try {
