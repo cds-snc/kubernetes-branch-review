@@ -49,9 +49,11 @@ spec:
               mountPath: /code
       volumes:
         - name: git-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: git-storage
         - name: dind-storage
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: dind-storage
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
