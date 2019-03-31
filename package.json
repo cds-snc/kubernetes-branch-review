@@ -42,7 +42,7 @@
     "jest": "^24.5.0",
     "lint-staged": "^8.1.5",
     "prettier": "^1.16.4",
-    "supertest": "^3.4.2"
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "@cdssnc/logdriver": "^0.0.2",
