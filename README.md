@@ -1,6 +1,7 @@
 # Élenchos
 
 [![Phase](https://img.shields.io/badge/Phase-Alpha-f90277.svg)](https://digital.canada.ca/products/) [![Maintainability](https://api.codeclimate.com/v1/badges/9a136d7466cf164780f3/maintainability)](https://codeclimate.com/github/cds-snc/elenchos/maintainability) [![Total alerts](https://img.shields.io/lgtm/alerts/g/cds-snc/elenchos.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cds-snc/elenchos/alerts/)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcds-snc%2Felenchos.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcds-snc%2Felenchos?ref=badge_shield)
 
 ### :exclamation: This tool is a proof-of-concept, do not use for important workloads
 
@@ -102,3 +103,7 @@ The application runs on Google GKE.
 ### Questions?
 
 Please contact us through any of the multiple ways listed on our [website](https://digital.canada.ca/).
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcds-snc%2Felenchos.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcds-snc%2Felenchos?ref=badge_large)
