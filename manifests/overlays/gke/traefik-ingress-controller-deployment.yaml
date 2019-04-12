@@ -22,7 +22,7 @@ spec:
             - --acme
             - --acme.onhostrule
             - --acme.entrypoint=https
-            - --acme.domains=elenchos.cdssandbox.xyz
+            - --acme.domains=branch-review-apps.cds-snc.ca
             - --acme.email=max.neuvians@cds-snc.ca
             - --acme.storage=/certs/acme.json
             - --acme.httpchallenge
