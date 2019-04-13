@@ -1,13 +1,15 @@
-FROM gcr.io/cloud-builders/kubectl
+FROM gcr.io/cloud-builders/kubectl@sha256:7fd11ee400cb396737d525377b9706dbaf742c07b3456f04dedbb0ff5a819ea6
 
-# Add node and yarn
+# Add node and npm
 RUN curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && bash nodesource_setup.sh
 
 RUN apt-get update && \
-    apt-get -y install \
-    curl \
-    ca-certificates \
-    nodejs 
+    apt-get install -y --no-install-recommends \
+    curl=7.47.0-1ubuntu2.12 \
+    ca-certificates=20170717~16.04.2 \
+    nodejs=10.15.3-1nodesource1 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Add kustomize
 ADD https://github.com/kubernetes-sigs/kustomize/releases/download/v2.0.1/kustomize_2.0.1_linux_amd64 /usr/local/bin/kustomize
