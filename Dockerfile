@@ -1,26 +1,18 @@
-FROM docker:18.09.3-dind
+FROM gcr.io/cloud-builders/kubectl
 
-ENV HOME=/config
+# Add node and yarn
+RUN curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh && bash nodesource_setup.sh
 
-RUN set -x && \
-    apk add --no-cache \
-    curl=7.64.0-r1 \
-    ca-certificates=20190108-r0 \
-    git=2.20.1-r0 \
-    nodejs=10.14.2-r0 \
-    yarn=1.12.3-r0
-
-# Clean up
-RUN rm -rf /var/cache/apk/*
-
-# Install kubectl
-ADD https://storage.googleapis.com/kubernetes-release/release/v1.13.3/bin/linux/amd64/kubectl /usr/local/bin/kubectl
+RUN apt-get update && \
+    apt-get -y install \
+    curl \
+    ca-certificates \
+    nodejs 
 
 # Add kustomize
 ADD https://github.com/kubernetes-sigs/kustomize/releases/download/v2.0.1/kustomize_2.0.1_linux_amd64 /usr/local/bin/kustomize
 
-RUN chmod +x /usr/local/bin/kustomize && \
-chmod +x /usr/local/bin/kubectl
+RUN chmod +x /usr/local/bin/kustomize
 
 # Add app
 WORKDIR /app
@@ -29,7 +21,7 @@ COPY . .
 ENV NODE_ENV production
 ENV PORT 3000
 
-RUN yarn install
+RUN npm install
 
 EXPOSE 3000
 
