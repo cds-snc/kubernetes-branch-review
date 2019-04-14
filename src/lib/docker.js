@@ -9,7 +9,14 @@ const build = (name, dirPath, sha) => {
   console.log("BUILD ", buildPath, imgName);
   const build = spawnSync(
     "gcloud",
-    ["builds", "submit", "-t", `${imgName}`, `${dirPath}`],
+    [
+      "builds",
+      "submit",
+      "--project=elenchos-registry",
+      "-t",
+      `${imgName}`,
+      `${dirPath}`
+    ],
     {
       cwd: `${DIR}/${sha}`
     }
