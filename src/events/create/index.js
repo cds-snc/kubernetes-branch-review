@@ -37,7 +37,7 @@ export const create = async req => {
 
     console.log("create cluster");
     const cluster = await createCluster({
-      name: refId.replace(/\//g, "-"),
+      name: refId.replace(/\//g, "-").replace(/_/g, "-"),
       version: "1.12.1-do.2"
     });
 
