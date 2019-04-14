@@ -7,7 +7,7 @@ const build = (name, dirPath, sha) => {
   const imgName = `gcr.io/elenchos-registry/${name}:${sha}`;
 
   console.log("BUILD ", buildPath, imgName);
-  const build = spawnSync(
+  spawnSync(
     "gcloud",
     [
       "builds",
@@ -22,15 +22,9 @@ const build = (name, dirPath, sha) => {
     }
   );
 
-  if (build.stderr && build.stderr.toString()) {
-    console.log(build.stderr.toString());
-    return false;
-  }
-
   return imgName;
 };
 
 export const buildAndPush = (name, path, sha) => {
-  const imgName = build(name, path, sha);
-  return imgName;
+  return build(name, path, sha);
 };

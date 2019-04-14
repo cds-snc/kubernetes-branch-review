@@ -6,11 +6,6 @@ jest.mock("child_process", () => ({
 }));
 
 describe("buildAndPush", () => {
-  it("returns false if the build fails", () => {
-    spawnSync.mockReturnValueOnce({ stderr: "Bad build" });
-    expect(buildAndPush("cds-snc/dns", "abcd", "efgh")).toEqual(false);
-  });
-
   it("returns the image name if build and push pass", () => {
     spawnSync.mockReturnValueOnce({ stderr: null });
     expect(buildAndPush("cds-snc/dns", "abcd", "efgh")).toEqual(
