@@ -30,8 +30,6 @@ spec:
             privileged: true
           name: elenchos
           env:
-            - name: DOCKER_HOST
-              value: tcp://localhost:2375
             - name: PORT
               value: "3000"
             - name: DB_URI
@@ -43,17 +41,12 @@ spec:
             - name: CODE_DIR
               value: "/code"
           volumeMounts:
-            - name: dind-storage
-              mountPath: /var/lib/docker
             - name: git-storage
               mountPath: /code
       volumes:
         - name: git-storage
           persistentVolumeClaim:
             claimName: git-storage
-        - name: dind-storage
-          persistentVolumeClaim:
-            claimName: dind-storage
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
