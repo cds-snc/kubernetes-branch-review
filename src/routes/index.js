@@ -43,6 +43,11 @@ router.post("/", async (req, res) => {
 
   let release = await getRelease({ refId });
 
+  // Check if a cluster exists, if not create one vs. using opened or updated
+  // the problem this is trying to fix is that a deployment may not be able to be created on "opened" if the checks fail
+
+  // Also handle reopened action
+
   switch (action) {
     case "opened":
       release = await create(req, release);
