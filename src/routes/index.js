@@ -8,8 +8,8 @@ import { getRelease } from "../db/queries";
 import { isMaster } from "../lib/isMaster";
 import { saveIpAndUpdate } from "../lib/saveIp";
 import { create } from "../events/create";
-//import {create} from "../li"
-//import { checkAndCreateCluster } from "../lib/checkCluster";
+// import {create} from "../li"
+// import { checkAndCreateCluster } from "../lib/checkCluster";
 
 Logger.subscribe("error", StackDriverNode.log);
 
@@ -45,13 +45,13 @@ router.post("/", async (req, res) => {
 
   let release = await getRelease({ refId });
 
-  //console.log("release", release);
+  // console.log("release", release);
 
-  //release = await checkAndCreateCluster(release);
-  //console.log(cluster);
-  //res.send("hey");
+  // release = await checkAndCreateCluster(release);
+  // console.log(cluster);
+  // res.send("hey");
 
-  //process.exit();
+  // process.exit();
 
   // opened or updated
   // check to see if cluster exists

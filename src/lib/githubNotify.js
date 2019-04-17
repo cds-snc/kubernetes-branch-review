@@ -68,7 +68,7 @@ export const updateDeploymentStatus = async (
   try {
     result = await client.repos.createDeploymentStatus(statusObj);
   } catch (e) {
-    //kill it
+    // kill it
     console.log(e);
   }
 

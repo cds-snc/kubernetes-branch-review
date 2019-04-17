@@ -19,7 +19,9 @@ export const setOptions = options => {
   });
 
   if (options.name) {
-    //clusterOptions.node_pools[0].tags.concat([options.name]);
+    const tags = clusterOptions.node_pools[0].tags;
+
+    clusterOptions.node_pools[0].tags = [...tags, options.name];
   }
 
   return clusterOptions;

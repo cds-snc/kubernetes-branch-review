@@ -1,7 +1,8 @@
-import { defaultOptions, setOptions } from "../lib/setOptions";
+import { setOptions } from "../lib/setOptions";
 
-test.skip("returns refId for create event", async () => {
-  const result = setOptions({ name: "hello" });
-  console.log(result);
-  expect(result).toEqual(defaultOptions);
+test("returns refId for create event", async () => {
+  const name = "the-pr-name";
+  const result = setOptions({ name });
+  expect(result.name).toEqual(name);
+  expect(result.node_pools[0].tags).toContain(name);
 });
