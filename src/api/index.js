@@ -1,5 +1,7 @@
 import fetch from "node-fetch";
 import yaml from "js-yaml";
+import { setOptions } from "../lib/setOptions";
+
 require("dotenv-safe").config({ allowEmptyValues: true });
 
 const baseUrl = "https://api.digitalocean.com/v2";
@@ -7,26 +9,9 @@ const baseUrlKubernetes = `${baseUrl}/kubernetes`;
 
 const { K8_API_KEY: TOKEN } = process.env;
 
-const defaultOptions = {
-  name: "stage-cluster-01",
-  region: "nyc1",
-  version: "1.12.1-do.2",
-  tags: ["stage"],
-  node_pools: [
-    {
-      size: "s-1vcpu-2gb",
-      count: 1,
-      name: "frontend-pool",
-      tags: ["frontend"]
-    }
-  ]
-};
-
 export const createCluster = async (options = {}) => {
   const endpoint = `${baseUrlKubernetes}/clusters`;
-  const clusterOptions = Object.assign({}, defaultOptions, {
-    ...options
-  });
+  const clusterOptions = setOptions(options);
 
   try {
     console.log("fetch");

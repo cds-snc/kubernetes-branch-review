@@ -3,6 +3,7 @@ import { createCluster, getConfig } from "../../api";
 import { createDeployment } from "../../lib/githubNotify";
 import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
+import { getName } from "../../lib/getName";
 
 export const create = async req => {
   if (!req || !req.body) {
@@ -35,9 +36,11 @@ export const create = async req => {
     // notify github
     const deployment = await createDeployment(body);
 
+    // if this fails kill the process + update db
+
     console.log("create cluster");
     const cluster = await createCluster({
-      name: refId.replace(/\//g, "-").replace(/_/g, "-"),
+      name: getName(req),
       version: "1.12.1-do.2"
     });
 

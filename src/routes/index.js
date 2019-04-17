@@ -1,5 +1,4 @@
 import express from "express";
-import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
 import { Logger, StackDriverNode } from "@cdssnc/logdriver";
@@ -8,6 +7,9 @@ import { deploy } from "../lib/deploy";
 import { getRelease } from "../db/queries";
 import { isMaster } from "../lib/isMaster";
 import { saveIpAndUpdate } from "../lib/saveIp";
+import { create } from "../events/create";
+//import {create} from "../li"
+//import { checkAndCreateCluster } from "../lib/checkCluster";
 
 Logger.subscribe("error", StackDriverNode.log);
 
@@ -42,6 +44,31 @@ router.post("/", async (req, res) => {
   }
 
   let release = await getRelease({ refId });
+
+  //console.log("release", release);
+
+  //release = await checkAndCreateCluster(release);
+  //console.log(cluster);
+  //res.send("hey");
+
+  //process.exit();
+
+  // opened or updated
+  // check to see if cluster exists
+  // getCluster ... cluster_id
+
+  /*
+
+  "none",
+        "pending",
+        "queued",
+        "in_progress",
+        "error",
+        "failure",
+        "success",
+        "deleted"
+
+  */
 
   // Check if a cluster exists, if not create one vs. using opened or updated
   // the problem this is trying to fix is that a deployment may not be able to be created on "opened" if the checks fail

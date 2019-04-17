@@ -33,6 +33,7 @@ export const createDeployment = async (
     result = await client.repos.createDeployment(statusObj);
   } catch (e) {
     // console.log(e);
+    // kill it ...
     console.log("createDeployment", e.message);
   }
 
@@ -67,6 +68,7 @@ export const updateDeploymentStatus = async (
   try {
     result = await client.repos.createDeploymentStatus(statusObj);
   } catch (e) {
+    //kill it
     console.log(e);
   }
 
