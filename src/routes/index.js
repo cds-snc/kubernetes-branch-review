@@ -35,11 +35,6 @@ router.post("/", async (req, res) => {
   release = await checkAndCreateCluster(req, release);
 
   switch (action) {
-    case "opened":
-      // release = await create(req, release);
-      status = await deploy(release);
-      await saveIpAndUpdate(req.body, release.sha, refId);
-      break;
     case "updated":
       if (release) {
         status = await deploy(await update(req, release));
@@ -52,7 +47,7 @@ router.post("/", async (req, res) => {
       status = await close(req, release);
       break;
     default:
-      status = "no route found";
+      status = `default: ${action}`;
   }
 
   res.send(status);

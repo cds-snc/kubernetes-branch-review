@@ -31,11 +31,6 @@ jest.mock("../api", () => ({
   })
 }));
 
-test("returns false if no release exists", async () => {
-  const result = await checkAndCreateCluster(req);
-  expect(result).toEqual(false);
-});
-
 test("checks and creates cluster if it doesn't exist", async () => {
   await checkAndCreateCluster(req, { refId: 123, cluster_state: "pending" });
   expect(deleteDropletByTag).toHaveBeenCalledTimes(1);

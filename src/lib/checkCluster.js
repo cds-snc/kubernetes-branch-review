@@ -1,7 +1,9 @@
 import { deleteDropletByTag, getCluster } from "../api";
+import { getRefId } from "../lib/getRefId";
 import { getName } from "../lib/getName";
 import { getAction } from "../lib/getAction";
 import { create } from "../events/create";
+import { saveReleaseToDB } from "../db/queries";
 
 const handleCreate = async (req, release) => {
   const action = getAction(req);
@@ -18,7 +20,19 @@ export const checkAndCreateCluster = async (req, release = {}) => {
   const name = getName(req);
 
   if (!release || !release.refId) {
-    return false;
+    const action = getAction(req);
+
+    if (action === "opened") {
+      const refId = getRefId(req.body);
+      await saveReleaseToDB({
+        refId,
+        sha: req.body.after,
+        cluster_id: null,
+        pr_state: "none"
+      });
+
+      return false;
+    }
   }
 
   if (!release.cluster_state || release.cluster_state === "deleted") {
