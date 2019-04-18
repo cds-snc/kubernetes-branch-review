@@ -8,8 +8,8 @@ import { getRelease } from "../db/queries";
 import { saveIpAndUpdate } from "../lib/saveIp";
 import { getAction } from "../lib/getAction";
 
-import { create } from "../events/create";
-// import { checkAndCreateCluster } from "../lib/checkCluster";
+// import { create } from "../events/create";
+import { checkAndCreateCluster } from "../lib/checkCluster";
 
 Logger.subscribe("error", StackDriverNode.log);
 
@@ -32,11 +32,11 @@ router.post("/", async (req, res) => {
 
   let release = await getRelease({ refId });
 
-  // release = await checkAndCreateCluster(req, release);
+  release = await checkAndCreateCluster(req, release);
 
   switch (action) {
     case "opened":
-      release = await create(req, release);
+      // release = await create(req, release);
       status = await deploy(release);
       await saveIpAndUpdate(req.body, release.sha, refId);
       break;

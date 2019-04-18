@@ -2,6 +2,7 @@ import { isMaster } from "./isMaster";
 export const getAction = req => {
   let action;
   const body = req.body;
+
   if (body && body.action) {
     // create
     // close
