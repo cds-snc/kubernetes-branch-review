@@ -10,6 +10,15 @@ const req = {
   }
 };
 
+// Todo: Add tests for
+
+// initial push
+// create PR
+// additional push
+// close PR
+// re-open pr
+// push
+
 jest.mock("../events/create", () => ({
   create: jest.fn()
 }));
