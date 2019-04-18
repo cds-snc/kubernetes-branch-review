@@ -1,6 +1,7 @@
 import { checkAndCreateCluster } from "../lib/checkCluster";
 import { deleteDropletByTag, getCluster } from "../api/";
 import { create } from "../events/create";
+import { eventJS } from "../__mocks__";
 
 const req = {
   body: {
@@ -53,5 +54,89 @@ test("calls get cluster to see if it's running", async () => {
 
   expect(getCluster).toHaveBeenCalledTimes(1);
   expect(deleteDropletByTag).toHaveBeenCalledTimes(1);
+  expect(create).toHaveBeenCalledTimes(1);
+});
+
+test("create a PR", async () => {
+  const event = await eventJS("create_a_pr");
+  req.body = event;
+  await checkAndCreateCluster(req, {
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "none"
+  });
+  expect(create).toHaveBeenCalledTimes(1);
+  expect(deleteDropletByTag).toHaveBeenCalledTimes(0);
+});
+
+test("update to branch on running", async () => {
+  const event = await eventJS("update_to_branch");
+  req.body = event;
+  await checkAndCreateCluster(req, {
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "open",
+    cluster_state: "running",
+    cluster_id: "ijkl"
+  });
+  expect(create).toHaveBeenCalledTimes(0);
+  expect(deleteDropletByTag).toHaveBeenCalledTimes(0);
+});
+
+test("update to branch on no cluster id", async () => {
+  const event = await eventJS("update_to_branch");
+  req.body = event;
+  await checkAndCreateCluster(req, {
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "open",
+    cluster_state: "pending"
+  });
+  expect(deleteDropletByTag).toHaveBeenCalledTimes(1);
+  expect(create).toHaveBeenCalledTimes(1);
+});
+
+test("update to branch on no running cluster", async () => {
+  const event = await eventJS("update_to_branch");
+  req.body = event;
+  getCluster.mockReturnValueOnce({
+    kubernetes_cluster: { id: "123", state: "failure" }
+  });
+  await checkAndCreateCluster(req, {
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "open",
+    cluster_state: "running",
+    cluster_id: "123"
+  });
+  expect(deleteDropletByTag).toHaveBeenCalledTimes(1);
+  expect(create).toHaveBeenCalledTimes(1);
+});
+
+test("close pr event gets sent", async () => {
+  const event = await eventJS("closed_a_pr");
+  req.body = event;
+  await checkAndCreateCluster(req, {
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "open",
+    cluster_state: "running",
+    cluster_id: "123"
+  });
+  expect(deleteDropletByTag).toHaveBeenCalledTimes(0);
+  expect(create).toHaveBeenCalledTimes(0);
+});
+
+test("reopen pr event gets sent", async () => {
+  const event = await eventJS("reopen_a_pr");
+  req.body = event;
+  await checkAndCreateCluster(req, {
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "closed",
+    cluster_state: "deleted",
+    cluster_id: "null"
+  });
+  expect(deleteDropletByTag).toHaveBeenCalledTimes(0);
   expect(create).toHaveBeenCalledTimes(1);
 });

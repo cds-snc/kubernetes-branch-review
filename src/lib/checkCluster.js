@@ -5,7 +5,7 @@ import { create } from "../events/create";
 
 const handleCreate = async (req, release) => {
   const action = getAction(req);
-  if (action === "opened" || action === "updated") {
+  if (action === "opened" || action === "updated" || action === "reopened") {
     // spin up a fresh cluster
     const result = await create(req, release);
     return result;
@@ -21,7 +21,7 @@ export const checkAndCreateCluster = async (req, release = {}) => {
     return false;
   }
 
-  if (!release.cluster_state) {
+  if (!release.cluster_state || release.cluster_state === "deleted") {
     console.log("cluster or cluster state not found");
     const result = await handleCreate(req, release);
     return result;
@@ -31,6 +31,8 @@ export const checkAndCreateCluster = async (req, release = {}) => {
   if (!release.cluster_id) {
     // destroy the droplet if no cluster id exists yet
     await deleteDropletByTag(name);
+    const result = await handleCreate(req, release);
+    return result;
   } else {
     // check to see if we have a cluster is in running state
     const data = await getCluster(release.cluster_id);
@@ -41,9 +43,10 @@ export const checkAndCreateCluster = async (req, release = {}) => {
       data.kubernetes_cluster.state !== "running"
     ) {
       await deleteDropletByTag(name);
+      const result = await handleCreate(req, release);
+      return result;
+    } else {
+      return release;
     }
   }
-
-  const result = await handleCreate(req, release);
-  return result;
 };
