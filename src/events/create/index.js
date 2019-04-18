@@ -4,6 +4,7 @@ import { createDeployment } from "../../lib/githubNotify";
 import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
 import { getName } from "../../lib/getName";
+import { getAction } from "../../lib/getAction";
 
 export const create = async req => {
   if (!req || !req.body) {
@@ -17,8 +18,8 @@ export const create = async req => {
     throw new Error("refId not defined");
   }
 
-  const sha = body.pull_request.head.sha;
-  const prState = body.action;
+  const sha = body.after;
+  const prState = getAction(req);
 
   if (!sha || !prState) {
     throw new Error("sha or prState not defined");

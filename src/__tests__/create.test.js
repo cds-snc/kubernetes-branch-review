@@ -111,7 +111,7 @@ test("throws error if no sha", async () => {
 });
 
 test("creates cluster and saves to the database", async () => {
-  const event = await eventJS("create_a_pr");
+  const event = await eventJS("update_to_branch");
   await create({ body: event });
   expect(createCluster).toHaveBeenCalledTimes(1);
   expect(pollCluster).toHaveBeenCalledTimes(1);
