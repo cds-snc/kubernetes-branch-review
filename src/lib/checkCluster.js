@@ -1,39 +1,49 @@
-import { getCluster, getDroplets } from "../api";
+import { deleteDropletByTag, getCluster } from "../api";
 import { getName } from "../lib/getName";
+import { getAction } from "../lib/getAction";
 import { create } from "../events/create";
 
-export const checkAndCreateCluster = async (req, release, action) => {
-  if (!release || !release.cluster_state) {
-    console.log("cluster or cluster state not found");
-  }
-
-  const name = getName(req);
-
-  if (action !== "opened" || action !== "updated") {
-    return false;
-  }
-
-  const data = await getCluster(release.cluster_id);
-
-  if (data && data.kubernetes_cluster) {
-    if (data.kubernetes_cluster.state !== "running") {
-      console.log("destroy droplet", name);
-      const droplets = await getDroplets();
-      console.log(droplets);
-      // get droplets
-      // destroy ...
-    }
-  }
-
+const handleCreate = async (req, release) => {
+  const action = getAction(req);
   if (action === "opened" || action === "updated") {
-    if (data.kubernetes_cluster.state === "running") {
-      console.log("already running");
-      return release;
-    }
-
+    // spin up a fresh cluster
     const result = await create(req, release);
     return result;
   }
 
   return release;
+};
+
+export const checkAndCreateCluster = async (req, release = {}) => {
+  const name = getName(req);
+
+  if (!release || !release.refId) {
+    return false;
+  }
+
+  if (!release.cluster_state) {
+    console.log("cluster or cluster state not found");
+    const result = await handleCreate(req, release);
+    return result;
+  }
+
+  // do some cleanup if we need to
+  if (!release.cluster_id) {
+    // destroy the droplet if no cluster id exists yet
+    await deleteDropletByTag(name);
+  } else {
+    // check to see if we have a cluster is in running state
+    const data = await getCluster(release.cluster_id);
+
+    if (
+      data &&
+      data.kubernetes_cluster &&
+      data.kubernetes_cluster.state !== "running"
+    ) {
+      await deleteDropletByTag(name);
+    }
+  }
+
+  const result = await handleCreate(req, release);
+  return result;
 };

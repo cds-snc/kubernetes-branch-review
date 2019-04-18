@@ -123,6 +123,17 @@ export const getDroplets = async () => {
   }
 };
 
+export const deleteDropletByTag = async tag => {
+  const endpoint = `${baseUrlKubernetes}/droplets?tag_name=${tag}`;
+  await fetch(endpoint, {
+    method: "delete",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${TOKEN}`
+    }
+  });
+};
+
 export const getLoadBalancers = async () => {
   const endpoint = `${baseUrl}/load_balancers`;
 
