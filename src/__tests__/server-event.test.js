@@ -35,14 +35,19 @@ jest.mock("../lib/saveIp", () => ({
 }));
 
 jest.mock("../db/queries", () => ({
-  getRelease: jest.fn(() => {
-    return true;
-  })
+  getRelease: jest.fn()
 }));
 
 // create event
 test("returns 302 status code + hits create route", async () => {
   const event = await eventJS("create_a_pr");
+
+  getRelease.mockReturnValueOnce({
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "none"
+  });
+
   await request(server)
     .post("/")
     .send(event)
@@ -54,6 +59,14 @@ test("returns 302 status code + hits create route", async () => {
 
 // update event
 test("returns 302 status code + hits update route", async () => {
+  getRelease.mockReturnValueOnce({
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "open",
+    cluster_state: "running",
+    cluster_id: "ijkl"
+  });
+
   const event = await eventJS("update_to_branch");
   await request(server)
     .post("/")
@@ -69,6 +82,15 @@ test("returns 302 status code + hits update route", async () => {
 // closed event
 test("returns 302 status code + hits update route", async () => {
   const event = await eventJS("closed_a_pr");
+
+  getRelease.mockReturnValueOnce({
+    refId: "abcd",
+    sha: "efgh",
+    pr_state: "open",
+    cluster_state: "running",
+    cluster_id: "123"
+  });
+
   await request(server)
     .post("/")
     .send(event)

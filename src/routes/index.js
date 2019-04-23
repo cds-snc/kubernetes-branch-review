@@ -1,13 +1,15 @@
 import express from "express";
-import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
 import { Logger, StackDriverNode } from "@cdssnc/logdriver";
 import { getRefId } from "../lib/getRefId";
 import { deploy } from "../lib/deploy";
 import { getRelease } from "../db/queries";
-import { isMaster } from "../lib/isMaster";
 import { saveIpAndUpdate } from "../lib/saveIp";
+import { getAction } from "../lib/getAction";
+
+// import { create } from "../events/create";
+import { checkAndCreateCluster } from "../lib/checkCluster";
 
 Logger.subscribe("error", StackDriverNode.log);
 
@@ -19,22 +21,9 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.post("/", async (req, res) => {
   const body = req.body;
-  let status;
-  let action;
-
-  if (body.action) {
-    // create
-    // close
-    // reopen
-    action = body.action;
-  } else {
-    // get action from other type of event
-    if (!isMaster() && body.repository) {
-      action = "updated";
-    }
-  }
-
+  const action = getAction(req);
   const refId = getRefId(body);
+  let status;
 
   if (!refId) {
     res.send("no refId found");
@@ -43,12 +32,9 @@ router.post("/", async (req, res) => {
 
   let release = await getRelease({ refId });
 
+  release = await checkAndCreateCluster(req, release);
+
   switch (action) {
-    case "opened":
-      release = await create(req, release);
-      status = await deploy(release);
-      await saveIpAndUpdate(req.body, release.sha, refId);
-      break;
     case "updated":
       if (release) {
         status = await deploy(await update(req, release));
@@ -61,7 +47,7 @@ router.post("/", async (req, res) => {
       status = await close(req, release);
       break;
     default:
-      status = "no route found";
+      status = `default: ${action}`;
   }
 
   res.send(status);

@@ -6,7 +6,7 @@ const schema = new mongoose.Schema(
     cluster_id: String,
     pr_state: {
       type: String,
-      enum: ["open", "closed"]
+      enum: ["none", "open", "closed"]
     },
     deployment_id: String,
     load_balancer_ip: String,
@@ -18,6 +18,7 @@ const schema = new mongoose.Schema(
         "pending",
         "queued",
         "in_progress",
+        "running",
         "error",
         "failure",
         "success",

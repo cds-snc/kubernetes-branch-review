@@ -15,13 +15,13 @@ export const deploy = async release => {
   ({ fullName, refId, sha, config } = release);
 
   if (!refId) {
-    console.error(`refIfd is not set`);
+    console.warn(`refIfd is not set`);
     return false;
   }
 
   // Checkout the code
   if (!(await checkout(fullName, sha))) {
-    console.error(`Could not checkout repo ${refId}`);
+    console.warn(`Could not checkout repo ${refId}`);
     return false;
   }
 
@@ -29,7 +29,7 @@ export const deploy = async release => {
   ({ dockerfiles, overlay } = await elenchosConfig(sha));
 
   if (!dockerfiles || !overlay) {
-    console.error(`Could not get repo config ${refId}`);
+    console.warn(`Could not get repo config ${refId}`);
     return false;
   }
 
@@ -42,7 +42,7 @@ export const deploy = async release => {
       sha
     );
     if (!newName) {
-      console.error(`Could not build ${dockerfile}`);
+      console.warn(`Could not build ${dockerfile}`);
     } else {
       images.push({ name: dockerfile, newName: newName });
     }
@@ -50,13 +50,13 @@ export const deploy = async release => {
 
   // Update the kustomize file
   if (!(await editKustomization(sha, overlay, images))) {
-    console.error("Could not edit kustomize file");
+    console.warn("Could not edit kustomize file");
     return false;
   }
 
   // Apply the kubernetes configuration
   if (!(await applyConfig(sha, overlay, config))) {
-    console.error("Could not apply kubectl config");
+    console.warn("Could not apply kubectl config");
     return false;
   }
   return true;
