@@ -15,8 +15,7 @@ export const pollLoadBalancer = async (clusterId, checkState = "active") => {
     poll.check = async () => {
       const result = await getLoadBalancer(name);
       // console.log(result);
-      const loadBalancerState = result.status || "⏸️";
-
+      const loadBalancerState = result.status || "⏱️";
       console.log(`current load balancer state ... ${loadBalancerState}`);
 
       if (loadBalancerState === checkState) {
@@ -25,9 +24,10 @@ export const pollLoadBalancer = async (clusterId, checkState = "active") => {
 
       if (poll.counter >= 120) {
         // bail
-        console.log(`issue creating load balancer`);
         const result = await getLoadBalancer(name);
+        console.log("=== load balancer ===");
         console.log(result);
+        poll.clear();
         return result;
       }
     };
