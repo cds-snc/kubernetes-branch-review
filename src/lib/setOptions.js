@@ -20,7 +20,7 @@ export const setOptions = options => {
 
   if (options.name) {
     const tags = clusterOptions.node_pools[0].tags;
-
+    clusterOptions.node_pools[0].name = options.name;
     clusterOptions.node_pools[0].tags = [...tags, options.name];
   }
 
