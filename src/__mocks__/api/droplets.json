@@ -1,0 +1,128 @@
+{
+  "droplets": [
+    {
+      "id": 140420000,
+      "name": "frontend-pool-mbec",
+      "memory": 2048,
+      "vcpus": 1,
+      "disk": 50,
+      "locked": false,
+      "status": "active",
+      "kernel": null,
+      "created_at": "2019-04-17T14:28:50Z",
+      "features": ["private_networking"],
+      "backup_ids": [],
+      "next_backup_window": null,
+      "snapshot_ids": [],
+      "image": {
+        "id": 40705622,
+        "name": "do-kube-base",
+        "distribution": "Debian",
+        "slug": null,
+        "public": false,
+        "regions": [
+          "nyc1",
+          "sfo1",
+          "nyc2",
+          "ams2",
+          "sgp1",
+          "lon1",
+          "nyc3",
+          "ams3",
+          "fra1",
+          "tor1",
+          "sfo2",
+          "blr1"
+        ],
+        "created_at": "2018-11-26T11:03:50Z",
+        "min_disk_size": 20,
+        "type": "snapshot",
+        "size_gigabytes": 2.83
+      },
+      "volume_ids": [],
+      "size": {
+        "slug": "s-1vcpu-2gb",
+        "memory": 2048,
+        "vcpus": 1,
+        "disk": 50,
+        "transfer": 2,
+        "price_monthly": 10,
+        "price_hourly": 0.01488,
+        "regions": [
+          "ams2",
+          "ams3",
+          "blr1",
+          "fra1",
+          "lon1",
+          "nyc1",
+          "nyc2",
+          "nyc3",
+          "sfo1",
+          "sfo2",
+          "sgp1",
+          "tor1"
+        ],
+        "available": true
+      },
+      "size_slug": "s-1vcpu-2gb",
+      "networks": {
+        "v4": [
+          {
+            "ip_address": "157.230.56.202",
+            "netmask": "255.255.240.0",
+            "gateway": "157.230.48.1",
+            "type": "public"
+          },
+          {
+            "ip_address": "10.136.202.195",
+            "netmask": "255.255.0.0",
+            "gateway": "10.136.0.1",
+            "type": "private"
+          }
+        ],
+        "v6": []
+      },
+      "region": {
+        "name": "New York 1",
+        "slug": "nyc1",
+        "features": [
+          "private_networking",
+          "backups",
+          "ipv6",
+          "metadata",
+          "install_agent",
+          "storage",
+          "image_transfer"
+        ],
+        "available": true,
+        "sizes": [
+          "m-1vcpu-8gb",
+          "512mb",
+          "s-1vcpu-1gb",
+          "s-3vcpu-1gb",
+          "1gb",
+          "2gb",
+          "s-1vcpu-2gb",
+          "s-2vcpu-2gb",
+          "s-1vcpu-3gb",
+          "4gb",
+          "s-2vcpu-4gb",
+          "s-4vcpu-8gb",
+          "8gb",
+          "16gb",
+          "s-6vcpu-16gb"
+        ]
+      },
+      "tags": [
+        "frontend",
+        "k8s",
+        "k8s:2b76872e-f8ba-4375-a2d5-658d2cecc047",
+        "k8s:worker"
+      ]
+    }
+  ],
+  "links": {},
+  "meta": {
+    "total": 1
+  }
+}
