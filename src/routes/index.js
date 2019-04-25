@@ -5,6 +5,7 @@ import { Logger, StackDriverNode } from "@cdssnc/logdriver";
 import { getRefId } from "../lib/getRefId";
 import { deploy } from "../lib/deploy";
 import { getRelease } from "../db/queries";
+import { dbConnect } from "../db/connect";
 import { saveIpAndUpdate } from "../lib/saveIp";
 import { getAction } from "../lib/getAction";
 
@@ -21,6 +22,13 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.post("/", async (req, res) => {
   const body = req.body;
+
+  const db = await dbConnect();
+  if (!db) {
+    res.send("database connection error 🛑");
+    return;
+  }
+
   const action = getAction(req);
   const refId = getRefId(body);
   let status;
