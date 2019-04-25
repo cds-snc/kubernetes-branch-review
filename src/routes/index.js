@@ -23,8 +23,10 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 router.post("/", async (req, res) => {
   const body = req.body;
 
+  // do we have a database connection?
   const db = await dbConnect();
   if (!db) {
+    // @todo notify github
     res.send("database connection error 🛑");
     return;
   }
@@ -33,31 +35,33 @@ router.post("/", async (req, res) => {
   const refId = getRefId(body);
   let status;
 
+  // do we have a refId?
   if (!refId) {
-    res.send("no refId found");
-    return false;
+    // @todo notify github
+    res.send("no refId found 🛑");
+    return;
   }
 
   let release = await getRelease({ refId });
+  console.log("release:", release);
 
-  release = await checkAndCreateCluster(req, release);
-
-  switch (action) {
-    case "updated":
-      if (release) {
-        status = await deploy(await update(req, release));
-        await saveIpAndUpdate(req.body, release.sha, refId);
-      } else {
-        status = "no release found";
-      }
-      break;
-    case "closed":
-      status = await close(req, release);
-      break;
-    default:
-      status = `default: ${action}`;
+  if (action === "closed") {
+    status = await close(req, release);
+    // @todo notify github
+    res.send(status);
+    return;
   }
 
+  release = await checkAndCreateCluster(req, release);
+  console.log("release:", release);
+
+  if (release) {
+    status = await deploy(await update(req, release));
+    await saveIpAndUpdate(req.body, release.sha, refId);
+  } else {
+    status = "no release found";
+  }
+  // @todo notify github
   res.send(status);
 });
 
