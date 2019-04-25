@@ -14,9 +14,7 @@ export const pollLoadBalancer = async (clusterId, checkState = "active") => {
 
     poll.check = async () => {
       const result = await getLoadBalancer(name);
-      // console.log(result);
       const loadBalancerState = result.status;
-
       // message for the logs
       let loadBalancerMsg = loadBalancerState || "⏱️";
 
