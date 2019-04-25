@@ -20,19 +20,15 @@ export const checkAndCreateCluster = async (req, release = {}) => {
   const name = getName(req);
 
   if (!release || !release.refId) {
-    const action = getAction(req);
+    const refId = getRefId(req.body);
+    await saveReleaseToDB({
+      refId,
+      sha: req.body.after,
+      cluster_id: null,
+      pr_state: "none"
+    });
 
-    if (action === "opened") {
-      const refId = getRefId(req.body);
-      await saveReleaseToDB({
-        refId,
-        sha: req.body.after,
-        cluster_id: null,
-        pr_state: "none"
-      });
-
-      return false;
-    }
+    return false;
   }
 
   if (!release.cluster_state || release.cluster_state === "deleted") {
