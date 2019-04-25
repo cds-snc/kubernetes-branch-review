@@ -46,6 +46,7 @@ export const updateDeploymentStatus = async (
   refId
 ) => {
   const deployment = await getDeployment({ refId: refId });
+
   const client = await authenticate(event.installation.id);
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;

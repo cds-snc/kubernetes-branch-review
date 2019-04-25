@@ -4,8 +4,15 @@ import { eventJS } from "../__mocks__";
 import { create } from "../events/create";
 import { update } from "../events/update";
 import { close } from "../events/close";
-import { getRelease } from "../db/queries";
+import { getRelease, getDeployment } from "../db/queries";
 require("dotenv-safe").config({ allowEmptyValues: true });
+
+// mock update deployment
+jest.mock("../lib/githubNotify", () => ({
+  updateDeploymentStatus: jest.fn(() => {
+    return true;
+  })
+}));
 
 // mock create
 jest.mock("../events/create", () => ({
@@ -35,12 +42,17 @@ jest.mock("../lib/saveIp", () => ({
 }));
 
 jest.mock("../db/queries", () => ({
+  getDeployment: jest.fn(),
   getRelease: jest.fn()
 }));
 
 // create event
-test("returns 302 status code + hits create route", async () => {
+test("returns 302 status code + calls create", async () => {
   const event = await eventJS("create_a_pr");
+
+  getDeployment.mockReturnValueOnce({
+    ip: "123"
+  });
 
   getRelease.mockReturnValueOnce({
     refId: "abcd",
@@ -58,7 +70,11 @@ test("returns 302 status code + hits create route", async () => {
 });
 
 // update event
-test("returns 302 status code + hits update route", async () => {
+test("returns 302 status code + calls update", async () => {
+  getDeployment.mockReturnValueOnce({
+    ip: "123"
+  });
+
   getRelease.mockReturnValueOnce({
     refId: "abcd",
     sha: "efgh",
@@ -80,8 +96,12 @@ test("returns 302 status code + hits update route", async () => {
 });
 
 // closed event
-test("returns 302 status code + hits update route", async () => {
+test("returns 302 status code + calls close", async () => {
   const event = await eventJS("closed_a_pr");
+
+  getDeployment.mockReturnValueOnce({
+    ip: "123"
+  });
 
   getRelease.mockReturnValueOnce({
     refId: "abcd",
@@ -100,8 +120,12 @@ test("returns 302 status code + hits update route", async () => {
 });
 
 // no action event
-test("returns 302 status code + hits update route", async () => {
-  const event = {};
+test("returns 302 status code + with no ref", async () => {
+  const event = { installation: { id: 123 } };
+  getDeployment.mockReturnValueOnce({
+    ip: "123"
+  });
+
   const result = await request(server)
     .post("/")
     .send(event)
