@@ -56,7 +56,9 @@ jest.mock("../db/queries", () => ({
     return true;
   }),
   getRelease: jest.fn(() => {
-    return {};
+    return {
+      sha: "abcd"
+    };
   })
 }));
 
@@ -97,13 +99,16 @@ test("throws error if bad event sent", async () => {
 test("throws error if no sha", async () => {
   try {
     // repository.full_name
-    await create({
-      body: {
-        action: "opened",
-        repository: { full_name: "the_repo_name" },
-        pull_request: { head: { ref: "1234" } }
-      }
-    });
+    await create(
+      {
+        body: {
+          action: "opened",
+          repository: { full_name: "the_repo_name" },
+          pull_request: { head: { ref: "1234" } }
+        }
+      },
+      {}
+    );
   } catch (e) {
     console.log(e.message);
     expect(e.message).toEqual("sha or prState not defined");
@@ -112,7 +117,7 @@ test("throws error if no sha", async () => {
 
 test("creates cluster and saves to the database", async () => {
   const event = await eventJS("update_to_branch");
-  await create({ body: event });
+  await create({ body: event }, { sha: "abcd" });
   expect(createCluster).toHaveBeenCalledTimes(1);
   expect(pollCluster).toHaveBeenCalledTimes(1);
   expect(createDeployment).toHaveBeenCalledTimes(1);

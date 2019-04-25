@@ -6,7 +6,7 @@ import { getRefId } from "../../lib/getRefId";
 import { getName } from "../../lib/getName";
 import { getAction } from "../../lib/getAction";
 
-export const create = async req => {
+export const create = async (req, release) => {
   if (!req || !req.body) {
     throw new Error("invalid event passed");
   }
@@ -18,7 +18,7 @@ export const create = async req => {
     throw new Error("refId not defined");
   }
 
-  const sha = body.after;
+  const sha = release.sha;
   const prState = getAction(req);
 
   if (!sha || !prState) {
