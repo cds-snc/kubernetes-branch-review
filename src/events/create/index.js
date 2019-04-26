@@ -64,7 +64,7 @@ export const create = async (req, release) => {
 
       await updateStatus(
         body,
-        { state: "pending", description: "Cluster deployed" },
+        { state: "pending", description: "Cluster deployed, building app ..." },
         refId
       );
 
