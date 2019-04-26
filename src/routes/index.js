@@ -44,7 +44,10 @@ router.post("/", async (req, res) => {
 
   if (action === "closed") {
     status = await close(req, release);
-    return returnStatus(body, res, { state: "success", description: status });
+    return returnStatus(body, res, {
+      state: "success",
+      description: "Branch review app removed"
+    });
   }
 
   release = await checkAndCreateCluster(req, release);
@@ -53,7 +56,10 @@ router.post("/", async (req, res) => {
   if (release) {
     status = await deploy(await update(req));
     await saveIpAndUpdate(req.body, release.sha, refId);
-    return returnStatus(body, res, { state: "success", description: status });
+    return returnStatus(body, res, {
+      state: "success",
+      description: "Branch review app deployed"
+    });
   }
 
   return returnStatus(body, res, {

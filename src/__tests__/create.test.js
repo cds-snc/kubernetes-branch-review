@@ -4,6 +4,7 @@ import { saveReleaseToDB, getRelease } from "../db/queries";
 import { pollCluster } from "../lib/pollCluster";
 import { getConfig, createCluster } from "../api/";
 import { createDeployment } from "../lib/githubNotify";
+import { updateStatus } from "../lib/githubStatus";
 
 jest.mock("../lib/pollCluster", () => ({
   pollCluster: jest.fn(() => {
@@ -78,6 +79,12 @@ jest.mock("../lib/githubNotify", () => ({
   })
 }));
 
+jest.mock("../lib/githubStatus", () => ({
+  updateStatus: jest.fn(() => {
+    return {};
+  })
+}));
+
 test("throws error if bad event sent", async () => {
   try {
     await create();
@@ -124,4 +131,5 @@ test("creates cluster and saves to the database", async () => {
   expect(getConfig).toHaveBeenCalledTimes(1);
   expect(saveReleaseToDB).toHaveBeenCalledTimes(3);
   expect(getRelease).toHaveBeenCalledTimes(1);
+  expect(updateStatus).toHaveBeenCalledTimes(1);
 });

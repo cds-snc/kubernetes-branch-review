@@ -5,6 +5,7 @@ import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
 import { getName } from "../../lib/getName";
 import { getAction } from "../../lib/getAction";
+import { updateStatus } from "../../lib/githubStatus";
 
 export const create = async (req, release) => {
   if (!req || !req.body) {
@@ -50,10 +51,14 @@ export const create = async (req, release) => {
       console.log("cluster created");
       console.log("polling cluster...");
 
+      await updateStatus(body, "Creating cluster ...", refId);
+
       const result = await pollCluster(
         cluster.kubernetes_cluster.id,
         "running"
       );
+
+      await updateStatus(body, "Cluster deployed", refId);
 
       const id = result.kubernetes_cluster.id;
       const state = result.kubernetes_cluster.status.state;

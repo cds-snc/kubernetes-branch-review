@@ -64,8 +64,8 @@ export const updateDeploymentStatus = async (
       repo: repoName,
       environment: "staging",
       deployment_id: deployment.id,
-      log_url: `http://${ip}`,
-      environment_url: `http://${ip}`,
+      log_url: ip ? `http://${ip}` : "",
+      environment_url: ip ? `http://${ip}` : "",
       required_contexts: []
     },
     status
