@@ -51,14 +51,22 @@ export const create = async (req, release) => {
       console.log("cluster created");
       console.log("polling cluster...");
 
-      await updateStatus(body, "Creating cluster ...", refId);
+      await updateStatus(
+        body,
+        { state: "pending", description: "Creating cluster ..." },
+        refId
+      );
 
       const result = await pollCluster(
         cluster.kubernetes_cluster.id,
         "running"
       );
 
-      await updateStatus(body, "Cluster deployed", refId);
+      await updateStatus(
+        body,
+        { state: "pending", description: "Cluster deployed" },
+        refId
+      );
 
       const id = result.kubernetes_cluster.id;
       const state = result.kubernetes_cluster.status.state;
