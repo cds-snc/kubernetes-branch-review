@@ -47,6 +47,11 @@ export const updateDeploymentStatus = async (
 ) => {
   const deployment = await getDeployment({ refId: refId });
 
+  if (!deployment || !event || !event.installation) {
+    console.log("no deployment or no event.installation");
+    return;
+  }
+
   const client = await authenticate(event.installation.id);
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
