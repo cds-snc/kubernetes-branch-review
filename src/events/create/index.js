@@ -19,6 +19,7 @@ export const create = async (req, release) => {
   }
 
   const sha = release.sha;
+
   const prState = getAction(req);
 
   if (!sha || !prState) {
