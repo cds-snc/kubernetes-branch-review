@@ -7,17 +7,8 @@ import {
 
 export const update = async req => {
   const body = req.body;
-  const sha = body.after;
   const refId = getRefId(body);
   let record = await getRelease({ refId });
-
-  if (record) {
-    await saveReleaseToDB({
-      refId,
-      sha
-    });
-    record = await getRelease({ refId });
-  }
 
   // mark old deployment as inactive (just in case)
   // note: this should happen automatically in most cases when a status is updated

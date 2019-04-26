@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
   console.log("release:", release);
 
   if (release) {
-    status = await deploy(await update(req, release));
+    status = await deploy(await update(req));
     await saveIpAndUpdate(req.body, release.sha, refId);
     return returnStatus(body, res, { state: "success", description: status });
   }
