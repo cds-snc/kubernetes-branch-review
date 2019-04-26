@@ -41,12 +41,17 @@ export const updateStatus = async (
       status.target_url = `http://${ip}`;
     }
   }
-
+  let sha;
+  if (event.pull_request) {
+    sha = event.pull_request.head.sha;
+  } else {
+    sha = event.after;
+  }
   const statusObj = Object.assign(
     {
       owner: repoOwner,
       repo: repoName,
-      sha: event.after,
+      sha: sha,
       context: "K8's branch deploy"
     },
     status
