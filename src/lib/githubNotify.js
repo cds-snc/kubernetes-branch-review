@@ -22,7 +22,8 @@ export const createDeployment = async (
       ref: sha,
       environment: "staging",
       payload: "from the app",
-      auto_merge: false
+      auto_merge: false,
+      required_contexts: []
     },
     status
   );
@@ -64,7 +65,8 @@ export const updateDeploymentStatus = async (
       environment: "staging",
       deployment_id: deployment.id,
       log_url: `http://${ip}`,
-      environment_url: `http://${ip}`
+      environment_url: `http://${ip}`,
+      required_contexts: []
     },
     status
   );
