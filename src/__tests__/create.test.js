@@ -128,8 +128,8 @@ test("creates cluster and saves to the database", async () => {
   expect(createCluster).toHaveBeenCalledTimes(1);
   expect(pollCluster).toHaveBeenCalledTimes(1);
   expect(createDeployment).toHaveBeenCalledTimes(1);
+  expect(updateStatus).toHaveBeenCalledTimes(2);
   expect(getConfig).toHaveBeenCalledTimes(1);
   expect(saveReleaseToDB).toHaveBeenCalledTimes(3);
   expect(getRelease).toHaveBeenCalledTimes(1);
-  expect(updateStatus).toHaveBeenCalledTimes(1);
 });
