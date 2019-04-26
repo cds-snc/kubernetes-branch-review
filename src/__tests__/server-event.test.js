@@ -14,6 +14,12 @@ jest.mock("../lib/githubNotify", () => ({
   })
 }));
 
+jest.mock("../lib/githubStatus", () => ({
+  updateStatus: jest.fn(() => {
+    return true;
+  })
+}));
+
 // mock create
 jest.mock("../events/create", () => ({
   create: jest.fn(() => {
