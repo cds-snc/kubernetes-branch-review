@@ -8,6 +8,7 @@
     "lint": "eslint src/*.js",
     "test": "jest --forceExit",
     "start": "NODE_ENV=production node index",
+    "watch": "tsc-watch",
     "minikube": "kustomize build manifests/overlays/minikube | kubectl apply -f -",
     "delete-minikube": "kustomize build manifests/overlays/minikube | kubectl delete -f -",
     "gke": "kustomize build manifests/overlays/gke | kubectl apply -f -",
@@ -42,7 +43,9 @@
     "jest": "^24.5.0",
     "lint-staged": "^8.1.5",
     "prettier": "^1.16.4",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "tsc-watch": "^2.1.2",
+    "typescript": "^3.4.5"
   },
   "dependencies": {
     "@cdssnc/logdriver": "^0.0.2",
