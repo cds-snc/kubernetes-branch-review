@@ -2,18 +2,16 @@ import express from "express";
 import { update } from "../events/update";
 import { close } from "../events/close";
 import { Logger, StackDriverNode } from "@cdssnc/logdriver";
-import { getRefId } from "../lib/getRefId";
-import { deploy } from "../lib/deploy";
 import { getRelease } from "../db/queries";
 import { dbConnect } from "../db/connect";
+import { getRefId } from "../lib/getRefId";
+import { deploy } from "../lib/deploy";
 import { saveIpAndUpdate } from "../lib/saveIp";
 import { getAction } from "../lib/getAction";
-
-// import { create } from "../events/create";
 import { checkAndCreateCluster } from "../lib/checkCluster";
+import { returnStatus } from "../lib/returnStatus";
 
 Logger.subscribe("error", StackDriverNode.log);
-
 // Logger.debug("=> The message from the server...");
 
 const router = express.Router();
@@ -22,43 +20,46 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.post("/", async (req, res) => {
   const body = req.body;
+  let status;
 
+  // do we have a database connection?
   const db = await dbConnect();
   if (!db) {
-    res.send("database connection error 🛑");
-    return;
+    // @todo notify github
+    status = "database connection error 🛑";
+    return returnStatus(body, res, { state: "error", description: status });
   }
 
   const action = getAction(req);
   const refId = getRefId(body);
-  let status;
 
+  // do we have a refId?
   if (!refId) {
-    res.send("no refId found");
-    return false;
+    status = "no refId found 🛑";
+    return returnStatus(body, res, { state: "error", description: status });
   }
 
   let release = await getRelease({ refId });
+  console.log("release:", release);
 
-  release = await checkAndCreateCluster(req, release);
-
-  switch (action) {
-    case "updated":
-      if (release) {
-        status = await deploy(await update(req, release));
-        await saveIpAndUpdate(req.body, release.sha, refId);
-      } else {
-        status = "no release found";
-      }
-      break;
-    case "closed":
-      status = await close(req, release);
-      break;
-    default:
-      status = `default: ${action}`;
+  if (action === "closed") {
+    status = await close(req, release);
+    return returnStatus(body, res, { state: "success", description: status });
   }
 
-  res.send(status);
+  release = await checkAndCreateCluster(req, release);
+  console.log("release:", release);
+
+  if (release) {
+    status = await deploy(await update(req, release));
+    await saveIpAndUpdate(req.body, release.sha, refId);
+    return returnStatus(body, res, { state: "success", description: status });
+  }
+
+  return returnStatus(body, res, {
+    state: "error",
+    description: "no release found"
+  });
 });
 
 export default router;
