@@ -1,2 +1,2 @@
-export { isMaster } from "./lib/isMaster1";
-export { getAction } from "./lib/getAction1";
+export { isMaster } from "./lib/isMaster";
+export { getAction } from "./lib/getAction";
