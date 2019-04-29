@@ -1,8 +1,8 @@
 import { getRefId } from "../lib/getRefId";
+import { Request } from "../interfaces/Request";
 
-export const getName = req => {
+export const getName = (req: Request): string => {
   const body = req.body;
-
   const refId = getRefId(body);
 
   if (!refId) {

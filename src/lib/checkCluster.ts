@@ -4,8 +4,10 @@ import { getName } from "../lib/getName";
 import { getAction } from "../lib/getAction";
 import { create } from "../events/create";
 import { saveReleaseToDB } from "../db/queries";
+import { Release } from "../interfaces/Release";
+import { Request } from "../interfaces/Request";
 
-const handleCreate = async (req, release) => {
+const handleCreate = async (req: Request, release: Release) => {
   const action = getAction(req);
   if (action === "opened" || action === "updated" || action === "reopened") {
     // spin up a fresh cluster
@@ -16,7 +18,7 @@ const handleCreate = async (req, release) => {
   return release;
 };
 
-export const checkAndCreateCluster = async (req, release = {}) => {
+export const checkAndCreateCluster = async (req: Request, release: Release) => {
   const name = getName(req);
 
   if (!release || !release.refId) {
