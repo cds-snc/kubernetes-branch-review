@@ -1,7 +1,11 @@
 import { longPoll } from "./longPoll";
 import { getClusterName, getLoadBalancer } from "../lib/getLoadBalancer";
+import { LoadBalancer } from "../interfaces/LoadBalancer";
 
-export const pollLoadBalancer = async (clusterId, checkState = "active") => {
+export const pollLoadBalancer = async (
+  clusterId: string,
+  checkState: string = "active"
+): Promise<void> => {
   return new Promise(async resolve => {
     const poll = Object.assign({}, longPoll);
     const prefix = "load-balancer";

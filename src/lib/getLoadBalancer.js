@@ -17,7 +17,7 @@ export const getDropletByName = async name => {
 export const getLoadBalancerById = async id => {
   const result = await getLoadBalancers();
 
-  let clusterLoadBalancer = false;
+  let clusterLoadBalancer = { status: "" };
   if (result) {
     result.load_balancers.forEach(loadBalancer => {
       let ids = loadBalancer.droplet_ids;
