@@ -29,7 +29,11 @@ export const deploy = async (release: Release): Promise<Boolean> => {
   }
 
   // Parse the repo specific config file
-  const { dockerfiles, overlay } = await elenchosConfig(sha);
+  const configuration = await elenchosConfig(sha);
+
+  if(!configuration){return false};
+
+  const { dockerfiles, overlay } = configuration;
 
   if (!dockerfiles || !overlay) {
     console.warn(`Could not get repo config ${refId}`);
