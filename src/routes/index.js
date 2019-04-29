@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
 
   if (release) {
     status = await deploy(await update(req));
-    await saveIpAndUpdate(req.body, release.sha, refId);
+    await saveIpAndUpdate(req.body, refId);
     return returnStatus(body, res, {
       state: "success",
       description: "Branch review app deployed"

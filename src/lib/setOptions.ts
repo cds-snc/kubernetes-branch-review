@@ -1,3 +1,5 @@
+import { Options } from "../interfaces/Options";
+
 export const defaultOptions = {
   name: "stage-cluster-01",
   region: "nyc1",
@@ -13,7 +15,7 @@ export const defaultOptions = {
   ]
 };
 
-export const setOptions = options => {
+export const setOptions = (options: Options): Options => {
   const clusterOptions = Object.assign({}, defaultOptions, {
     ...options
   });
