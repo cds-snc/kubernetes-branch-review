@@ -3,16 +3,17 @@ import { buildAndPush } from "./docker";
 import { editKustomization } from "./kustomize";
 import { elenchosConfig } from "./elenchosConfig";
 import { checkout } from "./git";
+import { Release } from "../interfaces/Release";
 
-async function asyncForEach(array, callback) {
+
+async function asyncForEach(array: Array<String>, callback: (a: String) => void): Promise<void> {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index]);
   }
 }
 
-export const deploy = async release => {
-  let fullName, refId, sha, config, dockerfiles, overlay;
-  ({ fullName, refId, sha, config } = release);
+export const deploy = async (release: Release): Promise<Boolean> => {
+  const { fullName, refId, sha, config } = release;
 
   if (!refId) {
     console.warn(`refIfd is not set`);
@@ -26,7 +27,7 @@ export const deploy = async release => {
   }
 
   // Parse the repo specific config file
-  ({ dockerfiles, overlay } = await elenchosConfig(sha));
+  const { dockerfiles, overlay } = await elenchosConfig(sha);
 
   if (!dockerfiles || !overlay) {
     console.warn(`Could not get repo config ${refId}`);
@@ -34,11 +35,12 @@ export const deploy = async release => {
   }
 
   // Build all the modified docker images
-  let images = [];
-  asyncForEach(Object.keys(dockerfiles), async dockerfile => {
+  let images:Array<{}> = [];
+
+  asyncForEach(Object.keys(dockerfiles), async (dockerfile:String) => {
     const newName = await buildAndPush(
       dockerfile,
-      dockerfiles[dockerfile],
+      dockerfiles[dockerfile.toString()],
       sha
     );
     if (!newName) {
