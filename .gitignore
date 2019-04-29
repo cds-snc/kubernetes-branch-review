@@ -70,3 +70,6 @@ docker.txt
 .vscode
 
 .gcloud.json
+
+
+dist
