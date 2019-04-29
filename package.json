@@ -8,7 +8,7 @@
     "lint": "eslint src/*.js",
     "test": "jest --forceExit",
     "start": "NODE_ENV=production node index",
-    "watch": "tsc-watch",
+    "watch": "tsc && tsc-watch",
     "minikube": "kustomize build manifests/overlays/minikube | kubectl apply -f -",
     "delete-minikube": "kustomize build manifests/overlays/minikube | kubectl delete -f -",
     "gke": "kustomize build manifests/overlays/gke | kubectl apply -f -",
