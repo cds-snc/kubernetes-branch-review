@@ -1,13 +1,15 @@
 const events = require("events");
+import { LongPoll } from "../interfaces/LongPoll";
 
-export const longPoll = {
+export const longPoll: LongPoll = {
   interval: null,
   counter: 0,
   delay: 5000,
   id: "",
   eventEmitter: new events.EventEmitter(),
-  check: () => {},
-  result: {},
+  check: () => {
+    return {};
+  },
   handle: async function() {
     this.counter++;
     const result = await this.check();
