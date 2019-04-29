@@ -28,4 +28,5 @@ export interface Release {
   repo: string;
   cluster_state: ClusterState;
   timestamp: string;
+  fullName: string;
 }
