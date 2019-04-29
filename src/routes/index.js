@@ -42,6 +42,13 @@ router.post("/", async (req, res) => {
   let release = await getRelease({ refId });
   console.log("release:", release);
 
+  if (body.after && body.after === "0000000000000000000000000000000000000000"){
+    return returnStatus(body, res, {
+      state: "success",
+      description: "Closing push ignored"
+    });
+  }
+
   if (action === "closed") {
     status = await close(req, release);
     return returnStatus(body, res, {
