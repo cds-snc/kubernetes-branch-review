@@ -1,4 +1,4 @@
-import { isMaster } from "./isMaster1";
+import { isMaster } from "./isMaster";
 import { Request } from "../interfaces/Request";
 
 export const getAction = (req: Request) => {

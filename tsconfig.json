@@ -1,60 +1,19 @@
 {
-  "name": "@cdssnc/elenchos",
-  "version": "0.0.1",
-  "description": "CDS PR deploys",
-  "main": "index.js",
-  "scripts": {
-    "dev": "node index",
-    "lint": "eslint src/*.js",
-    "test": "jest --forceExit",
-    "start": "NODE_ENV=production node index",
-    "watch": "tsc && tsc-watch",
-    "minikube": "kustomize build manifests/overlays/minikube | kubectl apply -f -",
-    "delete-minikube": "kustomize build manifests/overlays/minikube | kubectl delete -f -",
-    "gke": "kustomize build manifests/overlays/gke | kubectl apply -f -",
-    "delete-gke": "kustomize build manifests/overlays/gke | kubectl delete -f -"
-  },
-  "lint-staged": {
-    "*.js": ["eslint --fix", "prettier --write", "git add"]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm test && lint-staged",
-      "pre-push": "npm test"
+  "compilerOptions": {
+    "module": "es6",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "target": "es6",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "outDir": "dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*", "src/*"]
     }
   },
-  "devDependencies": {
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
-    "@types/jest": "^24.0.12",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.1.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jest": "^22.4.1",
-    "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "husky": "^1.3.1",
-    "jest": "^24.7.1",
-    "lint-staged": "^8.1.5",
-    "prettier": "^1.16.4",
-    "supertest": "^4.0.2",
-    "ts-jest": "^24.0.2",
-    "tsc-watch": "^2.1.2",
-    "typescript": "^3.4.5"
-  },
-  "dependencies": {
-    "@cdssnc/logdriver": "^0.0.2",
-    "@octokit/app": "^2.2.2",
-    "@octokit/rest": "^16.22.0",
-    "body-parser": "^1.18.3",
-    "dotenv-safe": "^6.1.0",
-    "esm": "^3.2.22",
-    "express": "^4.16.4",
-    "js-yaml": "^3.13.0",
-    "mongoose": "^5.4.20",
-    "node-fetch": "^2.3.0"
-  }
+  "include": ["src/**/*"],
+  "exclude": ["src/__mocks__", "**/*.test.*", "src/__tests__", "src/interfaces"]
 }
