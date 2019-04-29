@@ -5,8 +5,10 @@ import { elenchosConfig } from "./elenchosConfig";
 import { checkout } from "./git";
 import { Release } from "../interfaces/Release";
 
-
-async function asyncForEach(array: Array<String>, callback: (a: String) => void): Promise<void> {
+async function asyncForEach(
+  array: Array<String>,
+  callback: (a: String) => void
+): Promise<void> {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index]);
   }
@@ -35,9 +37,9 @@ export const deploy = async (release: Release): Promise<Boolean> => {
   }
 
   // Build all the modified docker images
-  let images:Array<{}> = [];
+  let images: Array<{}> = [];
 
-  asyncForEach(Object.keys(dockerfiles), async (dockerfile:String) => {
+  asyncForEach(Object.keys(dockerfiles), async (dockerfile: string) => {
     const newName = await buildAndPush(
       dockerfile,
       dockerfiles[dockerfile.toString()],
