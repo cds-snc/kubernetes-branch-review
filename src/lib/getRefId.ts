@@ -1,7 +1,8 @@
 import { isMaster } from "../lib/isMaster";
+import { RequestBody } from "../interfaces/Request";
 
-export const getRefId = event => {
-  let refId = false;
+export const getRefId = (event:RequestBody): false|string => {
+  let refId:string;
 
   if (!event || !event.repository || !event.repository.full_name) {
     return false;
@@ -25,7 +26,7 @@ export const getRefId = event => {
   return `${fullName}/${refId}`;
 };
 
-export const getFullNameFromRefId = refId => {
+export const getFullNameFromRefId = (refId:string): false|string => {
   if (!refId) return false;
   let ref = refId.split("/");
   ref.pop();
