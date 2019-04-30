@@ -13,7 +13,7 @@ export const getRefId = (event:RequestBody): false|string => {
   if (event && event.action) {
     refId = event.pull_request.head.ref;
   } else if (event && event.ref) {
-    if (!isMaster(event))event {
+    if (!isMaster(event)) {
       const ref = event.ref.split("/");
       refId = ref[ref.length - 1];
     }
