@@ -5,11 +5,11 @@ const { promisify } = require("util");
 export const execAsync = promisify(exec);
 const DIR = process.env.CODE_DIR || "/tmp";
 
-const writeKubeconfig = (sha, config) => {
+const writeKubeconfig = (sha: string, config: string): boolean => {
   const filePath = `${DIR}/${sha}/kubeconfig.yaml`;
   const configObj = JSON.parse(config);
   try {
-    fs.writeFile(filePath, yaml.safeDump(configObj), "utf8", e =>
+    fs.writeFile(filePath, yaml.safeDump(configObj), "utf8", (e: Error) =>
       console.error(e)
     );
     return true;
@@ -19,8 +19,13 @@ const writeKubeconfig = (sha, config) => {
   }
 };
 
-export const applyConfig = async (sha, overlayPath, config) => {
+export const applyConfig = async (
+  sha: string,
+  overlayPath: string,
+  config: string
+): Promise<boolean> => {
   const result = writeKubeconfig(sha, config);
+
   if (!result) {
     return false;
   }
