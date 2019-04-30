@@ -2,8 +2,10 @@
 
 import { authenticate } from "./githubAuth";
 import { getDeployment } from "../db/queries";
+import { RequestBody } from "../interfaces/Request";
+import { Status, StatusMessage } from "../interfaces/Status";
 
-const validate = event => {
+const validate = (event: RequestBody) => {
   if (
     !event ||
     !event.repository ||
@@ -18,9 +20,9 @@ const validate = event => {
 };
 
 export const updateStatus = async (
-  event,
-  status = { state: "pending", description: "..." },
-  refId
+  event: RequestBody,
+  status: StatusMessage = { state: "pending", description: "..." },
+  refId: string
 ) => {
   if (!validate(event)) return false;
 
@@ -33,12 +35,14 @@ export const updateStatus = async (
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
 
+  let target_url = ""; // this will be the deployment url
+
   if (status.state === "success") {
     const deployment = await getDeployment({ refId: refId });
 
     if (deployment && deployment.ip) {
       const ip = deployment.ip;
-      status.target_url = `http://${ip}`;
+      target_url = `http://${ip}`;
     }
   }
   let sha;
@@ -47,15 +51,16 @@ export const updateStatus = async (
   } else {
     sha = event.after;
   }
-  const statusObj = Object.assign(
-    {
-      owner: repoOwner,
-      repo: repoName,
-      sha: sha,
-      context: "K8's branch deploy"
-    },
-    status
-  );
+  const statusObj: Status = Object.assign(status, {
+    owner: repoOwner,
+    repo: repoName,
+    sha: sha,
+    context: "K8's branch deploy"
+  });
+
+  if (target_url) {
+    statusObj.target_url = target_url;
+  }
 
   const result = await client.repos.createStatus(statusObj);
 
