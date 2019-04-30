@@ -1,7 +1,6 @@
 export interface Head {
   ref: string;
 }
-
 export interface PullRequest {
   head: Head;
 }
