@@ -1,9 +1,17 @@
 import { authenticate } from "./githubAuth";
 import { getDeployment } from "../db/queries";
+import { RequestBody } from "../interfaces/Request";
+import { StatusMessage } from "../interfaces/Status";
+import {
+  ReposCreateDeploymentParams,
+  ReposCreateDeploymentStatusParams,
+  ReposCreateDeploymentStatusResponse
+} from "@octokit/rest";
+
 export const createDeployment = async (
-  event,
+  event: RequestBody,
   status = { task: "deploy", description: "Initializing deployment" }
-) => {
+): Promise<{}> => {
   const client = await authenticate(event.installation.id);
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
@@ -15,7 +23,7 @@ export const createDeployment = async (
     sha = event.after;
   }
 
-  const statusObj = Object.assign(
+  const statusObj: ReposCreateDeploymentParams = Object.assign(
     {
       owner: repoOwner,
       repo: repoName,
@@ -28,7 +36,7 @@ export const createDeployment = async (
     status
   );
 
-  let result = "";
+  let result = { data: { id: "" } };
 
   try {
     result = await client.repos.createDeployment(statusObj);
@@ -42,10 +50,13 @@ export const createDeployment = async (
 };
 
 export const updateDeploymentStatus = async (
-  event,
-  status = { state: "success", description: "deployment updated" },
-  refId
-) => {
+  event: RequestBody,
+  status: StatusMessage = {
+    state: "success",
+    description: "deployment updated"
+  },
+  refId: string
+): Promise<ReposCreateDeploymentStatusResponse | {}> => {
   const deployment = await getDeployment({ refId: refId });
 
   if (!deployment || !event || !event.installation) {
@@ -58,20 +69,22 @@ export const updateDeploymentStatus = async (
   const repoName = event.repository.name;
   const ip = deployment.ip;
 
-  const statusObj = Object.assign(
-    {
-      owner: repoOwner,
-      repo: repoName,
-      environment: "staging",
-      deployment_id: deployment.id,
-      log_url: ip ? `http://${ip}` : "",
-      environment_url: ip ? `http://${ip}` : "",
-      required_contexts: []
-    },
+  const deploymentStatus: ReposCreateDeploymentStatusParams = {
+    owner: repoOwner,
+    repo: repoName,
+    environment: "staging",
+    deployment_id: deployment.id,
+    log_url: ip ? `http://${ip}` : "",
+    environment_url: ip ? `http://${ip}` : "",
+    state: "pending"
+  };
+
+  const statusObj: ReposCreateDeploymentStatusParams = Object.assign(
+    deploymentStatus,
     status
   );
 
-  let result = "";
+  let result = {};
 
   try {
     result = await client.repos.createDeploymentStatus(statusObj);
