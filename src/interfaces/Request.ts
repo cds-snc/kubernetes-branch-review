@@ -1,5 +1,6 @@
 export interface Head {
   ref: string;
+  sha: string;
 }
 export interface PullRequest {
   head: Head;

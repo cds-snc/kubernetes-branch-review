@@ -15,7 +15,7 @@ const getKey = async () => {
   return result;
 };
 
-export const authenticate = async installationId => {
+export const authenticate = async (installationId:string): Promise<any> => {
   const app = new App({
     id: ISSUER_ID,
     privateKey: await getKey()
