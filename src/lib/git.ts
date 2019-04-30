@@ -1,7 +1,7 @@
 const { spawnSync } = require("child_process");
 const DIR = process.env.CODE_DIR || "/tmp";
 
-export const cleanup = name => {
+export const cleanup = (name:string): true => {
   const cleanup = spawnSync("rm", ["-rf", name], {
     cwd: DIR
   });
@@ -13,7 +13,7 @@ export const cleanup = name => {
   return true;
 };
 
-const clone = (fullName, sha) => {
+const clone = (fullName:string, sha:string): boolean => {
   const clone = spawnSync(
     "git",
     ["clone", `https://github.com/${fullName}`, `${sha}`, "--quiet"],
@@ -30,7 +30,7 @@ const clone = (fullName, sha) => {
   return true;
 };
 
-export const checkout = async (fullName, sha) => {
+export const checkout = async (fullName:string, sha:string): Promise<boolean> => {
   if (!cleanup(sha) || !clone(fullName, sha)) {
     return false;
   }
