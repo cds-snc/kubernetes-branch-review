@@ -9,9 +9,11 @@ export const returnStatus = async (
   body: RequestBody,
   res: Response,
   status: Status
-) => {
+): Promise<void> => {
   const refId = getRefId(body);
-  await updateDeploymentStatus(body, status, refId);
-  await updateStatus(body, status, refId);
+  if(refId){
+    await updateDeploymentStatus(body, status, refId);
+    await updateStatus(body, status, refId);
+  }
   res.send(status.description);
 };
