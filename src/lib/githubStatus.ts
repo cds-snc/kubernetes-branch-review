@@ -51,18 +51,19 @@ export const updateStatus = async (
   } else {
     sha = event.after;
   }
-  const statusObj: Status = Object.assign(status, {
-    owner: repoOwner,
-    repo: repoName,
-    sha: sha,
-    context: "K8's branch deploy"
-  });
 
-  if (target_url) {
-    statusObj.target_url = target_url;
-  }
+    const statusObj: StatusMessage = Object.assign(status, {
+      owner: repoOwner,
+      repo: repoName,
+      sha: sha,
+      context: "K8's branch deploy"
+    });
 
-  const result = await client.repos.createStatus(statusObj);
+    if (target_url) {
+      statusObj.target_url = target_url;
+    }
 
-  return result;
+    const result = await client.repos.createStatus(statusObj);
+
+    return result;
 };

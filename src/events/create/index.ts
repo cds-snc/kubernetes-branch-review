@@ -6,9 +6,8 @@ import { getRefId } from "../../lib/getRefId";
 import { getName } from "../../lib/getName";
 import { getAction } from "../../lib/getAction";
 import { updateStatus } from "../../lib/githubStatus";
-import { Release } from "../../interfaces/Release";
 import { Request} from "../../interfaces/Request";
-import { PrState, ClusterState } from "../../interfaces/Release";
+import { Release, PrState, ClusterState } from "../../interfaces/Release";
 
 export const create = async (req: Request, release: Release) => {
   if (!req || !req.body) {
