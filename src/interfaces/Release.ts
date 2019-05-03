@@ -1,10 +1,11 @@
-enum PrState {
-  NONE = "none",
-  OPEN = "open",
-  CLOSED = "closed"
+export enum PrState {
+  none = "none",
+  open = "open",
+  closed = "closed",
+  reopen = "reopen"
 }
 
-enum ClusterState {
+export enum ClusterState {
   none = "none",
   pending = "pending",
   queued = "queued",
@@ -18,15 +19,15 @@ enum ClusterState {
 
 export interface Release {
   refId: string;
-  sha: string;
-  cluster_id: string;
-  pr_state: PrState;
-  deployment_id: string;
-  load_balancer_ip: string;
-  config: string;
-  branch: string;
-  repo: string;
-  cluster_state: ClusterState;
-  timestamp: string;
-  fullName: string;
+  sha?: string;
+  cluster_id?: string;
+  pr_state?: PrState;
+  deployment_id?: string;
+  load_balancer_ip?: string;
+  config?: string;
+  branch?: string;
+  repo?: string;
+  cluster_state?: ClusterState;
+  timestamp?: string;
+  fullName?: string;
 }

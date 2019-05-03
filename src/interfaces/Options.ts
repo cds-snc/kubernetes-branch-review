@@ -7,8 +7,9 @@ export interface NodePools {
 
 export interface Options {
   name: string;
-  region: string;
+  node_pools?: NodePools[];
+  region?: string;
   version: string;
-  tags: string[];
-  node_pools: NodePools[];
+  tags?: string[];
+  deployment_id?: string;
 }

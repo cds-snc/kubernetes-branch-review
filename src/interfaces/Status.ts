@@ -1,5 +1,5 @@
 export interface StatusMessage {
-  state: "error" | "failure" | "pending" | "success";
+  state: "error" | "failure" | "pending" | "success" | "in_progress";
   description?: string;
 }
 
@@ -12,7 +12,7 @@ export interface Status {
   /**
    * The state of the status. Can be one of `error`, `failure`, `pending`, or `success`.
    */
-  state: "error" | "failure" | "pending" | "success";
+  state: "error" | "failure" | "pending" | "success" | "in_progress";
   /**
    * The target URL to associate with this status. This URL will be linked from the GitHub UI to allow users to easily see the source of the status.  ,* For example, if your continuous integration system is posting build status, you would want to provide the deep link for the build output for this specific SHA:  ,* `http://ci.example.com/user/repo/build/sha`
    */

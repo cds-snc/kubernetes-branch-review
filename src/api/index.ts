@@ -15,7 +15,7 @@ const baseUrlKubernetes = `${baseUrl}/kubernetes`;
 
 const { K8_API_KEY: TOKEN } = process.env;
 
-export const createCluster = async (options:Options): Promise<Response|false> => {
+export const createCluster = async (options:Options): Promise<{kubernetes_cluster: Cluster}|false> => {
   const endpoint = `${baseUrlKubernetes}/clusters`;
   const clusterOptions = setOptions(options);
 
@@ -92,7 +92,7 @@ export const deleteCluster = async (id:string): Promise<true> => {
   return true;
 };
 
-export const getConfig = async (id:string): Promise<{}> => {
+export const getConfig = async (id:string): Promise<string> => {
   const endpoint = `${baseUrlKubernetes}/clusters/${id}/kubeconfig`;
   let doc = "";
 

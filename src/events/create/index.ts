@@ -6,8 +6,11 @@ import { getRefId } from "../../lib/getRefId";
 import { getName } from "../../lib/getName";
 import { getAction } from "../../lib/getAction";
 import { updateStatus } from "../../lib/githubStatus";
+import { Release } from "../../interfaces/Release";
+import { Request} from "../../interfaces/Request";
+import { PrState, ClusterState } from "../../interfaces/Release";
 
-export const create = async (req, release) => {
+export const create = async (req: Request, release: Release) => {
   if (!req || !req.body) {
     throw new Error("invalid event passed");
   }
@@ -32,8 +35,8 @@ export const create = async (req, release) => {
       refId,
       sha,
       cluster_id: null,
-      pr_state: prState,
-      cluster_state: "in_progress"
+      pr_state: PrState[prState as PrState],
+      cluster_state: ClusterState["in_progress"]
     });
 
     // notify github
@@ -47,7 +50,7 @@ export const create = async (req, release) => {
       version: "1.12.1-do.2"
     });
 
-    if (cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
+    if (cluster && cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
       console.log("cluster created");
       console.log("polling cluster...");
 
@@ -67,25 +70,27 @@ export const create = async (req, release) => {
         { state: "pending", description: "Cluster deployed, building app ..." },
         refId
       );
+      
+      if (result){
+        const id = result.kubernetes_cluster.id;
+        const state = result.kubernetes_cluster.status.state;
 
-      const id = result.kubernetes_cluster.id;
-      const state = result.kubernetes_cluster.status.state;
+        await saveReleaseToDB({
+          refId,
+          cluster_id: id,
+          pr_state: PrState[prState as PrState],
+          cluster_state: ClusterState[state as ClusterState],
+          deployment_id: deployment.id
+        });
 
-      await saveReleaseToDB({
-        refId,
-        cluster_id: id,
-        pr_state: prState,
-        cluster_state: state,
-        deployment_id: deployment.id
-      });
+        const config = await getConfig(id);
 
-      const config = await getConfig(id);
-
-      // save config to the database
-      await saveReleaseToDB({
-        refId,
-        config
-      });
+        // save config to the database
+        await saveReleaseToDB({
+          refId,
+          config
+        });
+      }
     }
 
     return await getRelease({ refId });

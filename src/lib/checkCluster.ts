@@ -4,7 +4,7 @@ import { getName } from "../lib/getName";
 import { getAction } from "../lib/getAction";
 import { create } from "../events/create";
 import { saveReleaseToDB } from "../db/queries";
-import { Release } from "../interfaces/Release";
+import { PrState, Release } from "../interfaces/Release";
 import { Request } from "../interfaces/Request";
 
 const handleCreate = async (req: Request, release: Release) => {
@@ -28,7 +28,7 @@ export const checkAndCreateCluster = async (req: Request, release: Release) => {
         refId,
         sha: req.body.after,
         cluster_id: null,
-        pr_state: "none"
+        pr_state: PrState["none" as PrState]
       });
     }
 

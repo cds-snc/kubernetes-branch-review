@@ -5,7 +5,7 @@ import { Cluster } from "../interfaces/Cluster";
 export const pollCluster = async (
   clusterId: string,
   checkState: string = "running"
-): Promise<void|Cluster> => {
+): Promise<void|{kubernetes_cluster: Cluster}> => {
   return new Promise(resolve => {
     const poll = Object.assign({}, longPoll);
     const prefix = "cluster";

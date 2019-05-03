@@ -11,6 +11,7 @@ export interface Status {
 }
 
 export interface Cluster {
+    id: string;
     node_pools: NodePools[];
     status: Status;
     state: string;

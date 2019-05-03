@@ -11,7 +11,7 @@ import {
 export const createDeployment = async (
   event: RequestBody,
   status = { task: "deploy", description: "Initializing deployment" }
-): Promise<{}> => {
+): Promise<{id: string}> => {
   const client = await authenticate(event.installation.id);
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
