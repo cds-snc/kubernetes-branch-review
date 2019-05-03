@@ -67,13 +67,13 @@ export const updateDeploymentStatus = async (
   const client = await authenticate(event.installation.id);
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
-  const ip = deployment.ip;
+  const ip = deployment.load_balancer_ip;
 
   const deploymentStatus: ReposCreateDeploymentStatusParams = {
     owner: repoOwner,
     repo: repoName,
     environment: "staging",
-    deployment_id: deployment.id,
+    deployment_id: parseInt(deployment.deployment_id),
     log_url: ip ? `http://${ip}` : "",
     environment_url: ip ? `http://${ip}` : "",
     state: "pending"

@@ -23,12 +23,14 @@ export const checkAndCreateCluster = async (req: Request, release: Release) => {
 
   if (!release || !release.refId) {
     const refId = getRefId(req.body);
-    await saveReleaseToDB({
-      refId,
-      sha: req.body.after,
-      cluster_id: null,
-      pr_state: "none"
-    });
+    if (refId){
+      await saveReleaseToDB({
+        refId,
+        sha: req.body.after,
+        cluster_id: null,
+        pr_state: "none"
+      });
+    }
 
     return false;
   }

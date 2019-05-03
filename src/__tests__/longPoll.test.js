@@ -7,8 +7,6 @@ test("receives done event when check is met", async () => {
     if (poll.counter >= 2) return true;
   };
 
-  //
-
   poll.eventEmitter.on("done", () => {
     expect(poll.counter).toEqual(2);
   });

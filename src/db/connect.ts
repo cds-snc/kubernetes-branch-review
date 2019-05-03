@@ -1,16 +1,25 @@
+import { Connection } from "mongoose";
+import { MongoClient } from "mongodb";
+
 const mongoose = require("mongoose");
 mongoose.set("useFindAndModify", false);
 mongoose.set("bufferCommands", false);
 
-const connect = async (uri, user = "", password = "") => {
+interface ConnectOptions {
+  useNewUrlParser: boolean;
+  auth?: {};
+}
+
+const connect = async (uri:string, user:string = "", password:string = ""): Promise<Connection|false> => {
   if (!uri) {
     throw new Error("no uri passed to connect");
   }
 
-  const mongodbUri = uri;
+  const mongodbUri:string = uri;
   let connect = null;
+  
   try {
-    const options = {
+    const options:ConnectOptions = {
       useNewUrlParser: true
     };
 
@@ -30,7 +39,7 @@ const connect = async (uri, user = "", password = "") => {
   return connect;
 };
 
-const dbConnect = async () => {
+export const dbConnect = async (): Promise<Connection> => {
   const { DB_URI, DB_USER, DB_PASS } = process.env;
 
   const db = await connect(
@@ -42,5 +51,3 @@ const dbConnect = async () => {
 
   return db;
 };
-
-module.exports.dbConnect = dbConnect;

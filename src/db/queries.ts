@@ -1,8 +1,10 @@
 import { dbConnect } from "./connect";
 import { getFullNameFromRefId } from "../lib/getRefId";
 const { Model } = require("./model");
+import { Query } from "../interfaces/Query";
+import { Release } from "../interfaces/Release";
 
-export const saveReleaseToDB = async obj => {
+export const saveReleaseToDB = async (obj: Query): Promise<Release|void> => {
   await dbConnect();
 
   if (!obj || !obj.refId) {
@@ -20,7 +22,7 @@ export const saveReleaseToDB = async obj => {
   }
 };
 
-export const getRelease = async (obj, query = { refId: obj.refId }) => {
+export const getRelease = async (obj:Query, query = { refId: obj.refId }): Promise<Release|false> => {
   await dbConnect();
   try {
     let record = await Model.findOne(query).exec();
@@ -29,14 +31,16 @@ export const getRelease = async (obj, query = { refId: obj.refId }) => {
     return record;
   } catch (e) {
     console.error(e.message);
+    return false;
   }
 };
 
-export const getDeployment = async query => {
+export const getDeployment = async (query: Query): Promise<false|Release> => {
   const release = await getRelease(query);
   if (!release || !release.deployment_id) {
     console.log("no release or deployment found", release);
     return false;
   }
-  return { id: release.deployment_id, ip: release.load_balancer_ip };
+  // return { id: release.deployment_id, ip: release.load_balancer_ip };
+  return release;
 };
