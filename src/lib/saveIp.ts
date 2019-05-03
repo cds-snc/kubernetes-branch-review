@@ -6,12 +6,18 @@ import { Request } from "../interfaces/Request";
 
 export const saveIp = async ({ refId }: { refId: string }) => {
   const record = await getRelease({ refId });
-  const clusterId = record.cluster_id;
-  await pollLoadBalancer(clusterId);
+  if (record){
+    const clusterId = record.cluster_id;
+    await pollLoadBalancer(clusterId);
 
-  const ip = await getLoadBalancerIp(clusterId);
-  await saveReleaseToDB({ refId, load_balancer_ip: ip });
-  return ip;
+    const ip = await getLoadBalancerIp(clusterId);
+
+    if(ip){
+      await saveReleaseToDB({ refId, load_balancer_ip: ip });
+    }
+    
+    return ip;
+  }
 };
 
 export const saveIpAndUpdate = async (req: Request, refId: string) => {

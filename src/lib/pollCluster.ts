@@ -1,10 +1,11 @@
 import { longPoll } from "../lib/longPoll";
 import { getCluster } from "../api";
+import { Cluster } from "../interfaces/Cluster";
 
 export const pollCluster = async (
   clusterId: string,
   checkState: string = "running"
-): Promise<void> => {
+): Promise<void|Cluster> => {
   return new Promise(resolve => {
     const poll = Object.assign({}, longPoll);
     const prefix = "cluster";
@@ -12,18 +13,22 @@ export const pollCluster = async (
     poll.id = id;
     poll.delay = 20000;
 
-    poll.check = async (): Promise<void> => {
+    poll.check = async (): Promise<void|{kubernetes_cluster: Cluster}> => {
       const result = await getCluster(clusterId);
-      const clusterState = result.kubernetes_cluster.status.state;
-      console.log(`current cluster state ... ${clusterState}`);
 
-      if (clusterState === checkState) {
-        return result;
-      }
+      if (result){
 
-      if (poll.counter >= 20) {
-        // bail
-        return result;
+        const clusterState = result.kubernetes_cluster.status.state;
+        console.log(`current cluster state ... ${clusterState}`);
+
+        if (clusterState === checkState) {
+          return result;
+        }
+
+        if (poll.counter >= 20) {
+          // bail
+          return result;
+        }
       }
     };
 

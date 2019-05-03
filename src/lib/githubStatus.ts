@@ -40,8 +40,8 @@ export const updateStatus = async (
   if (status.state === "success") {
     const deployment = await getDeployment({ refId: refId });
 
-    if (deployment && deployment.ip) {
-      const ip = deployment.ip;
+    if (deployment && deployment.load_balancer_ip) {
+      const ip = deployment.load_balancer_ip;
       target_url = `http://${ip}`;
     }
   }
