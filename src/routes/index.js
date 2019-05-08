@@ -1,15 +1,12 @@
 import express from "express";
-import { update } from "../events/update";
 import { close } from "../events/close";
 import { Logger, StackDriverNode } from "@cdssnc/logdriver";
 import { getRelease } from "../db/queries";
 import { dbConnect } from "../db/connect";
 import { getRefId } from "../lib/getRefId";
-import { deploy } from "../lib/deploy";
-import { saveIpAndUpdate } from "../lib/saveIp";
 import { getAction } from "../lib/getAction";
-import { checkAndCreateCluster } from "../lib/checkCluster";
 import { returnStatus } from "../lib/returnStatus";
+import { deployRelease } from "../lib/deployRelease";
 
 Logger.subscribe("error", StackDriverNode.log);
 // Logger.debug("=> The message from the server...");
@@ -42,7 +39,7 @@ router.post("/", async (req, res) => {
   let release = await getRelease({ refId });
   console.log("release:", release);
 
-  if (body.after && body.after === "0000000000000000000000000000000000000000"){
+  if (body.after && body.after === "0000000000000000000000000000000000000000") {
     return returnStatus(body, res, {
       state: "success",
       description: "Closing push ignored"
@@ -57,16 +54,10 @@ router.post("/", async (req, res) => {
     });
   }
 
-  release = await checkAndCreateCluster(req, release);
-  console.log("release:", release);
+  const deployStatus = await deployRelease(req, refId, release);
 
-  if (release) {
-    status = await deploy(await update(req));
-    await saveIpAndUpdate(req.body, refId);
-    return returnStatus(body, res, {
-      state: "success",
-      description: "Branch review app deployed"
-    });
+  if (deployStatus && deployStatus.state) {
+    return returnStatus(body, res, deployStatus);
   }
 
   return returnStatus(body, res, {
