@@ -14,6 +14,6 @@
       "*": ["node_modules/*", "src/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "worker.mjs"],
   "exclude": ["src/__mocks__", "**/*.test.*", "src/__tests__", "src/interfaces"]
 }

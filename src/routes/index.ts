@@ -6,6 +6,33 @@ import { getRefId } from "../lib/getRefId";
 import { getAction } from "../lib/getAction";
 import { returnStatus } from "../lib/returnStatus";
 import { deployRelease } from "../lib/deployRelease";
+import { Worker, isMainThread } from "worker_threads";
+import { ClusterWorker } from "../interfaces/ClusterWorker";
+
+let workers: ClusterWorker = {};
+
+// terminate worker
+const terminate = async (worker: Worker, refId: string): Promise<void> => {
+  worker.terminate((err: Error, code: number) => {
+    console.log("index.ts => exit code", code);
+    delete workers[refId];
+  });
+};
+
+//  https://nodejs.org/api/worker_threads.html
+const setupWorker = (refId: string): Worker => {
+  // can init and send data
+  console.log(`setup a new worker for refId ${refId}`);
+  const w = new Worker("./worker.mjs", {
+    workerData: "data sent -> hello from index.js"
+  });
+
+  w.on("message", e => {
+    terminate(w, refId);
+  });
+
+  return w;
+};
 
 const router = express.Router();
 
@@ -48,6 +75,23 @@ router.post("/", async (req, res) => {
       state: "success",
       description: "Branch review app removed"
     });
+  }
+
+  if (isMainThread) {
+    console.log("this is the main thread");
+
+    if (!workers[refId]) {
+      //@ts-ignore
+      workers[refId] = setupWorker();
+    } else {
+      console.log("terminate existing worker");
+      //@ts-ignore
+      await terminate(workers[refId], refId);
+    }
+
+    //
+  } else {
+    console.log("not main thread");
   }
 
   const deployStatus = await deployRelease(req, refId, release);
