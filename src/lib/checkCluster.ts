@@ -18,12 +18,15 @@ const handleCreate = async (req: Request, release: Release) => {
   return release;
 };
 
-export const checkAndCreateCluster = async (req: Request, release: Release) => {
+export const checkAndCreateCluster = async (
+  req: Request,
+  release: Release | false
+) => {
   const name = getName(req);
 
   if (!release || !release.refId) {
     const refId = getRefId(req.body);
-    if (refId){
+    if (refId) {
       await saveReleaseToDB({
         refId,
         sha: req.body.after,

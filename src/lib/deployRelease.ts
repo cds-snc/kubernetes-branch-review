@@ -4,13 +4,13 @@ import { update } from "../events/update";
 import { deploy } from "./deploy";
 import { Request } from "../interfaces/Request";
 import { Release } from "../interfaces/Release";
-import { StatusMessage } from "../interfaces/Status";
+import { Status } from "../interfaces/Status";
 
 export const deployRelease = async (
   req: Request,
   refId: string,
-  currentRelease: Release
-): Promise<StatusMessage | boolean> => {
+  currentRelease: Release | false
+): Promise<Status | boolean> => {
   let release: Release | false = await checkAndCreateCluster(
     req,
     currentRelease
@@ -24,4 +24,6 @@ export const deployRelease = async (
       description: "Branch review app deployed"
     };
   }
+
+  return false;
 };

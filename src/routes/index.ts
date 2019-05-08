@@ -1,6 +1,6 @@
 import express from "express";
 import { close } from "../events/close";
-import { Logger, StackDriverNode } from "@cdssnc/logdriver";
+//import { Logger, StackDriverNode } from "@cdssnc/logdriver";
 import { getRelease } from "../db/queries";
 import { dbConnect } from "../db/connect";
 import { getRefId } from "../lib/getRefId";
@@ -8,7 +8,7 @@ import { getAction } from "../lib/getAction";
 import { returnStatus } from "../lib/returnStatus";
 import { deployRelease } from "../lib/deployRelease";
 
-Logger.subscribe("error", StackDriverNode.log);
+//Logger.subscribe("error", StackDriverNode.log);
 // Logger.debug("=> The message from the server...");
 
 const router = express.Router();
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
     });
   }
 
-  if (action === "closed") {
+  if (action === "closed" && release) {
     status = await close(req, release);
     return returnStatus(body, res, {
       state: "success",
@@ -56,7 +56,7 @@ router.post("/", async (req, res) => {
 
   const deployStatus = await deployRelease(req, refId, release);
 
-  if (deployStatus && deployStatus.state) {
+  if (deployStatus && typeof deployStatus === "object") {
     return returnStatus(body, res, deployStatus);
   }
 
