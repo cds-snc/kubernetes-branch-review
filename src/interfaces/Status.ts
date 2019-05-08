@@ -5,11 +5,11 @@ export interface StatusMessage {
 }
 
 export interface Status {
-  owner: string;
+  owner?: string;
 
-  repo: string;
+  repo?: string;
 
-  sha: string;
+  sha?: string;
   /**
    * The state of the status. Can be one of `error`, `failure`, `pending`, or `success`.
    */
