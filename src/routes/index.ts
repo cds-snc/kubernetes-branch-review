@@ -1,15 +1,11 @@
 import express from "express";
 import { close } from "../events/close";
-//import { Logger, StackDriverNode } from "@cdssnc/logdriver";
 import { getRelease } from "../db/queries";
 import { dbConnect } from "../db/connect";
 import { getRefId } from "../lib/getRefId";
 import { getAction } from "../lib/getAction";
 import { returnStatus } from "../lib/returnStatus";
 import { deployRelease } from "../lib/deployRelease";
-
-//Logger.subscribe("error", StackDriverNode.log);
-// Logger.debug("=> The message from the server...");
 
 const router = express.Router();
 
