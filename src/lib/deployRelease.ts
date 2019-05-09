@@ -27,3 +27,5 @@ export const deployRelease = async (
 
   return false;
 };
+
+module.exports.deployRelease = deployRelease;

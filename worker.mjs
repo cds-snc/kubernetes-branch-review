@@ -2,17 +2,15 @@
 
 const { workerData, isMainThread } = require("worker_threads");
 
-const sleep = milliseconds => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-};
+// const { fakeDeploy } = require("./src/lib/fakeDeploy");
+
+// const { deployRelease } = require("./src/lib/deployRelease");
+// const { workerStatus } = require("./src/lib/returnStatus");
+
+const { deployReleaseAndNotify } = require("./src/lib/deployReleaseAndNotify");
 
 if (!isMainThread) {
-  console.log("worker.ts => workerData:", workerData);
+  //console.log("worker.ts => workerData:", workerData);
+  //fakeDeploy(workerData.req, workerData.refId, workerData.release);
+  deployReleaseAndNotify(workerData.req, workerData.refId, workerData.release);
 }
-
-const hello = async () => {
-  await sleep(10000);
-  console.log("worker.ts => paused for 10000ms some long running process");
-};
-
-hello();

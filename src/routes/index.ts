@@ -5,9 +5,10 @@ import { dbConnect } from "../db/connect";
 import { getRefId } from "../lib/getRefId";
 import { getAction } from "../lib/getAction";
 import { returnStatus } from "../lib/returnStatus";
-import { deployRelease } from "../lib/deployRelease";
 import { Worker, isMainThread } from "worker_threads";
 import { ClusterWorker } from "../interfaces/ClusterWorker";
+import { Release } from "../interfaces/Release";
+import { Request } from "../interfaces/Request";
 
 let workers: ClusterWorker = {};
 
@@ -20,12 +21,12 @@ const terminate = async (worker: Worker, refId: string): Promise<void> => {
 };
 
 //  https://nodejs.org/api/worker_threads.html
-const setupWorker = (refId: string): Worker => {
+const setupWorker = (req: Request, refId: string, release: Release): Worker => {
   // can init and send data
   console.log(`setup a new worker for refId ${refId}`);
 
   const w = new Worker("./worker.mjs", {
-    workerData: "data sent -> hello from index.js"
+    workerData: { req, refId, release }
   });
 
   w.on("message", e => {
@@ -78,33 +79,18 @@ router.post("/", async (req, res) => {
     });
   }
 
+  // hand off to Worker
   if (isMainThread) {
-    console.log("this is the main thread");
-
-    if (!workers[refId]) {
+    if (refId && !workers[refId]) {
+      // create and pass a stripped down version of the request
       //@ts-ignore
-      workers[refId] = setupWorker();
+      workers[refId] = setupWorker({ body: req.body }, refId, release);
     } else {
-      console.log("terminate existing worker");
+      console.log(`terminate existing worker ${refId}`);
       //@ts-ignore
       await terminate(workers[refId], refId);
     }
-
-    //
-  } else {
-    console.log("not main thread");
   }
-
-  const deployStatus = await deployRelease(req, refId, release);
-
-  if (deployStatus && typeof deployStatus === "object") {
-    return returnStatus(body, res, deployStatus);
-  }
-
-  return returnStatus(body, res, {
-    state: "error",
-    description: "no release found"
-  });
 });
 
 export default router;

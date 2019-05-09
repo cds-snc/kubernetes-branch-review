@@ -11,9 +11,23 @@ export const returnStatus = async (
   status: Status
 ): Promise<void> => {
   const refId = getRefId(body);
-  if(refId){
+  if (refId) {
     await updateDeploymentStatus(body, status, refId);
     await updateStatus(body, status, refId);
   }
+
   res.send(status.description);
 };
+
+const workerStatus = async (
+  body: RequestBody,
+  status: Status
+): Promise<void> => {
+  const refId = getRefId(body);
+  if (refId) {
+    await updateDeploymentStatus(body, status, refId);
+    await updateStatus(body, status, refId);
+  }
+};
+
+module.exports.workerStatus = workerStatus;
