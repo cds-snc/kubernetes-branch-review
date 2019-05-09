@@ -23,6 +23,7 @@ const terminate = async (worker: Worker, refId: string): Promise<void> => {
 const setupWorker = (refId: string): Worker => {
   // can init and send data
   console.log(`setup a new worker for refId ${refId}`);
+
   const w = new Worker("./worker.mjs", {
     workerData: "data sent -> hello from index.js"
   });
