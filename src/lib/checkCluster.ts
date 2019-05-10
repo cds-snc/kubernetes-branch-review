@@ -22,6 +22,9 @@ export const checkAndCreateCluster = async (
   req: Request,
   release: Release | false
 ) => {
+  
+  console.log("checkAndCreateCluster() called");
+  
   const name = getName(req);
 
   if (!release || !release.refId) {
