@@ -53,7 +53,7 @@ jest.mock("../db/queries", () => ({
 }));
 
 // create event
-test("returns 200 status code + calls create", async () => {
+test.skip("returns 200 status code + calls create", async () => {
   const event = await eventJS("create_a_pr");
 
   getDeployment.mockReturnValueOnce({
@@ -76,7 +76,7 @@ test("returns 200 status code + calls create", async () => {
 });
 
 // update event
-test("returns 200 status code + calls update", async () => {
+test.skip("returns 200 status code + calls update", async () => {
   getDeployment.mockReturnValueOnce({
     ip: "123"
   });

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsc && node index",
     "lint": "eslint src/*.js",
-    "test": "jest --forceExit",
+    "test": "tsc && jest --forceExit",
     "start": "tsc && NODE_ENV=production node index",
     "build": "tsc",
     "watch": "tsc && tsc-watch",

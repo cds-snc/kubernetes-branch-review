@@ -7,7 +7,7 @@ import { Response } from "express";
 
 export const returnStatus = async (
   body: RequestBody,
-  res: Response,
+  res: Response | null,
   status: Status
 ): Promise<void> => {
   const refId = getRefId(body);
@@ -16,18 +16,7 @@ export const returnStatus = async (
     await updateStatus(body, status, refId);
   }
 
-  res.send(status.description);
-};
-
-const workerStatus = async (
-  body: RequestBody,
-  status: Status
-): Promise<void> => {
-  const refId = getRefId(body);
-  if (refId) {
-    await updateDeploymentStatus(body, status, refId);
-    await updateStatus(body, status, refId);
+  if (res) {
+    res.send(status.description);
   }
 };
-
-module.exports.workerStatus = workerStatus;
