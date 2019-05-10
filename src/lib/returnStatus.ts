@@ -7,13 +7,16 @@ import { Response } from "express";
 
 export const returnStatus = async (
   body: RequestBody,
-  res: Response,
+  res: Response | null,
   status: Status
 ): Promise<void> => {
   const refId = getRefId(body);
-  if(refId){
+  if (refId) {
     await updateDeploymentStatus(body, status, refId);
     await updateStatus(body, status, refId);
   }
-  res.send(status.description);
+
+  if (res) {
+    res.send(status.description);
+  }
 };

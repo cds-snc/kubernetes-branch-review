@@ -5,7 +5,36 @@ import { dbConnect } from "../db/connect";
 import { getRefId } from "../lib/getRefId";
 import { getAction } from "../lib/getAction";
 import { returnStatus } from "../lib/returnStatus";
-import { deployRelease } from "../lib/deployRelease";
+import { Worker, isMainThread } from "worker_threads";
+import { ClusterWorker } from "../interfaces/ClusterWorker";
+import { Release } from "../interfaces/Release";
+import { Request } from "../interfaces/Request";
+
+let workers: ClusterWorker = {};
+
+// terminate worker
+const terminate = async (worker: Worker, refId: string): Promise<void> => {
+  worker.terminate((err: Error, code: number) => {
+    console.log("index.ts => exit code", code);
+    delete workers[refId];
+  });
+};
+
+//  https://nodejs.org/api/worker_threads.html
+const setupWorker = (req: Request, refId: string, release: Release): Worker => {
+  // can init and send data
+  console.log(`setup a new worker for refId ${refId}`);
+
+  const w = new Worker("./worker.mjs", {
+    workerData: { req, refId, release }
+  });
+
+  w.on("message", e => {
+    terminate(w, refId);
+  });
+
+  return w;
+};
 
 const router = express.Router();
 
@@ -50,16 +79,18 @@ router.post("/", async (req, res) => {
     });
   }
 
-  const deployStatus = await deployRelease(req, refId, release);
-
-  if (deployStatus && typeof deployStatus === "object") {
-    return returnStatus(body, res, deployStatus);
+  // hand off to Worker
+  if (isMainThread) {
+    if (refId && !workers[refId]) {
+      // create and pass a stripped down version of the request
+      //@ts-ignore
+      workers[refId] = setupWorker({ body: req.body }, refId, release);
+    } else {
+      console.log(`terminate existing worker ${refId}`);
+      //@ts-ignore
+      await terminate(workers[refId], refId);
+    }
   }
-
-  return returnStatus(body, res, {
-    state: "error",
-    description: "no release found"
-  });
 });
 
 export default router;
