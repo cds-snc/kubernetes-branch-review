@@ -1,3 +1,5 @@
+// tests need to be fixed to run worker code
+
 import { server } from "../server";
 import request from "supertest";
 import { eventJS } from "../__mocks__";
