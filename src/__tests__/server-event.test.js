@@ -3,8 +3,8 @@
 import { server } from "../server";
 import request from "supertest";
 import { eventJS } from "../__mocks__";
-import { create } from "../events/create";
-import { update } from "../events/update";
+// import { create } from "../events/create";
+// import { update } from "../events/update";
 import { close } from "../events/close";
 import { getRelease, getDeployment } from "../db/queries";
 require("dotenv-safe").config({ allowEmptyValues: true });
@@ -23,18 +23,22 @@ jest.mock("../lib/githubStatus", () => ({
 }));
 
 // mock create
+/*
 jest.mock("../events/create", () => ({
   create: jest.fn(() => {
     return true;
   })
 }));
+*/
 
 // mock update
+/*
 jest.mock("../events/update", () => ({
   update: jest.fn(() => {
     return true;
   })
 }));
+*/
 
 // mock close
 jest.mock("../events/close", () => ({
@@ -55,7 +59,7 @@ jest.mock("../db/queries", () => ({
 }));
 
 // create event
-test.skip("returns 200 status code + calls create", async () => {
+test("returns 200 status code + calls create", async () => {
   const event = await eventJS("create_a_pr");
 
   getDeployment.mockReturnValueOnce({
@@ -74,11 +78,12 @@ test.skip("returns 200 status code + calls create", async () => {
     .set("Content-Type", "application/json")
     .expect(200);
 
-  expect(create).toHaveBeenCalledTimes(1);
+  // this happens in the worker now
+  // expect(create).toHaveBeenCalledTimes(1);
 });
 
 // update event
-test.skip("returns 200 status code + calls update", async () => {
+test("returns 200 status code + calls update", async () => {
   getDeployment.mockReturnValueOnce({
     ip: "123"
   });
@@ -99,8 +104,8 @@ test.skip("returns 200 status code + calls update", async () => {
     .expect(200);
 
   expect(getRelease).toHaveBeenCalledTimes(1);
-  expect(update).toHaveBeenCalledTimes(1);
-  //
+  // this happens in the worker now
+  // expect(update).toHaveBeenCalledTimes(1);
 });
 
 // closed event
