@@ -25,6 +25,10 @@ const setupWorker = (req: Request, refId: string, release: Release): Worker => {
   // can init and send data
   console.log(`setup a new worker for refId ${refId}`);
 
+  console.log(`release refId ${release.refId}`);
+
+  //console.log(release);
+
   const w = new Worker("./worker.js", {
     workerData: { req, refId, release }
   });
@@ -85,8 +89,6 @@ router.post("/", async (req, res) => {
       // create and pass a stripped down version of the request
       //@ts-ignore
       workers[refId] = setupWorker({ body: req.body }, refId, release);
-
-      
     } else {
       console.log(`terminate existing worker ${refId}`);
       //@ts-ignore
@@ -94,7 +96,7 @@ router.post("/", async (req, res) => {
     }
   }
 
-  res.send("setting up worker");
+  res.send("event received");
 });
 
 export default router;

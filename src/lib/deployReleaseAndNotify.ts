@@ -2,14 +2,18 @@ import { deployRelease } from "./deployRelease";
 import { returnStatus } from "./returnStatus";
 
 import { Request } from "../interfaces/Request";
-import { Release } from "../interfaces/Release";
 
-const deployReleaseAndNotify = async (
-  req: Request,
-  refId: string,
-  currentRelease: Release
-) => {
+// import { Release } from "../interfaces/Release";
+
+import { getRelease } from "../db/queries";
+
+const deployReleaseAndNotify = async (req: Request, refId: string) => {
   const body = req.body;
+
+  console.log("deployReleaseAndNotify");
+
+  let currentRelease = await getRelease({ refId });
+
 
   const deployStatus = await deployRelease(req, refId, currentRelease);
 
