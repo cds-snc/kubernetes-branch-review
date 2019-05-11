@@ -25,10 +25,6 @@ const setupWorker = (req: Request, refId: string, release: Release): Worker => {
   // can init and send data
   console.log(`setup a new worker for refId ${refId}`);
 
-  console.log(`release refId ${release.refId}`);
-
-  //console.log(release);
-
   const w = new Worker("./worker.js", {
     workerData: { req, refId, release }
   });
@@ -85,18 +81,21 @@ router.post("/", async (req, res) => {
 
   // hand off to Worker
   if (isMainThread) {
-    if (refId && !workers[refId]) {
-      // create and pass a stripped down version of the request
-      //@ts-ignore
-      workers[refId] = setupWorker({ body: req.body }, refId, release);
-    } else {
-      console.log(`terminate existing worker ${refId}`);
-      //@ts-ignore
-      await terminate(workers[refId], refId);
-    }
+    // @todo - handle initial commit
+    // stop existing worker + start a new worker
+    //if (refId && !workers[refId]) {
+    // create and pass a stripped down version of the request
+    //@ts-ignore
+    workers[refId] = setupWorker({ body: req.body }, refId, release);
+    //} else {
+    //console.log(`⚡ terminate existing worker ${refId}`);
+    //@ts-ignore
+    //await terminate(workers[refId], refId);
+    //}
   }
-
-  res.send("event received");
+  const msg = `✅ event received ✅ action: ${action}  ✅ refId: ${refId}`;
+  console.log(msg);
+  res.send(msg);
 });
 
 export default router;

@@ -11,8 +11,7 @@ export const deployRelease = async (
   refId: string,
   currentRelease: Release | false
 ): Promise<Status | boolean> => {
-  console.log("deployRelease");
-
+  
   if (currentRelease && currentRelease.refId) {
     console.log(currentRelease.refId);
   }

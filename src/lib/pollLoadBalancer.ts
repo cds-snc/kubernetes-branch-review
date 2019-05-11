@@ -27,7 +27,11 @@ export const pollLoadBalancer = async (
         return false;
       }
 
-      const loadBalancerState = result.status;
+      let loadBalancerState = "";
+
+      if (result && result.status) {
+        loadBalancerState = result.status;
+      }
       // message for the logs
       let loadBalancerMsg = loadBalancerState || "⏱️";
 

@@ -10,8 +10,6 @@ import { getRelease } from "../db/queries";
 const deployReleaseAndNotify = async (req: Request, refId: string) => {
   const body = req.body;
 
-  console.log("deployReleaseAndNotify");
-
   let currentRelease = await getRelease({ refId });
 
 

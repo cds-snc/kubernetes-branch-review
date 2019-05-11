@@ -4,6 +4,7 @@ import { authenticate } from "./githubAuth";
 import { getDeployment } from "../db/queries";
 import { RequestBody } from "../interfaces/Request";
 import { Status, StatusMessage } from "../interfaces/Status";
+import { getInstallationId } from "../lib/getInstallationId";
 
 const validate = (event: RequestBody) => {
   if (
@@ -26,12 +27,12 @@ export const updateStatus = async (
 ) => {
   if (!validate(event)) return false;
 
-  if (!event || !event.installation) {
-    console.log("no event.installation");
+  if (!event) {
+    console.log("no event passed");
     return;
   }
 
-  const client = await authenticate(event.installation.id);
+  const client = await authenticate(getInstallationId(event));
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
 
@@ -52,18 +53,18 @@ export const updateStatus = async (
     sha = event.after;
   }
 
-    const statusObj: StatusMessage = Object.assign(status, {
-      owner: repoOwner,
-      repo: repoName,
-      sha: sha,
-      context: "K8's branch deploy"
-    });
+  const statusObj: StatusMessage = Object.assign(status, {
+    owner: repoOwner,
+    repo: repoName,
+    sha: sha,
+    context: "K8's branch deploy"
+  });
 
-    if (target_url) {
-      statusObj.target_url = target_url;
-    }
+  if (target_url) {
+    statusObj.target_url = target_url;
+  }
 
-    const result = await client.repos.createStatus(statusObj);
+  const result = await client.repos.createStatus(statusObj);
 
-    return result;
+  return result;
 };

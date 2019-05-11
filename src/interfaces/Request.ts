@@ -15,8 +15,9 @@ export interface RequestBody {
   action: string;
   repository: Repository;
   ref: string;
+  before?: string;
   after?: string;
-  installation: { id: string };
+  installation?: { id: string };
   pull_request: PullRequest;
 }
 

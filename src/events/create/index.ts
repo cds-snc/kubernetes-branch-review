@@ -42,8 +42,6 @@ export const create = async (req: Request, release: Release) => {
     const deployment = await createDeployment(body);
 
     // if this fails kill the process + update db
-
-    console.log("create cluster");
     const cluster = await createCluster({
       name: getName(req),
       version: "1.12.1-do.2"

@@ -22,14 +22,10 @@ export const checkAndCreateCluster = async (
   req: Request,
   release: Release | false
 ) => {
-  console.log(`checkAndCreateCluster()`);
-
   const name = getName(req);
 
   if (!release || !release.refId) {
-    console.log("!release || !release.refId");
     //@ts-ignore
-    console.log(release.refId);
     const refId = getRefId(req.body);
     if (refId) {
       await saveReleaseToDB({

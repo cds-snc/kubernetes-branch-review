@@ -2,6 +2,7 @@ import { authenticate } from "./githubAuth";
 import { getDeployment } from "../db/queries";
 import { RequestBody } from "../interfaces/Request";
 import { StatusMessage } from "../interfaces/Status";
+import { getInstallationId } from "../lib/getInstallationId";
 import {
   ReposCreateDeploymentParams,
   ReposCreateDeploymentStatusParams,
@@ -11,8 +12,8 @@ import {
 export const createDeployment = async (
   event: RequestBody,
   status = { task: "deploy", description: "Initializing deployment" }
-): Promise<{id: string}> => {
-  const client = await authenticate(event.installation.id);
+): Promise<{ id: string }> => {
+  const client = await authenticate(getInstallationId(event));
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
   let sha;
@@ -59,12 +60,12 @@ export const updateDeploymentStatus = async (
 ): Promise<ReposCreateDeploymentStatusResponse | {}> => {
   const deployment = await getDeployment({ refId: refId });
 
-  if (!deployment || !event || !event.installation) {
-    console.log("no deployment or no event.installation");
+  if (!deployment || !event) {
+    console.log(`no deployment found`);
     return;
   }
 
-  const client = await authenticate(event.installation.id);
+  const client = await authenticate(getInstallationId(event));
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
   const ip = deployment.load_balancer_ip;
