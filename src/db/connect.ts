@@ -1,5 +1,4 @@
 import { Connection } from "mongoose";
-import { MongoClient } from "mongodb";
 
 const mongoose = require("mongoose");
 mongoose.set("useFindAndModify", false);

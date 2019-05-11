@@ -3,7 +3,7 @@
 import { authenticate } from "./githubAuth";
 import { getDeployment } from "../db/queries";
 import { RequestBody } from "../interfaces/Request";
-import { Status, StatusMessage } from "../interfaces/Status";
+import { StatusMessage } from "../interfaces/Status";
 import { getInstallationId } from "../lib/getInstallationId";
 
 const validate = (event: RequestBody) => {

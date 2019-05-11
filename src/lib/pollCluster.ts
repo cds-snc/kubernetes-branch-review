@@ -25,7 +25,7 @@ export const pollCluster = async (
           return result;
         }
 
-        if (poll.counter >= 20) {
+        if (poll.counter >= 40) {
           // bail
           return result;
         }

@@ -43,13 +43,12 @@ router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.post("/", async (req, res) => {
   const body = req.body;
-  let status;
 
   // do we have a database connection?
   const db = await dbConnect();
   if (!db) {
     // @todo notify github
-    status = "database connection error 🛑";
+    let status = "database connection error 🛑";
     return returnStatus(body, res, { state: "error", description: status });
   }
 
@@ -58,7 +57,7 @@ router.post("/", async (req, res) => {
 
   // do we have a refId?
   if (!refId) {
-    status = "no refId found 🛑";
+    let status = "no refId found 🛑";
     return returnStatus(body, res, { state: "error", description: status });
   }
 
@@ -73,7 +72,7 @@ router.post("/", async (req, res) => {
   }
 
   if (action === "closed" && release) {
-    status = await close(req, release);
+    await close(req, release);
     return returnStatus(body, res, {
       state: "success",
       description: "Branch review app removed"

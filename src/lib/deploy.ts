@@ -31,7 +31,9 @@ export const deploy = async (release: Release): Promise<Boolean> => {
   // Parse the repo specific config file
   const configuration = await elenchosConfig(sha);
 
-  if(!configuration){return false};
+  if (!configuration) {
+    return false;
+  }
 
   const { dockerfiles, overlay } = configuration;
 
