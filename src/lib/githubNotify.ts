@@ -3,6 +3,7 @@ import { getDeployment } from "../db/queries";
 import { RequestBody } from "../interfaces/Request";
 import { StatusMessage } from "../interfaces/Status";
 import { getInstallationId } from "../lib/getInstallationId";
+import { getSha } from "../lib/getSha";
 import {
   ReposCreateDeploymentParams,
   ReposCreateDeploymentStatusParams,
@@ -16,13 +17,7 @@ export const createDeployment = async (
   const client = await authenticate(getInstallationId(event));
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
-  let sha;
-
-  if (event.pull_request) {
-    sha = event.pull_request.head.sha;
-  } else {
-    sha = event.after;
-  }
+  const sha = getSha(event);
 
   const statusObj: ReposCreateDeploymentParams = Object.assign(
     {
