@@ -1,6 +1,5 @@
 import { longPoll } from "./longPoll";
 import { getClusterName, getLoadBalancer } from "../lib/getLoadBalancer";
-import { LoadBalancer } from "../interfaces/LoadBalancer";
 
 export const pollLoadBalancer = async (
   clusterId: string,

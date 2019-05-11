@@ -3,8 +3,9 @@ import { close } from "../events/close";
 import { getRelease } from "../db/queries";
 import { dbConnect } from "../db/connect";
 import { getRefId } from "../lib/getRefId";
-import { getAction } from "../lib/getAction";
+import { getAction, isBeforePr } from "../lib/getAction";
 import { returnStatus } from "../lib/returnStatus";
+import { beforePr } from "../lib/checkCluster";
 import { Worker, isMainThread } from "worker_threads";
 import { ClusterWorker } from "../interfaces/ClusterWorker";
 import { Release } from "../interfaces/Release";
@@ -81,19 +82,21 @@ router.post("/", async (req, res) => {
 
   // hand off to Worker
   if (isMainThread) {
-    // @todo - handle initial commit
-    // stop existing worker + start a new worker
-    //if (refId && !workers[refId]) {
-    // create and pass a stripped down version of the request
-    //@ts-ignore
-    workers[refId] = setupWorker({ body: req.body }, refId, release);
-    //} else {
-    //console.log(`⚡ terminate existing worker ${refId}`);
-    //@ts-ignore
-    //await terminate(workers[refId], refId);
-    //}
+    if (isBeforePr(req)) {
+      beforePr(req);
+    } else {
+      // stop existing worker + start a new worker
+      if (refId && workers[refId]) {
+        //@ts-ignore
+        await terminate(workers[refId], refId);
+      }
+
+      //@ts-ignore
+      workers[refId] = setupWorker({ body: req.body }, refId, release);
+    }
   }
-  const msg = `✅ event received ✅ action: ${action}  ✅ refId: ${refId}`;
+
+  const msg = `✅ event received  ✅ action: ${action}  ✅ refId: ${refId}`;
   console.log(msg);
   res.send(msg);
 });

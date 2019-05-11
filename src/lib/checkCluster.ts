@@ -18,6 +18,19 @@ const handleCreate = async (req: Request, release: Release) => {
   return release;
 };
 
+export const beforePr = async (req: Request): Promise<void> => {
+  //@ts-ignore
+  const refId = getRefId(req.body);
+  if (refId) {
+    await saveReleaseToDB({
+      refId,
+      sha: req.body.after,
+      cluster_id: null,
+      pr_state: PrState["none" as PrState]
+    });
+  }
+};
+
 export const checkAndCreateCluster = async (
   req: Request,
   release: Release | false
@@ -25,17 +38,7 @@ export const checkAndCreateCluster = async (
   const name = getName(req);
 
   if (!release || !release.refId) {
-    //@ts-ignore
-    const refId = getRefId(req.body);
-    if (refId) {
-      await saveReleaseToDB({
-        refId,
-        sha: req.body.after,
-        cluster_id: null,
-        pr_state: PrState["none" as PrState]
-      });
-    }
-
+    await beforePr(req);
     return false;
   }
 

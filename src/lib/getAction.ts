@@ -1,18 +1,24 @@
 import { isMaster } from "./isMaster";
 import { Request } from "../interfaces/Request";
 
-// @todo - update return type with possible values
-export const getAction = (req: Request): string => {
-  let action;
+export const isBeforePr = (req: Request): boolean => {
   const body = req.body;
-
   if (
     body &&
     body.before &&
     body.before === "0000000000000000000000000000000000000000"
   ) {
-    console.log("✅ initial commit");
+    console.log("✅ commit prior to PR");
+    return true;
   }
+
+  return false;
+};
+
+// @todo - update return type with possible values
+export const getAction = (req: Request): string => {
+  let action;
+  const body = req.body;
 
   if (body && body.action) {
     // create
@@ -25,5 +31,10 @@ export const getAction = (req: Request): string => {
       action = "updated";
     }
   }
+
+  if (isBeforePr(req)) {
+    action = "init";
+  }
+
   return action;
 };
