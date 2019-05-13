@@ -25,14 +25,9 @@ export const getAction = (req: Request): string => {
     // close
     // reopen
     action = body.action;
-  } else {
-    // get action from other type of event
-    if (!isMaster(body) && body.repository) {
-      action = "updated";
-    }
-  }
-
-  if (isBeforePr(req)) {
+  } else if (!isMaster(body) && body.repository) {
+    action = "updated";
+  } else if (isBeforePr(req)) {
     action = "init";
   }
 
