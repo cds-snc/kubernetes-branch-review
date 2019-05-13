@@ -2,30 +2,36 @@ import { getDroplets, getLoadBalancers, getCluster } from "../api";
 import { Droplet } from "../interfaces/Droplet";
 import { LoadBalancer } from "../interfaces/LoadBalancer";
 
-export const getDropletByName = async (name:string): Promise<false|Droplet> => {
+export const getDropletByName = async (
+  name: string
+): Promise<false | Droplet> => {
   const result = await getDroplets();
 
-  let clusterDroplet:false|Droplet
+  let clusterDroplet: false | Droplet;
   clusterDroplet = false;
 
-  if (result) {
-    result.droplets.forEach((droplet:Droplet): void => {
-      if (droplet.name === name) {
-        clusterDroplet = droplet;
+  if (result && result.droplets) {
+    result.droplets.forEach(
+      (droplet: Droplet): void => {
+        if (droplet.name === name) {
+          clusterDroplet = droplet;
+        }
       }
-    });
+    );
   }
 
   return clusterDroplet;
 };
 
-export const getLoadBalancerById = async (id:number): Promise<LoadBalancer> => {
+export const getLoadBalancerById = async (
+  id: number
+): Promise<LoadBalancer> => {
   const result = await getLoadBalancers();
 
-  let clusterLoadBalancer:LoadBalancer
+  let clusterLoadBalancer: LoadBalancer;
 
-  if (result) {
-    result.load_balancers.forEach((loadBalancer:LoadBalancer) => {
+  if (result && result.load_balancers) {
+    result.load_balancers.forEach((loadBalancer: LoadBalancer) => {
       let ids = loadBalancer.droplet_ids;
 
       if (ids && ids.length >= 1 && ids.includes(id)) {
@@ -37,7 +43,9 @@ export const getLoadBalancerById = async (id:number): Promise<LoadBalancer> => {
   return clusterLoadBalancer;
 };
 
-export const getLoadBalancer = async (name:string): Promise<Error|LoadBalancer> => {
+export const getLoadBalancer = async (
+  name: string
+): Promise<Error | LoadBalancer> => {
   const droplet = await getDropletByName(name);
   if (!droplet || !droplet.id) {
     throw new Error(`droplet not found ${name}`);
@@ -46,9 +54,9 @@ export const getLoadBalancer = async (name:string): Promise<Error|LoadBalancer> 
   return balancer;
 };
 
-export const getClusterName = async (clusterId:string): Promise<Error|string>=> {
-  
-  
+export const getClusterName = async (
+  clusterId: string
+): Promise<Error | string> => {
   const cluster = await getCluster(clusterId);
   if (
     !cluster ||
@@ -62,7 +70,9 @@ export const getClusterName = async (clusterId:string): Promise<Error|string>=> 
   return name;
 };
 
-export const getLoadBalancerIp = async (clusterId:string): Promise<false|string> => {
+export const getLoadBalancerIp = async (
+  clusterId: string
+): Promise<false | string> => {
   const name = await getClusterName(clusterId);
 
   if (name instanceof Error) {
@@ -76,10 +86,9 @@ export const getLoadBalancerIp = async (clusterId:string): Promise<false|string>
   }
 
   if (balancer && balancer.id && balancer.ip) {
-    console.log("ip", balancer.ip);
+    console.log("✅ ready ip", balancer.ip);
     return balancer.ip;
   }
-  
 
   return false;
 };
