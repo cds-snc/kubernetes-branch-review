@@ -15,10 +15,28 @@ const validate = (event: RequestBody) => {
     !event.repository.owner ||
     !event.repository.owner.login
   ) {
+    console.log("failed to validate event");
     return false;
   }
 
   return true;
+};
+
+const getTargetUrl = async (status: StatusMessage, refId: string) => {
+  let target_url = ""; // this will be the deployment url
+
+  if (status && status.state !== "success") {
+    return {};
+  }
+
+  const deployment = await getDeployment({ refId: refId });
+
+  if (deployment && deployment.load_balancer_ip) {
+    const ip = deployment.load_balancer_ip;
+    target_url = `http://${ip}`;
+  }
+
+  return target_url ? { target_url } : {};
 };
 
 export const updateStatus = async (
@@ -28,37 +46,21 @@ export const updateStatus = async (
 ) => {
   if (!validate(event)) return false;
 
-  if (!event) {
-    console.log("no event passed");
-    return;
-  }
-
   const client = await authenticate(getInstallationId(event));
   const repoOwner = event.repository.owner.login;
   const repoName = event.repository.name;
-
-  let target_url = ""; // this will be the deployment url
-
-  if (status.state === "success") {
-    const deployment = await getDeployment({ refId: refId });
-
-    if (deployment && deployment.load_balancer_ip) {
-      const ip = deployment.load_balancer_ip;
-      target_url = `http://${ip}`;
-    }
-  }
   const sha = getSha(event);
 
-  const statusObj: StatusMessage = Object.assign(status, {
-    owner: repoOwner,
-    repo: repoName,
-    sha: sha,
-    context: "K8's branch deploy"
-  });
-
-  if (target_url) {
-    statusObj.target_url = target_url;
-  }
+  const statusObj: StatusMessage = Object.assign(
+    status,
+    {
+      owner: repoOwner,
+      repo: repoName,
+      sha: sha,
+      context: "K8's branch deploy"
+    },
+    await getTargetUrl(status, refId)
+  );
 
   const result = await client.repos.createStatus(statusObj);
 
