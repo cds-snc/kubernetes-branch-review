@@ -14,33 +14,16 @@ async function asyncForEach(
   }
 }
 
-export const deploy = async (release: Release): Promise<Boolean> => {
-  const { fullName, refId, sha, config } = release;
-
-  if (!refId) {
-    console.warn(`refIfd is not set`);
-    return false;
-  }
-
-  // Checkout the code
-  if (!(await checkout(fullName, sha))) {
-    console.warn(`Could not checkout repo ${refId}`);
-    return false;
-  }
-
+const getDockerImages = async (sha: string, refId: string) => {
   // Parse the repo specific config file
   const configuration = await elenchosConfig(sha);
 
-  if (!configuration) {
+  if (!configuration || !configuration.dockerfiles || !configuration.overlay) {
+    console.warn(`Could not get repo config ${refId}`);
     return false;
   }
 
   const { dockerfiles, overlay } = configuration;
-
-  if (!dockerfiles || !overlay) {
-    console.warn(`Could not get repo config ${refId}`);
-    return false;
-  }
 
   // Build all the modified docker images
   let images: Array<{}> = [];
@@ -58,16 +41,34 @@ export const deploy = async (release: Release): Promise<Boolean> => {
     }
   });
 
+  return { overlay, images };
+};
+
+const updateConfig = async (sha: string, refId: string, config: string) => {
+  const docker = await getDockerImages(sha, refId);
+  if (!docker) return false;
+
   // Update the kustomize file
-  if (!(await editKustomization(sha, overlay, images))) {
-    console.warn("Could not edit kustomize file");
+  const { images, overlay } = docker;
+  const edit = await editKustomization(sha, overlay, images);
+  const apply = await applyConfig(sha, overlay, config);
+
+  if (!edit || !apply) {
     return false;
   }
 
-  // Apply the kubernetes configuration
-  if (!(await applyConfig(sha, overlay, config))) {
-    console.warn("Could not apply kubectl config");
+  return true;
+};
+
+export const deploy = async (release: Release): Promise<Boolean> => {
+  const { fullName, refId, sha, config } = release;
+
+  // Checkout the code
+  if (!(await checkout(fullName, sha))) {
+    console.warn(`Could not checkout repo ${refId}`);
     return false;
   }
-  return true;
+
+  const result = await updateConfig(sha, refId, config);
+  return result;
 };

@@ -30,7 +30,7 @@ const writeKustomization = async (
     );
     return true;
   } catch (e) {
-    console.error(e.message);
+    console.error("writeKustomization", e.message);
     return false;
   }
 };

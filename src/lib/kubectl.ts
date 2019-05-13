@@ -27,6 +27,7 @@ export const applyConfig = async (
   const result = writeKubeconfig(sha, config);
 
   if (!result) {
+    console.warn("Could not edit kustomize file");
     return false;
   }
 
@@ -43,7 +44,7 @@ export const applyConfig = async (
   ]);
 
   if (kubectl.stderr && kubectl.stderr.toString()) {
-    console.log(kubectl.stderr.toString());
+    console.log("kubectl.stderr", kubectl.stderr.toString());
     return false;
   }
 
