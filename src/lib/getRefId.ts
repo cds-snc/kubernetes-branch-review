@@ -6,13 +6,22 @@ const setFromEventRef = (event: RequestBody) => {
   return ref[ref.length - 1];
 };
 
-export const getRefId = (event: RequestBody): false | string => {
+const validateFields = (event: RequestBody) => {
   if (!event || !event.repository || !event.repository.full_name) {
     return false;
   }
 
+  return true;
+};
+
+export const getRefId = (event: RequestBody): false | string => {
   let refId: false | string = false;
-  let fullName = event.repository.full_name;
+
+  if (!validateFields(event)) {
+    return false;
+  }
+
+ const fullName = event.repository.full_name;
 
   if (event.action) {
     refId = event.pull_request.head.ref;
