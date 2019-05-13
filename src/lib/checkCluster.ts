@@ -31,6 +31,31 @@ export const beforePr = async (req: Request): Promise<void> => {
   }
 };
 
+const isClusterRunning = async (
+  req: Request,
+  release: Release,
+  name: string
+) => {
+  // check to see if we have a cluster is in running state
+  if (release && !release.cluster_id) {
+    return release;
+  }
+
+  const data = await getCluster(release.cluster_id);
+
+  if (
+    data &&
+    data.kubernetes_cluster &&
+    data.kubernetes_cluster.state !== "running"
+  ) {
+    await deleteDropletByTag(name);
+    const result = await handleCreate(req, release);
+    return result;
+  }
+
+  return release;
+};
+
 export const checkAndCreateCluster = async (
   req: Request,
   release: Release | false
@@ -54,20 +79,8 @@ export const checkAndCreateCluster = async (
     await deleteDropletByTag(name);
     const result = await handleCreate(req, release);
     return result;
-  } else {
-    // check to see if we have a cluster is in running state
-    const data = await getCluster(release.cluster_id);
-
-    if (
-      data &&
-      data.kubernetes_cluster &&
-      data.kubernetes_cluster.state !== "running"
-    ) {
-      await deleteDropletByTag(name);
-      const result = await handleCreate(req, release);
-      return result;
-    } else {
-      return release;
-    }
   }
+
+  const result = await isClusterRunning(req, release, name);
+  return result;
 };
