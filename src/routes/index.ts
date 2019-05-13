@@ -71,8 +71,8 @@ router.post("/", async (req, res) => {
     });
   }
 
-  if (action === "closed" && release) {
-    await close(req, release);
+  if (action === "closed") {
+    await close(req);
     return returnStatus(body, res, {
       state: "success",
       description: "Branch review app removed"
