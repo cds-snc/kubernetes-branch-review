@@ -94,10 +94,8 @@ router.post("/", async (req, res) => {
       workers[refId] = setupWorker({ body: req.body }, refId, release);
     }
   }
-
-  const msg = `✅ event received  ✅ action: ${action}  ✅ refId: ${refId}`;
-  console.log(msg);
-  res.send(msg);
+  console.log(`✅ event received  ✅ action: ${action}  ✅ refId: ${refId}`);
+  res.send("✅ event received");
 });
 
 export default router;

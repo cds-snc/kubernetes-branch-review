@@ -14,8 +14,8 @@ const baseUrlKubernetes = `${baseUrl}/kubernetes`;
 const { K8_API_KEY: TOKEN } = process.env;
 
 const fetchEndpoint = async (
-  endpoint: string,
   type: string,
+  endpoint: string,
   parseJson: Boolean = true
 ) => {
   const res = await fetch(endpoint, {
@@ -73,7 +73,7 @@ export const getCluster = async (
     );
     return result;
   } catch (e) {
-    console.log(e.message);
+    console.log("getCluster", e.message);
   }
 };
 
@@ -97,7 +97,7 @@ export const getConfig = async (id: string): Promise<string> => {
     doc = JSON.stringify(yaml.safeLoad(ymlStr));
     return doc;
   } catch (e) {
-    console.log(e.message);
+    console.log("getConfig", e.message);
   }
 };
 
@@ -108,7 +108,7 @@ export const getDroplets = async (): Promise<{
     const result = await fetchEndpoint("get", `${baseUrl}/droplets`);
     return result;
   } catch (e) {
-    console.log(e.message);
+    console.log("getDroplets", e.message);
   }
 };
 
@@ -126,7 +126,7 @@ export const getLoadBalancers = async (): Promise<{
     const result = await fetchEndpoint("get", `${baseUrl}/load_balancers`);
     return result;
   } catch (e) {
-    console.log(e.message);
+    console.log("getLoadBalancers", e.message);
   }
 };
 
