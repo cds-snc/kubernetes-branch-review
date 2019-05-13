@@ -85,22 +85,22 @@ jest.mock("../lib/githubStatus", () => ({
   })
 }));
 
-test("throws error if bad event sent", async () => {
+test("doesn't call createCluster if empty event is sent", async () => {
   try {
     await create();
   } catch (e) {
-    console.log(e.message);
-    expect(e.message).toEqual("invalid event passed");
+    //
   }
+  expect(createCluster).toHaveBeenCalledTimes(0);
 });
 
-test("throws error if bad event sent", async () => {
+test("doesn't call createCluster if bad event sent", async () => {
   try {
     await create({ body: {} });
   } catch (e) {
-    console.log(e.message);
-    expect(e.message).toEqual("refId not defined");
+    //
   }
+  expect(createCluster).toHaveBeenCalledTimes(0);
 });
 
 test("throws error if no sha", async () => {
