@@ -1,7 +1,7 @@
 const { spawnSync } = require("child_process");
 const DIR = process.env.CODE_DIR || "/tmp";
 
-export const cleanup = (name:string): true => {
+export const cleanup = (name: string): true => {
   const cleanup = spawnSync("rm", ["-rf", name], {
     cwd: DIR
   });
@@ -13,8 +13,17 @@ export const cleanup = (name:string): true => {
   return true;
 };
 
-const clone = (fullName:string, sha:string): boolean => {
-  const clone = spawnSync(
+const handleError = (p: { stderr?: string }) => {
+  if (p && p.stderr && p.stderr.toString()) {
+    console.log(p.stderr.toString());
+    return false;
+  }
+
+  return true;
+};
+
+const clone = (fullName: string, sha: string): boolean => {
+  const status = spawnSync(
     "git",
     ["clone", `https://github.com/${fullName}`, `${sha}`, "--quiet"],
     {
@@ -22,27 +31,20 @@ const clone = (fullName:string, sha:string): boolean => {
     }
   );
 
-  if (clone.stderr && clone.stderr.toString()) {
-    console.log(clone.stderr.toString());
-    return false;
-  }
-
-  return true;
+  return handleError(status) === false ? false : true;
 };
 
-export const checkout = async (fullName:string, sha:string): Promise<boolean> => {
+export const checkout = async (
+  fullName: string,
+  sha: string
+): Promise<boolean> => {
   if (!cleanup(sha) || !clone(fullName, sha)) {
     return false;
   }
 
-  const checkout = spawnSync("git", ["checkout", sha, "--quiet"], {
+  const status = spawnSync("git", ["checkout", sha, "--quiet"], {
     cwd: `${DIR}/${sha}`
   });
 
-  if (checkout.stderr && checkout.stderr.toString()) {
-    console.log(checkout.stderr.toString());
-    return false;
-  }
-
-  return true;
+  return handleError(status) === false ? false : true;
 };
