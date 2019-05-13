@@ -1,8 +1,8 @@
 import { getFile } from "./getFile";
 import yaml from "js-yaml";
 import { Config } from "../interfaces/Config";
+import { writeFile } from "../lib/writeFile";
 
-const fs = require("fs");
 const DIR = process.env.CODE_DIR || "/tmp";
 
 const loadKustomization = async (sha: string, overlayPath: string) => {
@@ -24,15 +24,7 @@ const writeKustomization = async (
   config: Config
 ): Promise<boolean> => {
   const filePath = `${DIR}/${sha}/${overlayPath}/kustomization.yaml`;
-  try {
-    fs.writeFile(filePath, yaml.safeDump(config), "utf8", (e: Error) =>
-      console.error(e)
-    );
-    return true;
-  } catch (e) {
-    console.error("writeKustomization", e.message);
-    return false;
-  }
+  return writeFile(filePath, config);
 };
 
 export const editKustomization = async (

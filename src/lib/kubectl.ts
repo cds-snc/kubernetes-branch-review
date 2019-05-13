@@ -1,22 +1,12 @@
-import yaml from "js-yaml";
+import { writeFile } from "../lib/writeFile";
 const { exec, spawnSync } = require("child_process");
-const fs = require("fs");
 const { promisify } = require("util");
 export const execAsync = promisify(exec);
 const DIR = process.env.CODE_DIR || "/tmp";
 
 const writeKubeconfig = (sha: string, config: string): boolean => {
   const filePath = `${DIR}/${sha}/kubeconfig.yaml`;
-  const configObj = JSON.parse(config);
-  try {
-    fs.writeFile(filePath, yaml.safeDump(configObj), "utf8", (e: Error) =>
-      console.error(e)
-    );
-    return true;
-  } catch (e) {
-    console.error(e.message);
-    return false;
-  }
+  return writeFile(filePath, config);
 };
 
 export const applyConfig = async (
