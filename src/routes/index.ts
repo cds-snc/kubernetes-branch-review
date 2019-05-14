@@ -39,6 +39,16 @@ const setupWorker = (req: Request, refId: string, release: Release): Worker => {
 
 const router = express.Router();
 
+const checkEnv = () => {
+  if (process.env.NODE_ENV === "test") {
+    // don't spin up for test env
+    // @todo see if there's a way to test worker process using jest
+    return false;
+  }
+
+  return true;
+};
+
 router.get("/favicon.ico", (req, res) => res.status(204));
 
 router.post("/", async (req, res) => {
@@ -80,7 +90,7 @@ router.post("/", async (req, res) => {
   }
 
   // hand off to Worker
-  if (isMainThread) {
+  if (isMainThread && checkEnv()) {
     if (isBeforePr(req)) {
       beforePr(req);
     } else {
