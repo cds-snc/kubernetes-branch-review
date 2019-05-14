@@ -20,6 +20,8 @@ export const writeFile = (
     );
     return true;
   } catch (e) {
+    console.log("filePath", filePath);
+    console.log(config);
     console.error("writeFile error", e.message);
     return false;
   }
