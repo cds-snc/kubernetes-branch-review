@@ -32,7 +32,7 @@ action "Decrypt PEM" {
 }
 
 action "Test" {
-  uses = "docker://mhart/alpine-node:12"
+  uses = "docker://gcr.io/cdssnc/node-12-git"
   needs = ["Decrypt ENV", "Install", "Decrypt PEM", "Dockerfile lint"]
   env = {
     CODE_DIR = "/github/home"
