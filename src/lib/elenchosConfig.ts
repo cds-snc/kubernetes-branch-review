@@ -15,7 +15,7 @@ export const elenchosConfig = async (sha: string): Promise<false | Config> => {
       return config;
     }
   } catch (e) {
-    console.log(e.message);
+    console.log("elenchosConfig", e.message);
     return false;
   }
 };

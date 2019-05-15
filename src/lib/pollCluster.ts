@@ -4,8 +4,9 @@ import { Cluster } from "../interfaces/Cluster";
 
 export const pollCluster = async (
   clusterId: string,
-  checkState: string = "running"
-): Promise<void|{kubernetes_cluster: Cluster}> => {
+  checkState: string = "running",
+  reporter: (msg: string) => void = () => {}
+): Promise<void | { kubernetes_cluster: Cluster }> => {
   return new Promise(resolve => {
     const poll = Object.assign({}, longPoll);
     const prefix = "cluster";
@@ -13,13 +14,12 @@ export const pollCluster = async (
     poll.id = id;
     poll.delay = 20000;
 
-    poll.check = async (): Promise<void|{kubernetes_cluster: Cluster}> => {
+    poll.check = async (): Promise<void | { kubernetes_cluster: Cluster }> => {
       const result = await getCluster(clusterId);
 
-      if (result){
-
+      if (result) {
         const clusterState = result.kubernetes_cluster.status.state;
-        console.log(`current cluster state ... ${clusterState}`);
+        reporter(`current cluster state ... ${clusterState}`);
 
         if (clusterState === checkState) {
           return result;
@@ -33,10 +33,11 @@ export const pollCluster = async (
     };
 
     poll.eventEmitter.on(`done-${id}`, result => {
-      console.log("done pollCluster", result);
       if (poll.id === `${prefix}-${clusterId}`) {
         const clusterState = result.kubernetes_cluster.status.state;
-        console.log(`done polling ${clusterState}`);
+        if (reporter) {
+          reporter(`current cluster state ... ${clusterState}`);
+        }
         resolve(result);
       }
     });

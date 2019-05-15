@@ -92,9 +92,16 @@ const checkCluster = async (
 
   if (cluster && cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
     console.log("cluster created");
-    await pendingStatus(req, "cluster created ...");
+    await pendingStatus(req, "cluster created - start provisioning");
 
-    const result = await pollCluster(cluster.kubernetes_cluster.id, "running");
+    const result = await pollCluster(
+      cluster.kubernetes_cluster.id,
+      "running",
+      async (msg: string) => {
+        console.log("report", msg);
+        await pendingStatus(req, msg);
+      }
+    );
 
     await pendingStatus(req, "Cluster deployed, building app ...");
     await saveConfig(result, deployment, refId, prState);
