@@ -15,9 +15,11 @@ export const writeFile = (
       configObj = config;
     }
 
-    fs.writeFile(filePath, yaml.safeDump(configObj), "utf8", (e: Error) =>
-      console.error(e)
-    );
+    fs.writeFile(filePath, yaml.safeDump(configObj), "utf8", (e: Error) => {
+      console.log("filePath", filePath);
+      console.log(config);
+      console.error(e);
+    });
     return true;
   } catch (e) {
     console.log("filePath", filePath);

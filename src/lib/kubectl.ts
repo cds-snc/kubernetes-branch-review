@@ -6,6 +6,7 @@ const DIR = process.env.CODE_DIR || "/tmp";
 
 const writeKubeconfig = (sha: string, config: string): boolean => {
   const filePath = `${DIR}/${sha}/kubeconfig.yaml`;
+  console.log("writeKubeconfig");
   return writeFile(filePath, config);
 };
 
