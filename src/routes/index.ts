@@ -10,6 +10,7 @@ import { Worker, isMainThread } from "worker_threads";
 import { ClusterWorker } from "../interfaces/ClusterWorker";
 import { Release } from "../interfaces/Release";
 import { Request } from "../interfaces/Request";
+import { getVersion } from "../lib/getVersion";
 
 let workers: ClusterWorker = {};
 
@@ -104,7 +105,12 @@ router.post("/", async (req, res) => {
       workers[refId] = setupWorker({ body: req.body }, refId, release);
     }
   }
-  console.log(`✅ event received  ✅ action: ${action}  ✅ refId: ${refId}`);
+
+  const version = getVersion();
+
+  console.log(
+    `✅ event received  ✅ action: ${action}  ✅ refId: ${refId} ✅ version: ${version}`
+  );
   res.send("✅ event received");
 });
 
