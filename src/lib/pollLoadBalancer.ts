@@ -3,7 +3,8 @@ import { getClusterName, getLoadBalancer } from "../lib/getLoadBalancer";
 
 export const pollLoadBalancer = async (
   clusterId: string,
-  checkState: string = "active"
+  checkState: string = "active",
+  reporter: (msg: string) => void = () => {}
 ): Promise<void> => {
   return new Promise(async resolve => {
     const poll = Object.assign({}, longPoll);
@@ -37,17 +38,19 @@ export const pollLoadBalancer = async (
       if (loadBalancerMsg === "active") {
         loadBalancerMsg += " ✅";
       }
-      console.log(`current load balancer state ... ${loadBalancerMsg}`);
+
+      reporter(`current load balancer state ... ${loadBalancerMsg}`);
 
       if (loadBalancerState === checkState) {
         return result;
       }
 
-      if (poll.counter >= 120) {
+      const timeout = 120;
+
+      if (poll.counter >= timeout) {
         // bail
         const result = await getLoadBalancer(name);
-        console.log("=== load balancer ===");
-        console.log(result);
+        reporter(`load balancer timed out after ${timeout}`);
         poll.clear();
         return result;
       }
@@ -56,7 +59,7 @@ export const pollLoadBalancer = async (
     poll.eventEmitter.on(`done-${id}`, result => {
       if (poll.id === `${prefix}-${clusterId}`) {
         const loadBalancerState = result.status;
-        console.log(`done polling ${loadBalancerState}`);
+        reporter(`done polling ${loadBalancerState}`);
         resolve(result);
       }
     });

@@ -5,10 +5,10 @@ import { pollCluster } from "../../lib/pollCluster";
 import { getRefId } from "../../lib/getRefId";
 import { getName } from "../../lib/getName";
 import { getAction } from "../../lib/getAction";
-import { updateStatus } from "../../lib/githubStatus";
 import { Request } from "../../interfaces/Request";
 import { Cluster } from "../../interfaces/Cluster";
 import { Release, PrState, ClusterState } from "../../interfaces/Release";
+import { statusReporter } from "../../lib/statusReporter";
 
 const parseData = (req: Request, release: Release) => {
   if (!req || !req.body) {
@@ -59,13 +59,6 @@ const saveConfig = async (
   }
 };
 
-const pendingStatus = async (req: Request, message: string) => {
-  const body = req.body;
-  const refId = getRefId(body);
-  if (!refId) return;
-  await updateStatus(body, { state: "pending", description: message }, refId);
-};
-
 const startCreate = async (req: Request, release: Release) => {
   const { refId, sha, prState } = parseData(req, release);
 
@@ -91,19 +84,17 @@ const checkCluster = async (
   });
 
   if (cluster && cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
-    console.log("cluster created");
-    await pendingStatus(req, "cluster created - start provisioning");
+    await statusReporter(req, "cluster created - start provisioning");
 
     const result = await pollCluster(
       cluster.kubernetes_cluster.id,
       "running",
       async (msg: string) => {
-        console.log("report", msg);
-        await pendingStatus(req, msg);
+        await statusReporter(req, msg);
       }
     );
 
-    await pendingStatus(req, "Cluster deployed, building app ...");
+    await statusReporter(req, "Cluster deployed, building app ...");
     await saveConfig(result, deployment, refId, prState);
   }
 };
