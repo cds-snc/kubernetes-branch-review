@@ -22,5 +22,6 @@ export interface RequestBody {
 }
 
 export interface Request {
+  header: (name: string) => string;
   body: RequestBody;
 }

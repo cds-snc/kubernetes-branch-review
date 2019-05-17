@@ -11,6 +11,7 @@ import { ClusterWorker } from "../interfaces/ClusterWorker";
 import { Release } from "../interfaces/Release";
 import { Request } from "../interfaces/Request";
 import { getVersion } from "../lib/getVersion";
+import { handleEvent } from "../lib/handleEvent";
 
 let workers: ClusterWorker = {};
 
@@ -53,7 +54,7 @@ const checkEnv = () => {
 
 router.get("/favicon.ico", (req, res) => res.status(204));
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: Request, res) => {
   const body = req.body;
 
   // do we have a database connection?
@@ -74,7 +75,7 @@ router.post("/", async (req, res) => {
   }
 
   let release = await getRelease({ refId });
-  console.log("release:", release);
+  //console.log("release:", release);
 
   if (body.after && body.after === "0000000000000000000000000000000000000000") {
     return returnStatus(body, res, {
@@ -92,7 +93,7 @@ router.post("/", async (req, res) => {
   }
 
   // hand off to Worker
-  if (isMainThread && checkEnv()) {
+  if (isMainThread && checkEnv() && handleEvent(req)) {
     if (isBeforePr(req)) {
       beforePr(req);
     } else {
