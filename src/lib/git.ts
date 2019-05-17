@@ -7,7 +7,7 @@ export const cleanup = (name: string): true => {
   });
 
   if (cleanup.error && cleanup.error.toString()) {
-    console.log(cleanup.error.toString());
+    console.log("cleanup error:", cleanup.error.toString());
   }
 
   return true;
@@ -31,6 +31,10 @@ const clone = (fullName: string, sha: string): boolean => {
     }
   );
 
+  if (!status) {
+    console.log("failed to clone");
+  }
+
   return handleError(status) === false ? false : true;
 };
 
@@ -39,6 +43,7 @@ export const checkout = async (
   sha: string
 ): Promise<boolean> => {
   if (!cleanup(sha) || !clone(fullName, sha)) {
+    console.log("failed to clean up or clone");
     return false;
   }
 
