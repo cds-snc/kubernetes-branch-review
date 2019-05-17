@@ -45,12 +45,12 @@ export const pollLoadBalancer = async (
         return result;
       }
 
-      const timeout = 120;
+      const timeout = 300;
 
       if (poll.counter >= timeout) {
         // bail
         const result = await getLoadBalancer(name);
-        reporter(`load balancer timed out after ${timeout}`);
+        reporter(`poll load balancer timed out after ${timeout}`);
         poll.clear();
         return result;
       }

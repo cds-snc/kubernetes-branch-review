@@ -15,16 +15,21 @@ export const writeFile = (
       configObj = config;
     }
 
+    //@todo test to see if we can remove the callback and catch with the try / catch
     fs.writeFile(filePath, yaml.safeDump(configObj), "utf8", (e: Error) => {
-      console.log("filePath", filePath);
-      console.log(config);
-      console.error(e);
+      if (e) {
+        console.log("writeFile error");
+        console.log("filePath", filePath);
+        console.log(config);
+        console.error(e);
+      }
     });
     return true;
   } catch (e) {
+    console.log("writeFile error catch");
     console.log("filePath", filePath);
     console.log(config);
-    console.error("writeFile error", e.message);
+    console.error(e);
     return false;
   }
 };
