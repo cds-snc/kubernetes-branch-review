@@ -22,6 +22,7 @@ export const deployRelease = async (
 
   if (release && release.refId) {
     await deploy(await update(req));
+
     await saveIpAndUpdate(req, refId);
     return {
       state: "success",

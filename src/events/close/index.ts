@@ -82,7 +82,7 @@ export const close = async (req: Request): Promise<string | false> => {
     await cleanupLoadBalancer(clusterId);
     await deleteClusterAndUpdate(clusterId, refId, sha);
   } catch (e) {
-    console.log("delete load balancer", e.message);
+    console.log("delete load balancer error", e.message);
   }
 
   return refId;

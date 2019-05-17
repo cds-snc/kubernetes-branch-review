@@ -11,10 +11,10 @@ export const pollLoadBalancer = async (
     const prefix = "load-balancer";
     const id = `${prefix}-${clusterId}`;
     poll.id = id;
-    poll.delay = 2000;
+    poll.delay = 10000;
 
     const name = await getClusterName(clusterId);
-    console.log("name", name);
+    console.log("cluster name", name);
 
     if (name instanceof Error) {
       return false;
@@ -59,7 +59,8 @@ export const pollLoadBalancer = async (
     poll.eventEmitter.on(`done-${id}`, result => {
       if (poll.id === `${prefix}-${clusterId}`) {
         const loadBalancerState = result.status;
-        reporter(`done polling ${loadBalancerState}`);
+        reporter(`⚡ done polling ${loadBalancerState} ⚡ `);
+        poll.clear();
         resolve(result);
       }
     });

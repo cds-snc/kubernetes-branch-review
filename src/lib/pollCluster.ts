@@ -19,7 +19,7 @@ export const pollCluster = async (
 
       if (result) {
         const clusterState = result.kubernetes_cluster.status.state;
-        reporter(`current cluster state ... ${clusterState}`);
+        reporter(`current cluster state ... ${clusterState} ⏱️`);
 
         if (clusterState === checkState) {
           return result;
@@ -42,6 +42,7 @@ export const pollCluster = async (
         if (reporter) {
           reporter(`current cluster state ... ${clusterState}`);
         }
+        poll.clear();
         resolve(result);
       }
     });

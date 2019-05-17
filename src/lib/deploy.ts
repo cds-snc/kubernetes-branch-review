@@ -49,13 +49,17 @@ const updateConfig = async (sha: string, refId: string, config: string) => {
   if (!docker) return false;
 
   // Update the kustomize file
+  console.log("update config");
   const { images, overlay } = docker;
   const edit = await editKustomization(sha, overlay, images);
   const apply = await applyConfig(sha, overlay, config);
 
   if (!edit || !apply) {
+    console.log("edit or apply failed");
     return false;
   }
+
+  console.log("updated config");
 
   return true;
 };
