@@ -9,5 +9,5 @@ export const getName = (req: Request): string => {
     throw new Error("refId not defined");
   }
   const name = refId.replace(/\//g, "-").replace(/_/g, "-");
-  return name;
+  return `branch-review-app-${name}`;
 };
