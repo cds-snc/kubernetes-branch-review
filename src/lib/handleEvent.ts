@@ -11,6 +11,7 @@ export const handleEvent = (req: Request): boolean => {
   const ignore = ["completed", "status", "deployment_status", "deployment"];
 
   if (ignore.includes(headerEvent)) {
+    console.log(`ignore - ${headerEvent}`);
     return false;
   }
 
