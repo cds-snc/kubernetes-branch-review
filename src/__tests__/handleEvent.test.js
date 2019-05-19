@@ -68,3 +68,13 @@ test("return true for a create", async () => {
 
   expect(result.res.text).toEqual("true");
 });
+
+test("return true for a push", async () => {
+  const result = await request(server)
+    .post("/")
+    .send({})
+    .set("X-GitHub-Event", "push")
+    .expect(200);
+
+  expect(result.res.text).toEqual("true");
+});
