@@ -41,6 +41,9 @@ const getDockerImages = async (sha: string, refId: string) => {
     }
   });
 
+  console.log("built & pushed images");
+  console.log(images);
+
   return { overlay, images };
 };
 
@@ -49,7 +52,7 @@ const updateConfig = async (sha: string, refId: string, config: string) => {
   if (!docker) return false;
 
   // Update the kustomize file
-  console.log("update config");
+  console.log("try update config");
   const { images, overlay } = docker;
   const edit = await editKustomization(sha, overlay, images);
   const apply = await applyConfig(sha, overlay, config);

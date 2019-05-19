@@ -75,6 +75,7 @@ test("returns 200 status code + calls create", async () => {
   await request(server)
     .post("/")
     .send(event)
+    .set("X-GitHub-Event", "pull_request")
     .set("Content-Type", "application/json")
     .expect(200);
 
@@ -100,6 +101,7 @@ test("returns 200 status code + calls update", async () => {
   await request(server)
     .post("/")
     .send(event)
+    .set("X-GitHub-Event", "pull_request")
     .set("Content-Type", "application/json")
     .expect(200);
 
@@ -127,6 +129,7 @@ test("returns 200 status code + calls close", async () => {
   await request(server)
     .post("/")
     .send(event)
+    .set("X-GitHub-Event", "pull_request")
     .set("Content-Type", "application/json")
     .expect(200);
   expect(close).toHaveBeenCalledTimes(1);
@@ -151,6 +154,7 @@ test("returns 200 status code because it does not matter", async () => {
   const result = await request(server)
     .post("/")
     .send(event)
+    .set("X-GitHub-Event", "pull_request")
     .set("Content-Type", "application/json")
     .expect(200);
 

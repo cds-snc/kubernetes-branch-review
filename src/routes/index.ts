@@ -6,12 +6,12 @@ import { getRefId } from "../lib/getRefId";
 import { getAction, isBeforePr } from "../lib/getAction";
 import { returnStatus } from "../lib/returnStatus";
 import { beforePr } from "../lib/checkCluster";
+import { getVersion } from "../lib/getVersion";
+import { handleEvent } from "../lib/handleEvent";
 import { Worker, isMainThread } from "worker_threads";
 import { ClusterWorker } from "../interfaces/ClusterWorker";
 import { Release } from "../interfaces/Release";
 import { Request } from "../interfaces/Request";
-import { getVersion } from "../lib/getVersion";
-import { handleEvent } from "../lib/handleEvent";
 
 let workers: ClusterWorker = {};
 
@@ -27,7 +27,7 @@ const terminate = async (worker: Worker, refId: string): Promise<void> => {
 //  https://nodejs.org/api/worker_threads.html
 const setupWorker = (req: Request, refId: string, release: Release): Worker => {
   // can init and send data
-  console.log(`setup a new worker for refId ${refId}`);
+  console.log(`setup worker for refId ${refId}`);
 
   const w = new Worker("./worker.js", {
     workerData: { req, refId, release }
@@ -67,6 +67,7 @@ router.post("/", async (req: Request, res) => {
 
   const action = getAction(req);
   const refId = getRefId(body);
+  const eventInfo = handleEvent(req);
 
   // do we have a refId?
   if (!refId) {
@@ -74,8 +75,12 @@ router.post("/", async (req: Request, res) => {
     return returnStatus(body, res, { state: "error", description: status });
   }
 
+  if (!eventInfo.handleEvent) {
+    res.send(`✅ event ignored ${eventInfo.type}`);
+    return;
+  }
+
   let release = await getRelease({ refId });
-  //console.log("release:", release);
 
   if (body.after && body.after === "0000000000000000000000000000000000000000") {
     return returnStatus(body, res, {
@@ -93,7 +98,7 @@ router.post("/", async (req: Request, res) => {
   }
 
   // hand off to Worker
-  if (isMainThread && checkEnv() && handleEvent(req)) {
+  if (isMainThread && checkEnv()) {
     if (isBeforePr(req)) {
       beforePr(req);
     } else {
@@ -111,8 +116,9 @@ router.post("/", async (req: Request, res) => {
   const version = getVersion();
 
   console.log(
-    `✅ event received  ✅ action: ${action}  ✅ refId: ${refId} ✅ version: ${version}`
+    ` ✅ event: ${eventInfo.type}  ✅ refId: ${refId} ✅ v: ${version}`
   );
+
   res.send("✅ event received");
 });
 

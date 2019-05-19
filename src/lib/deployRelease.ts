@@ -11,9 +11,6 @@ export const deployRelease = async (
   refId: string,
   currentRelease: Release | false
 ): Promise<Status | boolean> => {
-  if (currentRelease && currentRelease.refId) {
-    console.log(`deploy release refId:${refId}`);
-  }
 
   let release: Release | false = await checkAndCreateCluster(
     req,

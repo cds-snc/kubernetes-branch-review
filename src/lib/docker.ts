@@ -2,11 +2,15 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 const DIR = process.env.CODE_DIR || "/tmp";
 
-export const buildAndPush = (name:string, dirPath:string, sha:string): string=> {
+export const buildAndPush = (
+  name: string,
+  dirPath: string,
+  sha: string
+): string => {
   const buildPath = path.resolve(`${DIR}/${sha}`, dirPath);
   const imgName = `gcr.io/elenchos-registry/${name}:${sha}`;
 
-  console.log("BUILD ", buildPath, imgName);
+  console.log("build ", buildPath, imgName);
   spawnSync(
     "gcloud",
     [

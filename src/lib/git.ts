@@ -2,6 +2,8 @@ const { spawnSync } = require("child_process");
 const DIR = process.env.CODE_DIR || "/tmp";
 
 export const cleanup = (name: string): true => {
+  console.log(`cleanup rm -rf ${name}`);
+
   const cleanup = spawnSync("rm", ["-rf", name], {
     cwd: DIR
   });
@@ -23,6 +25,8 @@ const handleError = (p: { stderr?: string }) => {
 };
 
 const clone = (fullName: string, sha: string): boolean => {
+  console.log(`git clone ${sha}`);
+
   const status = spawnSync(
     "git",
     ["clone", `https://github.com/${fullName}`, `${sha}`, "--quiet"],
@@ -46,6 +50,8 @@ export const checkout = async (
     console.log("failed to clean up or clone");
     return false;
   }
+
+  console.log(`git checkout ${sha}`);
 
   const status = spawnSync("git", ["checkout", sha, "--quiet"], {
     cwd: `${DIR}/${sha}`

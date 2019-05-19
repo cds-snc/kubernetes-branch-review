@@ -28,6 +28,8 @@ export const applyConfig = async (
     cwd: `${DIR}/${sha}/${overlayPath}`
   });
 
+  console.log(`kustomize apply > ${sha}.yaml`);
+
   const kubectl = spawnSync("kubectl", [
     "apply",
     "--kubeconfig",

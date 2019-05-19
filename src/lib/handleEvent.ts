@@ -1,19 +1,22 @@
 import { Request } from "../interfaces/Request";
-export const handleEvent = (req: Request): boolean => {
-  let headerEvent = "";
+export const handleEvent = (
+  req: Request
+): { handleEvent: boolean; type: string } => {
+  let event = "not-found";
+  let handleEvent = false;
 
   try {
-    headerEvent = req.header("X-GitHub-Event");
+    event = req.header("X-GitHub-Event");
   } catch (e) {
     console.log("headerEvent not found");
   }
 
-  const ignore = ["completed", "status", "deployment_status", "deployment"];
+  const safeList = ["create", "delete", "pull_request"];
 
-  if (ignore.includes(headerEvent)) {
-    console.log(`ignore - ${headerEvent}`);
-    return false;
+  if (safeList.includes(event)) {
+    console.log(`allow - ${event}`);
+    handleEvent = true;
   }
 
-  return true;
+  return { handleEvent, type: event };
 };

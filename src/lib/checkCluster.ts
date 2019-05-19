@@ -19,7 +19,6 @@ const handleCreate = async (req: Request, release: Release) => {
 };
 
 export const beforePr = async (req: Request): Promise<void> => {
-  //@ts-ignore
   const refId = getRefId(req.body);
   if (refId) {
     await saveReleaseToDB({
@@ -60,6 +59,7 @@ export const checkAndCreateCluster = async (
   req: Request,
   release: Release | false
 ) => {
+  
   const name = getName(req);
 
   if (!release || !release.refId) {
