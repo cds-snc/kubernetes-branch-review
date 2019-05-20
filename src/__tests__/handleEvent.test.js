@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import request from "supertest";
-import { handleEvent } from "../lib/handleEvent";
+import { handleEvent } from "../lib/util/handleEvent";
 
 const port = parseInt(process.env.PORT, 10) || 5000;
 

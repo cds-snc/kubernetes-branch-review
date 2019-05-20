@@ -1,6 +1,6 @@
 import { getRefId } from "./getRefId";
-import { updateStatus } from "./githubStatus";
-import { Request } from "../interfaces/Request";
+import { updateStatus } from "../github/githubStatus";
+import { Request } from "../../interfaces/Request";
 
 const pendingStatus = async (req: Request, message: string) => {
   const body = req.body;

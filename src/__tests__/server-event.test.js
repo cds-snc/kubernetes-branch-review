@@ -10,13 +10,13 @@ import { getRelease, getDeployment } from "../db/queries";
 require("dotenv-safe").config({ allowEmptyValues: true });
 
 // mock update deployment
-jest.mock("../lib/githubNotify", () => ({
+jest.mock("../lib/github/githubNotify", () => ({
   updateDeploymentStatus: jest.fn(() => {
     return true;
   })
 }));
 
-jest.mock("../lib/githubStatus", () => ({
+jest.mock("../lib/github/githubStatus", () => ({
   updateStatus: jest.fn(() => {
     return true;
   })
@@ -47,7 +47,7 @@ jest.mock("../events/close", () => ({
   })
 }));
 
-jest.mock("../lib/saveIp", () => ({
+jest.mock("../lib/loadBalancer/saveIp", () => ({
   saveIpAndUpdate: jest.fn(() => {
     return true;
   })

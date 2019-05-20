@@ -1,9 +1,9 @@
 import { authenticate } from "./githubAuth";
-import { getDeployment } from "../db/queries";
-import { RequestBody } from "../interfaces/Request";
-import { StatusMessage } from "../interfaces/Status";
-import { getInstallationId } from "../lib/getInstallationId";
-import { getSha } from "../lib/getSha";
+import { getDeployment } from "../../db/queries";
+import { RequestBody } from "../../interfaces/Request";
+import { StatusMessage } from "../../interfaces/Status";
+import { getInstallationId } from "../util/getInstallationId";
+import { getSha } from "../util/getSha";
 import {
   ReposCreateDeploymentParams,
   ReposCreateDeploymentStatusParams,

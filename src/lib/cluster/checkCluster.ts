@@ -1,14 +1,17 @@
-import { deleteDropletByTag, getCluster } from "../api";
-import { getRefId } from "../lib/getRefId";
-import { getName } from "../lib/getName";
-import { getAction } from "../lib/getAction";
-import { create } from "../events/create";
-import { saveReleaseToDB } from "../db/queries";
-import { PrState, Release } from "../interfaces/Release";
-import { Request } from "../interfaces/Request";
+import { deleteDropletByTag, getCluster } from "../../api";
+import { getRefId } from "../util/getRefId";
+import { getName } from "../util/getName";
+import { getAction } from "../util/getAction";
+import { create } from "../../events/create";
+import { saveReleaseToDB } from "../../db/queries";
+import { PrState, Release } from "../../interfaces/Release";
+import { Request } from "../../interfaces/Request";
 
 const handleCreate = async (req: Request, release: Release) => {
   const action = getAction(req);
+
+  console.log(`handle create cluster ${action}`)
+
   if (action === "opened" || action === "updated" || action === "reopened") {
     // spin up a fresh cluster
     const result = await create(req, release);
@@ -63,7 +66,6 @@ export const checkAndCreateCluster = async (
   const name = getName(req);
 
   if (!release || !release.refId) {
-    await beforePr(req);
     return false;
   }
 

@@ -1,7 +1,7 @@
-import { elenchosConfig } from "../lib/elenchosConfig";
-import { getFile } from "../lib/getFile";
+import { elenchosConfig } from "../lib/deploy/elenchosConfig";
+import { getFile } from "../lib/util/getFile";
 
-jest.mock("../lib/getFile", () => ({
+jest.mock("../lib/util/getFile", () => ({
   getFile: jest.fn()
 }));
 

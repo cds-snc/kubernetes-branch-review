@@ -1,5 +1,5 @@
 import { getCluster, getDroplets, getLoadBalancers } from "../api";
-import { getLoadBalancerIp } from "../lib/getLoadBalancer";
+import { getLoadBalancerIp } from "../lib/loadBalancer/getLoadBalancer";
 
 const clusterData = {
   kubernetes_cluster: {

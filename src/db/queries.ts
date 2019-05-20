@@ -1,5 +1,5 @@
 import { dbConnect } from "./connect";
-import { getFullNameFromRefId } from "../lib/getRefId";
+import { getFullNameFromRefId } from "../lib/util/getRefId";
 const { Model } = require("./model");
 import { Release } from "../interfaces/Release";
 

@@ -1,6 +1,6 @@
-import { longPoll } from "../lib/longPoll";
-import { getCluster } from "../api";
-import { Cluster } from "../interfaces/Cluster";
+import { longPoll } from "../util/longPoll";
+import { getCluster } from "../../api";
+import { Cluster } from "../../interfaces/Cluster";
 
 export const pollCluster = async (
   clusterId: string,

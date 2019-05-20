@@ -1,6 +1,6 @@
-import { getFile } from "./getFile";
+import { getFile } from "../util/getFile";
 const DIR = process.env.CODE_DIR || "/tmp";
-import { Config } from "../interfaces/Config";
+import { Config } from "../../interfaces/Config";
 
 export const elenchosConfig = async (sha: string): Promise<false | Config> => {
   const configData = await getFile(`${DIR}/${sha}/elenchos.json`);

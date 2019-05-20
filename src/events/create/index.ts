@@ -1,14 +1,14 @@
 import { saveReleaseToDB, getRelease } from "../../db/queries";
 import { createCluster, getConfig } from "../../api";
-import { createDeployment } from "../../lib/githubNotify";
-import { pollCluster } from "../../lib/pollCluster";
-import { getRefId } from "../../lib/getRefId";
-import { getName } from "../../lib/getName";
-import { getAction } from "../../lib/getAction";
+import { createDeployment } from "../../lib/github/githubNotify";
+import { pollCluster } from "../../lib/cluster/pollCluster";
+import { getRefId } from "../../lib/util/getRefId";
+import { getName } from "../../lib/util/getName";
+import { getAction } from "../../lib/util/getAction";
 import { Request } from "../../interfaces/Request";
 import { Cluster } from "../../interfaces/Cluster";
 import { Release, PrState, ClusterState } from "../../interfaces/Release";
-import { statusReporter } from "../../lib/statusReporter";
+import { statusReporter } from "../../lib/util/statusReporter";
 
 const parseData = (req: Request, release: Release) => {
   if (!req || !req.body) {

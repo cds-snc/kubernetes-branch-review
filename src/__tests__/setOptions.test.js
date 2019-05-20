@@ -1,4 +1,4 @@
-import { setOptions } from "../lib/setOptions";
+import { setOptions } from "../lib/util/setOptions";
 
 test("returns refId for create event", async () => {
   const name = "the-pr-name";

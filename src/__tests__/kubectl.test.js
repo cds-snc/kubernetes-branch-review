@@ -1,4 +1,4 @@
-import { applyConfig, execAsync } from "../lib/kubectl";
+import { applyConfig, execAsync } from "../lib/deploy/kubectl";
 import { writeFile } from "fs";
 const { spawnSync } = require("child_process");
 require("util");
@@ -19,8 +19,8 @@ jest.mock("util", () => ({
   promisify: () => jest.fn()
 }));
 
-jest.mock("../lib/kubectl", () => {
-  const actualLib = require.requireActual("../lib/kubectl");
+jest.mock("../lib/deploy/kubectl", () => {
+  const actualLib = require.requireActual("../lib/deploy/kubectl");
   return {
     ...actualLib,
     execAsync: jest.fn().mockResolvedValue("default")

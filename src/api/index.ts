@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import yaml from "js-yaml";
-import { setOptions } from "../lib/setOptions";
+import { setOptions } from "../lib/util/setOptions";
 import { Cluster } from "../interfaces/Cluster";
 import { Droplet } from "../interfaces/Droplet";
 import { LoadBalancer } from "../interfaces/LoadBalancer";

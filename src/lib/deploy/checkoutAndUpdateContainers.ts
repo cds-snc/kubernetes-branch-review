@@ -2,8 +2,8 @@ import { applyConfig } from "./kubectl";
 import { buildAndPush } from "./docker";
 import { editKustomization } from "./kustomize";
 import { elenchosConfig } from "./elenchosConfig";
-import { checkout } from "./git";
-import { Release } from "../interfaces/Release";
+import { checkout } from "../git";
+import { Release } from "../../interfaces/Release";
 
 async function asyncForEach(
   array: Array<String>,
@@ -67,7 +67,9 @@ const updateConfig = async (sha: string, refId: string, config: string) => {
   return true;
 };
 
-export const deploy = async (release: Release): Promise<Boolean> => {
+export const checkoutAndUpdateContainers = async (
+  release: Release
+): Promise<Boolean> => {
   const { fullName, refId, sha, config } = release;
 
   // Checkout the code

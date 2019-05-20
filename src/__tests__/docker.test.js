@@ -1,4 +1,4 @@
-import { buildAndPush } from "../lib/docker";
+import { buildAndPush } from "../lib/deploy/docker";
 const { spawnSync } = require("child_process");
 
 jest.mock("child_process", () => ({

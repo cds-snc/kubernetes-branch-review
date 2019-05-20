@@ -1,8 +1,11 @@
 import { cleanup } from "../../lib/git";
-import { getRefId } from "../../lib/getRefId";
+import { getRefId } from "../../lib/util/getRefId";
 import { getRelease, saveReleaseToDB } from "../../db/queries";
 import { deleteCluster, deleteLoadBalancer } from "../../api";
-import { getClusterName, getLoadBalancer } from "../../lib/getLoadBalancer";
+import {
+  getClusterName,
+  getLoadBalancer
+} from "../../lib/loadBalancer/getLoadBalancer";
 import { Request } from "../../interfaces/Request";
 import { PrState, ClusterState } from "../../interfaces/Release";
 

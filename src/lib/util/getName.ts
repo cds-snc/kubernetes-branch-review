@@ -1,5 +1,5 @@
-import { getRefId } from "../lib/getRefId";
-import { Request } from "../interfaces/Request";
+import { getRefId } from "./getRefId";
+import { Request } from "../../interfaces/Request";
 
 export const getName = (req: Request): string => {
   const body = req.body;

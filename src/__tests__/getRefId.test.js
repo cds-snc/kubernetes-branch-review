@@ -1,5 +1,5 @@
 import { eventJS } from "../__mocks__/";
-import { getFullNameFromRefId, getRefId } from "../lib/getRefId";
+import { getFullNameFromRefId, getRefId } from "../lib/util/getRefId";
 
 const fullName = "cds-snc/etait-ici";
 const repoName = `${fullName}/elenchos_demo`;

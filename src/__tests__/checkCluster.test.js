@@ -1,4 +1,4 @@
-import { checkAndCreateCluster } from "../lib/checkCluster";
+import { checkAndCreateCluster } from "../lib/cluster/checkCluster";
 import { deleteDropletByTag, getCluster } from "../api/";
 import { create } from "../events/create";
 import { eventJS } from "../__mocks__";

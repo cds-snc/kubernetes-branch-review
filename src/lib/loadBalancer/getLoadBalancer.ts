@@ -1,6 +1,6 @@
-import { getDroplets, getLoadBalancers, getCluster } from "../api";
-import { Droplet } from "../interfaces/Droplet";
-import { LoadBalancer } from "../interfaces/LoadBalancer";
+import { getDroplets, getLoadBalancers, getCluster } from "../../api";
+import { Droplet } from "../../interfaces/Droplet";
+import { LoadBalancer } from "../../interfaces/LoadBalancer";
 
 export const getDropletByName = async (
   name: string

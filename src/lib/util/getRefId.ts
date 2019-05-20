@@ -1,5 +1,5 @@
-import { isMaster } from "../lib/isMaster";
-import { RequestBody } from "../interfaces/Request";
+import { isMaster } from "./isMaster";
+import { RequestBody } from "../../interfaces/Request";
 
 const setFromEventRef = (event: RequestBody) => {
   const ref = event.ref.split("/");

@@ -1,4 +1,4 @@
-import { RequestBody } from "../interfaces/Request";
+import { RequestBody } from "../../interfaces/Request";
 
 export const getSha = (event: RequestBody): string => {
   let sha;

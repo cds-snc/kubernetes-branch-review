@@ -2,7 +2,7 @@
 /* typescript is set to compile back to commonjs + es5 */
 
 const { workerData, isMainThread } = require("worker_threads");
-const { deployReleaseAndNotify } = require("./dist/lib/deployReleaseAndNotify");
+const { deployReleaseAndNotify } = require("./dist/lib/deploy/deployRelease");
 
 if (!isMainThread) {
   // console.log("worker.ts => workerData:", workerData);

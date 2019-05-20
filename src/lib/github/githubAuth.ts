@@ -1,5 +1,5 @@
 import path from "path";
-import { getFile } from "./getFile";
+import { getFile } from "../util/getFile";
 
 const App = require("@octokit/app");
 const Octokit = require("@octokit/rest");

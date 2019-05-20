@@ -1,4 +1,4 @@
-import { writeFile } from "../lib/writeFile";
+import { writeFile } from "../util/writeFile";
 const { exec, spawnSync } = require("child_process");
 const { promisify } = require("util");
 export const execAsync = promisify(exec);

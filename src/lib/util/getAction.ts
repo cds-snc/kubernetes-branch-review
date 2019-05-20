@@ -1,5 +1,5 @@
 import { isMaster } from "./isMaster";
-import { Request } from "../interfaces/Request";
+import { Request } from "../../interfaces/Request";
 
 export const isBeforePr = (req: Request): boolean => {
   const body = req.body;

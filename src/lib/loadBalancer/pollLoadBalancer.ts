@@ -1,5 +1,5 @@
-import { longPoll } from "./longPoll";
-import { getClusterName, getLoadBalancer } from "../lib/getLoadBalancer";
+import { longPoll } from "../util/longPoll";
+import { getClusterName, getLoadBalancer } from "./getLoadBalancer";
 
 export const pollLoadBalancer = async (
   clusterId: string,

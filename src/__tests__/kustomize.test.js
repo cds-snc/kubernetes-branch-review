@@ -1,8 +1,8 @@
-import { editKustomization } from "../lib/kustomize";
-import { getFile } from "../lib/getFile";
+import { editKustomization } from "../lib/deploy/kustomize";
+import { getFile } from "../lib/util/getFile";
 import { writeFile } from "fs";
 
-jest.mock("../lib/getFile", () => ({
+jest.mock("../lib/util/getFile", () => ({
   getFile: jest.fn()
 }));
 

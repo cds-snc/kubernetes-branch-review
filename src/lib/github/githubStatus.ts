@@ -1,11 +1,11 @@
 /* https://octokit.github.io/rest.js/ */
 
 import { authenticate } from "./githubAuth";
-import { getDeployment } from "../db/queries";
-import { RequestBody } from "../interfaces/Request";
-import { StatusMessage } from "../interfaces/Status";
-import { getInstallationId } from "../lib/getInstallationId";
-import { getSha } from "./getSha";
+import { getDeployment } from "../../db/queries";
+import { RequestBody } from "../../interfaces/Request";
+import { StatusMessage } from "../../interfaces/Status";
+import { getInstallationId } from "../util/getInstallationId";
+import { getSha } from "../util/getSha";
 
 const validate = (event: RequestBody) => {
   if (

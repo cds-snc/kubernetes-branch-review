@@ -1,4 +1,4 @@
-import { Request } from "../interfaces/Request";
+import { Request } from "../../interfaces/Request";
 export const handleEvent = (
   req: Request
 ): { handleEvent: boolean; type: string } => {

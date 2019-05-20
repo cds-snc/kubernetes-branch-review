@@ -2,12 +2,12 @@ import express from "express";
 import { close } from "../events/close";
 import { getRelease } from "../db/queries";
 import { dbConnect } from "../db/connect";
-import { getRefId } from "../lib/getRefId";
-import { getAction, isBeforePr } from "../lib/getAction";
-import { returnStatus } from "../lib/returnStatus";
-import { beforePr } from "../lib/checkCluster";
-import { getVersion } from "../lib/getVersion";
-import { handleEvent } from "../lib/handleEvent";
+import { getRefId } from "../lib/util/getRefId";
+import { getAction, isBeforePr } from "../lib/util/getAction";
+import { returnStatus } from "../lib/util/returnStatus";
+import { beforePr } from "../lib/cluster/checkCluster";
+import { getVersion } from "../lib/util/getVersion";
+import { handleEvent } from "../lib/util/handleEvent";
 import { Worker, isMainThread } from "worker_threads";
 import { ClusterWorker } from "../interfaces/ClusterWorker";
 import { Release } from "../interfaces/Release";
@@ -116,7 +116,7 @@ router.post("/", async (req: Request, res) => {
   const version = getVersion();
 
   console.log(
-    ` ✅ event: ${eventInfo.type}  ✅ refId: ${refId} ✅ v: ${version}`
+    `✅ event: ${eventInfo.type}  ✅ refId: ${refId} ✅ v: ${version}`
   );
 
   res.send("✅ event received");

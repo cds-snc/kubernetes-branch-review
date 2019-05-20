@@ -1,10 +1,7 @@
 import octokit from "@octokit/rest";
-export { createDeployment } from "./githubNotify";
-export { longPoll } from "./longPoll";
+export { createDeployment } from "./github/githubNotify";
+export { longPoll } from "./util/longPoll";
 // export { workerStatus } from "../lib/returnStatus";
-export { deployRelease } from "../lib/deployRelease";
-
-//module.exports.workerStatus = workerStatus;
-//module.exports.deployRelease = deployRelease;
+export { deployRelease } from "./deploy/deployRelease";
 
 export default new octokit();

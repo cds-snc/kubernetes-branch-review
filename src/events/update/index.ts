@@ -1,11 +1,11 @@
-import { getRefId } from "../../lib/getRefId";
+import { getRefId } from "../../lib/util/getRefId";
 import { getRelease, saveReleaseToDB } from "../../db/queries";
 import {
   updateDeploymentStatus,
   createDeployment
-} from "../../lib/githubNotify";
+} from "../../lib/github/githubNotify";
 
-import { getSha } from "../../lib/getSha";
+import { getSha } from "../../lib/util/getSha";
 
 import { Request } from "../../interfaces/Request";
 import { Release } from "../../interfaces/Release";

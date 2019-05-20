@@ -1,12 +1,12 @@
 import { create } from "../events/create";
 import { eventJS } from "../__mocks__";
 import { saveReleaseToDB, getRelease } from "../db/queries";
-import { pollCluster } from "../lib/pollCluster";
+import { pollCluster } from "../lib/cluster/pollCluster";
 import { getConfig, createCluster } from "../api/";
-import { createDeployment } from "../lib/githubNotify";
-import { updateStatus } from "../lib/githubStatus";
+import { createDeployment } from "../lib/github/githubNotify";
+import { updateStatus } from "../lib/github/githubStatus";
 
-jest.mock("../lib/pollCluster", () => ({
+jest.mock("../lib/cluster/pollCluster", () => ({
   pollCluster: jest.fn(() => {
     const clusterResult = {
       kubernetes_cluster: {
@@ -73,13 +73,13 @@ jest.mock("../api", () => ({
   })
 }));
 
-jest.mock("../lib/githubNotify", () => ({
+jest.mock("../lib/github/githubNotify", () => ({
   createDeployment: jest.fn(() => {
     return { id: "123", ip: "192.168.2.10" };
   })
 }));
 
-jest.mock("../lib/githubStatus", () => ({
+jest.mock("../lib/github/githubStatus", () => ({
   updateStatus: jest.fn(() => {
     return {};
   })

@@ -1,5 +1,5 @@
 import path from "path";
-import { getFile } from "../lib/getFile";
+import { getFile } from "../lib/util/getFile";
 
 export const eventJS = async (filename = "") => {
   const file = path.resolve(__dirname, `./github/${filename}.json`);

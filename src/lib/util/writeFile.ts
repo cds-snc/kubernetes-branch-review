@@ -1,6 +1,6 @@
 const fs = require("fs");
 import yaml from "js-yaml";
-import { Config } from "../interfaces/Config";
+import { Config } from "../../interfaces/Config";
 
 export const writeFile = (
   filePath: string,

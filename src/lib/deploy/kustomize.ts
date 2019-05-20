@@ -1,7 +1,7 @@
-import { getFile } from "./getFile";
+import { getFile } from "../util/getFile";
 import yaml from "js-yaml";
-import { Config } from "../interfaces/Config";
-import { writeFile } from "../lib/writeFile";
+import { Config } from "../../interfaces/Config";
+import { writeFile } from "../util/writeFile";
 
 const DIR = process.env.CODE_DIR || "/tmp";
 
