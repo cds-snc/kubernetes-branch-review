@@ -8,10 +8,11 @@ import { returnStatus } from "../lib/util/returnStatus";
 import { beforePr } from "../lib/cluster/checkCluster";
 import { getVersion } from "../lib/util/getVersion";
 import { handleEvent } from "../lib/util/handleEvent";
+import { checkEnv } from "../lib/util/checkEnv";
 import { Worker, isMainThread } from "worker_threads";
 import { ClusterWorker } from "../interfaces/ClusterWorker";
-import { Release } from "../interfaces/Release";
 import { Request } from "../interfaces/Request";
+import { Release } from "../interfaces/Release";
 
 let workers: ClusterWorker = {};
 
@@ -23,9 +24,12 @@ const terminate = async (worker: Worker, refId: string): Promise<void> => {
     delete workers[refId];
   });
 };
-
 //  https://nodejs.org/api/worker_threads.html
-const setupWorker = (req: Request, refId: string, release: Release): Worker => {
+export const setupWorker = (
+  req: Request,
+  refId: string,
+  release: Release
+): Worker => {
   // can init and send data
   console.log(`setup worker for refId ${refId}`);
 
@@ -41,16 +45,6 @@ const setupWorker = (req: Request, refId: string, release: Release): Worker => {
 };
 
 const router = express.Router();
-
-const checkEnv = () => {
-  if (process.env.NODE_ENV === "test") {
-    // don't spin up for test env
-    // @todo see if there's a way to test worker process using jest
-    return false;
-  }
-
-  return true;
-};
 
 router.get("/favicon.ico", (req, res) => res.status(204));
 
@@ -68,6 +62,7 @@ router.post("/", async (req: Request, res) => {
   const action = getAction(req);
   const refId = getRefId(body);
   const eventInfo = handleEvent(req);
+  const defaultMessage = "✅ event received";
 
   // do we have a refId?
   if (!refId) {
@@ -75,13 +70,16 @@ router.post("/", async (req: Request, res) => {
     return returnStatus(body, res, { state: "error", description: status });
   }
 
+  // check if we want to handle this type of event
   if (!eventInfo.handleEvent) {
     res.send(`✅ event ignored ${eventInfo.type}`);
     return;
   }
 
-  let release = await getRelease({ refId });
+  console.log(`✅ version: ${getVersion()}`);
+  console.log(`✅ event: ${eventInfo.type}  ✅ refId: ${refId} `);
 
+  // ignore closing push
   if (body.after && body.after === "0000000000000000000000000000000000000000") {
     return returnStatus(body, res, {
       state: "success",
@@ -89,6 +87,7 @@ router.post("/", async (req: Request, res) => {
     });
   }
 
+  // handle closed event
   if (action === "closed") {
     await close(req);
     return returnStatus(body, res, {
@@ -97,29 +96,29 @@ router.post("/", async (req: Request, res) => {
     });
   }
 
-  // hand off to Worker
-  if (isMainThread && checkEnv()) {
-    if (isBeforePr(req)) {
-      beforePr(req);
-    } else {
-      // stop existing worker + start a new worker
-      if (refId && workers[refId]) {
-        //@ts-ignore
-        await terminate(workers[refId], refId);
-      }
-
-      //@ts-ignore
-      workers[refId] = setupWorker({ body: req.body }, refId, release);
-    }
+  // handle events before a PR
+  if (isBeforePr(req)) {
+    await beforePr(req);
+    res.send(defaultMessage);
+    return;
   }
 
-  const version = getVersion();
+  // handle deploment
+  let release = await getRelease({ refId });
 
-  console.log(
-    `✅ event: ${eventInfo.type}  ✅ refId: ${refId} ✅ v: ${version}`
-  );
+  // hand off to Worker
+  if (isMainThread && checkEnv()) {
+    // stop existing worker + start a new worker
+    if (refId && workers[refId]) {
+      //@ts-ignore
+      await terminate(workers[refId], refId);
+    }
 
-  res.send("✅ event received");
+    //@ts-ignore
+    workers[refId] = setupWorker({ body: req.body }, refId, release);
+  }
+
+  res.send(defaultMessage);
 });
 
 export default router;

@@ -14,7 +14,7 @@ export const handleEvent = (
   const safeList = ["create", "push", "delete", "pull_request"];
 
   if (safeList.includes(event)) {
-    console.log(`allow - ${event}`);
+    console.log(`✅ allow - ${event}`);
     handleEvent = true;
   }
 
