@@ -1,18 +1,20 @@
 import express from "express";
 import { close } from "../events/close";
 import { getRelease } from "../db/queries";
-import { dbConnect } from "../db/connect";
+import { canConnect } from "../db/canConnect";
 import { getRefId } from "../lib/util/getRefId";
-import { getAction, isBeforePr } from "../lib/util/getAction";
+import { getAction } from "../lib/util/getAction";
 import { returnStatus } from "../lib/util/returnStatus";
-import { beforePr } from "../lib/cluster/checkCluster";
+import { isBeforePr, beforePr } from "../lib/util/beforePr";
 import { getVersion } from "../lib/util/getVersion";
 import { handleEvent } from "../lib/util/handleEvent";
 import { checkEnv } from "../lib/util/checkEnv";
+import { noteError } from "../lib/util/note";
 import { Worker, isMainThread } from "worker_threads";
 import { ClusterWorker } from "../interfaces/ClusterWorker";
 import { Request } from "../interfaces/Request";
 import { Release } from "../interfaces/Release";
+import { Response } from "express";
 
 let workers: ClusterWorker = {};
 
@@ -44,25 +46,16 @@ export const setupWorker = (
   return w;
 };
 
-const router = express.Router();
-
-router.get("/favicon.ico", (req, res) => res.status(204));
-
-router.post("/", async (req: Request, res) => {
+export const main = async (req: Request, res: Response) => {
   const body = req.body;
-
-  // do we have a database connection?
-  const db = await dbConnect();
-  if (!db) {
-    // @todo notify github
-    let status = "database connection error 🛑";
-    return returnStatus(body, res, { state: "error", description: status });
-  }
-
   const action = getAction(req);
   const refId = getRefId(body);
   const eventInfo = handleEvent(req);
   const defaultMessage = "✅ event received";
+
+  if (!(await canConnect(req, res))) {
+    return;
+  }
 
   // do we have a refId?
   if (!refId) {
@@ -119,6 +112,18 @@ router.post("/", async (req: Request, res) => {
   }
 
   res.send(defaultMessage);
+};
+
+const router = express.Router();
+
+router.get("/favicon.ico", (req, res) => res.status(204));
+
+router.post("/", async (req: Request, res) => {
+  try {
+    await main(req, res);
+  } catch (e) {
+    noteError(`deploy ${e.message}`, e);
+  }
 });
 
 export default router;

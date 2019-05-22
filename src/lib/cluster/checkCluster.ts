@@ -1,16 +1,14 @@
 import { deleteDropletByTag, getCluster } from "../../api";
-import { getRefId } from "../util/getRefId";
 import { getName } from "../util/getName";
 import { getAction } from "../util/getAction";
 import { create } from "../../events/create";
-import { saveReleaseToDB } from "../../db/queries";
-import { PrState, Release } from "../../interfaces/Release";
+import { Release } from "../../interfaces/Release";
 import { Request } from "../../interfaces/Request";
 
 const handleCreate = async (req: Request, release: Release) => {
   const action = getAction(req);
 
-  console.log(`handle create cluster ${action}`)
+  console.log(`handle create cluster ${action}`);
 
   if (action === "opened" || action === "updated" || action === "reopened") {
     // spin up a fresh cluster
@@ -19,18 +17,6 @@ const handleCreate = async (req: Request, release: Release) => {
   }
 
   return release;
-};
-
-export const beforePr = async (req: Request): Promise<void> => {
-  const refId = getRefId(req.body);
-  if (refId) {
-    await saveReleaseToDB({
-      refId,
-      sha: req.body.after,
-      cluster_id: null,
-      pr_state: PrState["none" as PrState]
-    });
-  }
 };
 
 const isClusterRunning = async (
@@ -62,7 +48,6 @@ export const checkAndCreateCluster = async (
   req: Request,
   release: Release | false
 ) => {
-  
   const name = getName(req);
 
   if (!release || !release.refId) {

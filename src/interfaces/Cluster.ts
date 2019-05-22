@@ -1,18 +1,20 @@
 export interface Node {
-    name: string; 
-  }
+  name: string;
+}
 
 export interface NodePools {
-    nodes: Node[];
+  nodes: Node[];
 }
 
 export interface Status {
-    state: string;
+  state: string;
 }
 
+// note - if an error occurs check for message field
 export interface Cluster {
-    id: string;
-    node_pools: NodePools[];
-    status: Status;
-    state: string;
-  }
+  id: string;
+  node_pools: NodePools[];
+  status: Status;
+  state: string;
+  message?: string;
+}

@@ -1,19 +1,6 @@
 import { isMaster } from "./isMaster";
 import { Request } from "../../interfaces/Request";
-
-export const isBeforePr = (req: Request): boolean => {
-  const body = req.body;
-  if (
-    body &&
-    body.before &&
-    body.before === "0000000000000000000000000000000000000000"
-  ) {
-    console.log("✅ commit prior to PR");
-    return true;
-  }
-
-  return false;
-};
+import { isBeforePr } from "../util/beforePr";
 
 // @todo - update return type with possible values
 export const getAction = (req: Request): string => {

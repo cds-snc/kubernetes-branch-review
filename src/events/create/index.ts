@@ -75,12 +75,17 @@ const checkCluster = async (
   req: Request,
   release: Release,
   deployment: { id: string }
-) => {
+): Promise<void> => {
+  
   const { refId, prState } = parseData(req, release);
   // if this fails kill the process + update db
+
+  const clusterName = getName(req);
+
+  // note: the version get change pull from api get options
   const cluster = await createCluster({
-    name: getName(req),
-    version: "1.12.1-do.2"
+    name: clusterName,
+    version: "1.14.2-do.0"
   });
 
   if (cluster && cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {

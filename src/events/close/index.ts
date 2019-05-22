@@ -80,13 +80,8 @@ export const close = async (req: Request): Promise<string | false> => {
   }
 
   const clusterId = record.cluster_id;
-
-  try {
-    await cleanupLoadBalancer(clusterId);
-    await deleteClusterAndUpdate(clusterId, refId, sha);
-  } catch (e) {
-    console.log("delete load balancer error", e.message);
-  }
+  await cleanupLoadBalancer(clusterId);
+  await deleteClusterAndUpdate(clusterId, refId, sha);
 
   return refId;
 };

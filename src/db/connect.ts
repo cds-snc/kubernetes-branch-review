@@ -3,37 +3,35 @@ import { Connection } from "mongoose";
 const mongoose = require("mongoose");
 mongoose.set("useFindAndModify", false);
 mongoose.set("bufferCommands", false);
-
 interface ConnectOptions {
   useNewUrlParser: boolean;
   auth?: {};
 }
 
-const connect = async (uri:string, user:string = "", password:string = ""): Promise<Connection|false> => {
+const connect = async (
+  uri: string,
+  user: string = "",
+  password: string = ""
+): Promise<Connection | false> => {
   if (!uri) {
     throw new Error("no uri passed to connect");
   }
 
-  const mongodbUri:string = uri;
+  const mongodbUri: string = uri;
   let connect = null;
-  
-  try {
-    const options:ConnectOptions = {
-      useNewUrlParser: true
+
+  const options: ConnectOptions = {
+    useNewUrlParser: true
+  };
+
+  if (user) {
+    options.auth = {
+      user: user,
+      password: password
     };
-
-    if (user) {
-      options.auth = {
-        user: user,
-        password: password
-      };
-    }
-
-    connect = await mongoose.connect(mongodbUri, options);
-  } catch (err) {
-    console.error("⚠ Database connection error:", err.message);
-    return false;
   }
+
+  connect = await mongoose.connect(mongodbUri, options);
 
   return connect;
 };
