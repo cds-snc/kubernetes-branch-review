@@ -7,7 +7,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     curl=7.47.0-1ubuntu2.12 \
     ca-certificates=20170717~16.04.2 \
-    nodejs=12.2.0-1nodesource1 \
+    nodejs=12.3.0-1nodesource1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
