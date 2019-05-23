@@ -17,6 +17,7 @@ action "Install" {
 
 action "Dockerfile lint" {
   uses = "docker://cdssnc/docker-lint"
+  args = "--ignore DL3008"
 }
 
 action "Decrypt ENV" {

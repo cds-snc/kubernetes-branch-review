@@ -5,9 +5,9 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh && bas
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    curl=7.47.0-1ubuntu2.13 \
-    ca-certificates=20170717~16.04.2 \
-    nodejs=12.3.1-1nodesource1 \
+    curl \
+    ca-certificates \
+    nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
