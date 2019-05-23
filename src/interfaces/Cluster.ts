@@ -13,6 +13,7 @@ export interface Status {
 // note - if an error occurs check for message field
 export interface Cluster {
   id: string;
+  name: string;
   node_pools: NodePools[];
   status: Status;
   state: string;

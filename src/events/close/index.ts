@@ -9,7 +9,12 @@ import {
 import { Request } from "../../interfaces/Request";
 import { PrState, ClusterState } from "../../interfaces/Release";
 
-const deleteClusterAndUpdate = async (
+import {
+  clusterExists,
+  getClusterByName
+} from "../../lib/cluster/checkCluster";
+
+export const deleteClusterAndUpdate = async (
   clusterId: string,
   refId: string,
   sha: string
@@ -50,7 +55,7 @@ const updateRelease = async (req: Request, sha: string) => {
   return record;
 };
 
-const cleanupLoadBalancer = async (clusterId: string) => {
+export const cleanupLoadBalancer = async (clusterId: string) => {
   const name = await getClusterName(clusterId);
 
   if (name instanceof Error) {
@@ -58,6 +63,9 @@ const cleanupLoadBalancer = async (clusterId: string) => {
   }
 
   const balancer = await getLoadBalancer(name);
+
+  console.log("== balancer ==");
+  console.log(balancer);
 
   if (!balancer || balancer instanceof Error || !balancer.id) {
     return false;
@@ -79,9 +87,35 @@ export const close = async (req: Request): Promise<string | false> => {
     return false;
   }
 
-  const clusterId = record.cluster_id;
-  await cleanupLoadBalancer(clusterId);
-  await deleteClusterAndUpdate(clusterId, refId, sha);
+  let result = await clusterExists(req);
 
+  if (result) {
+    console.log(`get cluster`);
+    const cluster = await getClusterByName(name);
+
+    if (cluster && cluster.id) {
+      const clusterId = cluster.id;
+
+      if (refId) {
+        console.log("cleanupLoadBalancer");
+        try {
+          await cleanupLoadBalancer(clusterId);
+        } catch (e) {
+          console.log("cleanupLoadBalancer", e.message);
+        }
+
+        //
+
+        try {
+          // delete the cluster deletes the droplet????
+          await deleteClusterAndUpdate(clusterId, refId, "123");
+        } catch (e) {
+          console.log("deleteClusterAndUpdate", e.message);
+        }
+      }
+
+      console.log(`refId: ${refId}`);
+    }
+  }
   return refId;
 };

@@ -10,7 +10,6 @@ require("dotenv-safe").config({ allowEmptyValues: true });
 
 const baseUrl = "https://api.digitalocean.com/v2";
 const baseUrlKubernetes = `${baseUrl}/kubernetes`;
-
 const { K8_API_KEY: TOKEN } = process.env;
 
 const fetchEndpoint = async (
@@ -85,7 +84,7 @@ export const getCluster = async (
 };
 
 export const deleteCluster = async (id: string): Promise<void> => {
-  await fetchEndpoint("delete", `${baseUrlKubernetes}/clusters/${id}`);
+  await fetchEndpoint("delete", `${baseUrlKubernetes}/clusters/${id}`, false);
 };
 
 export const getConfig = async (id: string): Promise<string> => {

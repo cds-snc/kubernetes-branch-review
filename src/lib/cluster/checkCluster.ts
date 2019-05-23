@@ -1,73 +1,91 @@
-import { deleteDropletByTag, getCluster } from "../../api";
+import { getAllClusters } from "../../api";
 import { getName } from "../util/getName";
-import { getAction } from "../util/getAction";
-import { create } from "../../events/create";
-import { Release } from "../../interfaces/Release";
+import { pollCluster } from "./pollCluster";
+import { createCluster } from "../../api";
 import { Request } from "../../interfaces/Request";
+import { Cluster } from "../../interfaces/Cluster";
+import { statusReporter } from "../../lib/util/statusReporter";
 
-const handleCreate = async (req: Request, release: Release) => {
-  const action = getAction(req);
+const waitForProvisioningCluster = async (req: Request, clusterId: string) => {
+  const data = await pollCluster(clusterId, "running", async (msg: string) => {
+    // update github
+    await statusReporter(req, msg);
+  });
 
-  console.log(`handle create cluster ${action}`);
+  if (data && data.kubernetes_cluster.state === "running") {
+    return data;
+  }
 
-  if (action === "opened" || action === "updated" || action === "reopened") {
-    // spin up a fresh cluster
-    const result = await create(req, release);
+  return data;
+};
+
+export const createClusterAndWait = async (req: Request) => {
+  const clusterName = getName(req);
+
+  // make the api call
+  const cluster = await createCluster({
+    name: clusterName,
+    version: "1.14.2-do.0"
+  });
+
+  if (cluster && cluster.kubernetes_cluster && cluster.kubernetes_cluster.id) {
+    const result = await waitForProvisioningCluster(
+      req,
+      cluster.kubernetes_cluster.id
+    );
+
     return result;
   }
 
-  return release;
+  throw new Error("failed to create cluster");
 };
 
-const isClusterRunning = async (
-  req: Request,
-  release: Release,
+export const getClusterByName = async (
   name: string
-) => {
-  // check to see if we have a cluster is in running state
-  if (release && !release.cluster_id) {
-    return release;
+): Promise<false | Cluster> => {
+  const result = await getAllClusters();
+
+  let found: false | Cluster;
+  found = false;
+
+  if (result && result.kubernetes_clusters) {
+    result.kubernetes_clusters.forEach(
+      (cluster: Cluster): void => {
+        if (cluster.name === name) {
+          found = cluster;
+        }
+      }
+    );
   }
 
-  const data = await getCluster(release.cluster_id);
-
-  if (
-    data &&
-    data.kubernetes_cluster &&
-    data.kubernetes_cluster.state !== "running"
-  ) {
-    await deleteDropletByTag(name);
-    const result = await handleCreate(req, release);
-    return result;
-  }
-
-  return release;
+  return found;
 };
 
-export const checkAndCreateCluster = async (
-  req: Request,
-  release: Release | false
-) => {
+// checks to see if we have an existing cluster and if it's in a running state
+export const clusterExists = async (req: Request): Promise<boolean> => {
   const name = getName(req);
+  const cluster = await getClusterByName(name);
 
-  if (!release || !release.refId) {
-    return false;
+  if (!cluster || !cluster.id || !cluster.status) return false;
+
+  if (cluster.status.state === "provisioning") {
+    console.log("we found a cluster in a provisioning state");
+    const result = await waitForProvisioningCluster(req, cluster.id);
+    console.log(result);
+    return true;
   }
 
-  if (!release.cluster_state || release.cluster_state === "deleted") {
-    console.log("cluster or cluster state not found");
-    const result = await handleCreate(req, release);
-    return result;
+  if (cluster.status.state === "running") {
+    return true;
   }
 
-  // do some cleanup if we need to
-  if (!release.cluster_id) {
-    // destroy the droplet if no cluster id exists yet
-    await deleteDropletByTag(name);
-    const result = await handleCreate(req, release);
-    return result;
-  }
+  return false;
+};
 
-  const result = await isClusterRunning(req, release, name);
-  return result;
+export const checkAndCreateCluster = async (req: Request): Promise<void> => {
+  let result = await clusterExists(req);
+
+  if (!result) {
+    await createClusterAndWait(req);
+  }
 };
