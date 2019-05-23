@@ -9,7 +9,6 @@ export const server = express();
 server.use(bodyParser.json());
 server.use("/", homeRouter);
 
-server.listen(port, (err: Error) => {
-  if (err) throw err;
+server.listen(port, () => {
   console.log(`> Ready on http://localhost:${port}`);
 });
