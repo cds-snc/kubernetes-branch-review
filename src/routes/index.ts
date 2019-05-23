@@ -96,7 +96,7 @@ export const main = async (req: Request, res: Response) => {
     return;
   }
 
-  // handle deploment
+  // handle deployment
   let release = await getRelease({ refId });
 
   // hand off to Worker
