@@ -59,8 +59,13 @@ export const main = async (req: Request, res: Response) => {
 
   // do we have a refId?
   if (!refId) {
-    let status = "no refId found 🛑";
-    return returnStatus(body, res, { state: "error", description: status });
+    let description = "no refId found 🛑";
+    return returnStatus(
+      body,
+      res,
+      { state: "error", description },
+      { state: "error", description }
+    );
   }
 
   // check if we want to handle this type of event
@@ -74,19 +79,35 @@ export const main = async (req: Request, res: Response) => {
 
   // ignore closing push
   if (body.after && body.after === "0000000000000000000000000000000000000000") {
-    return returnStatus(body, res, {
-      state: "success",
-      description: "Closing push ignored"
-    });
+    return returnStatus(
+      body,
+      res,
+      {
+        state: "success",
+        description: "Closing push ignored"
+      },
+      {
+        state: "inactive",
+        description: "closed"
+      }
+    );
   }
 
   // handle closed event
   if (action === "closed") {
     await close(req);
-    return returnStatus(body, res, {
-      state: "success",
-      description: "Branch review app removed"
-    });
+    return returnStatus(
+      body,
+      res,
+      {
+        state: "success",
+        description: "closed"
+      },
+      {
+        state: "inactive",
+        description: "closed"
+      }
+    );
   }
 
   // handle events before a PR

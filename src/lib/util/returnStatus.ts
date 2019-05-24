@@ -2,17 +2,18 @@ import { updateDeploymentStatus } from "../github/githubNotify";
 import { updateStatus } from "../github/githubStatus";
 import { getRefId } from "./getRefId";
 import { RequestBody } from "../../interfaces/Request";
-import { Status } from "../../interfaces/Status";
+import { StatusMessage, DeploymentMessage } from "../../interfaces/Status";
 import { Response } from "express";
 
 export const returnStatus = async (
   body: RequestBody,
   res: Response | null,
-  status: Status
+  status: StatusMessage,
+  deploymentStatus: DeploymentMessage
 ): Promise<void> => {
   const refId = getRefId(body);
   if (refId) {
-    await updateDeploymentStatus(body, status, refId);
+    await updateDeploymentStatus(body, deploymentStatus, refId);
     await updateStatus(body, status, refId);
   }
 

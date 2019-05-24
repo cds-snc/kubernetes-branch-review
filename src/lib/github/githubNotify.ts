@@ -1,7 +1,7 @@
 import { authenticate } from "./githubAuth";
 import { getDeployment } from "../../db/queries";
 import { RequestBody } from "../../interfaces/Request";
-import { StatusMessage } from "../../interfaces/Status";
+import { DeploymentMessage } from "../../interfaces/Status";
 import { getInstallationId } from "../util/getInstallationId";
 import { getSha } from "../util/getSha";
 import {
@@ -47,8 +47,8 @@ export const createDeployment = async (
 
 export const updateDeploymentStatus = async (
   event: RequestBody,
-  status: StatusMessage = {
-    state: "success",
+  status: DeploymentMessage = {
+    state: "pending",
     description: "deployment updated"
   },
   refId: string

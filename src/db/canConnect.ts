@@ -11,11 +11,19 @@ export const canConnect = async (
   // do we have a database connection?
   const db = await dbConnect();
   if (!db) {
-    let status = "database connection error 🛑";
-    await returnStatus(body, res, {
-      state: "error",
-      description: status
-    });
+    let description = "database connection error 🛑";
+    await returnStatus(
+      body,
+      res,
+      {
+        state: "error",
+        description
+      },
+      {
+        state: "error",
+        description
+      }
+    );
 
     return false;
   }

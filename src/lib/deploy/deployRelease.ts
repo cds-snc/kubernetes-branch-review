@@ -7,7 +7,7 @@ import { noteError } from "../util/note";
 import { getName } from "../util/getName";
 import { checkoutAndUpdateContainers } from "./checkoutAndUpdateContainers";
 import { Request } from "../../interfaces/Request";
-import { Status } from "../../interfaces/Status";
+import { StatusMessage } from "../../interfaces/Status";
 import { getConfig } from "../../api";
 import { PrState, ClusterState } from "../../interfaces/Release";
 import { getRefId } from "../../lib/util/getRefId";
@@ -84,9 +84,7 @@ const saveConfig = async (req: Request, refId: string, prState: string) => {
   }
 };
 
-export const deployRelease = async (
-  req: Request
-): Promise<Status | boolean> => {
+export const deployRelease = async (req: Request): Promise<StatusMessage> => {
   const { refId, prState } = await parseData(req);
 
   await startDeploy(req);
@@ -109,17 +107,24 @@ export const deployRelease = async (
 export const deployReleaseAndNotify = async (req: Request, refId: string) => {
   try {
     const body = req.body;
+    const result: StatusMessage = await deployRelease(req);
 
-    const deployStatus = await deployRelease(req);
-
-    if (deployStatus && typeof deployStatus === "object") {
-      return returnStatus(body, null, deployStatus);
+    if (result) {
+      return returnStatus(body, null, result, result);
     }
 
-    return returnStatus(body, null, {
-      state: "error",
-      description: "no release found"
-    });
+    return returnStatus(
+      body,
+      null,
+      {
+        state: "error",
+        description: "failed to deploy"
+      },
+      {
+        state: "error",
+        description: "failed to deploy"
+      }
+    );
   } catch (e) {
     noteError(`deploy ${e.message}`, e);
   }
