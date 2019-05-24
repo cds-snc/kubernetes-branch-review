@@ -32,7 +32,7 @@ export const pollLoadBalancer = async (
       if (result && result.status) {
         loadBalancerState = result.status;
       }
-      // message for the logs
+      
       let loadBalancerMsg = loadBalancerState || "⏱️";
 
       if (loadBalancerMsg === "active") {
@@ -46,7 +46,6 @@ export const pollLoadBalancer = async (
       }
 
       if (poll.counter >= 300) {
-        // bail
         const result = await getLoadBalancer(name);
         reporter(`poll load balancer timed out after`, "failure");
         poll.clear();

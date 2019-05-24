@@ -1,5 +1,5 @@
 import express from "express";
-import { close } from "../events/close";
+import { close } from "../lib/close";
 import { getRelease } from "../db/queries";
 import { canConnect } from "../db/canConnect";
 import { getRefId } from "../lib/util/getRefId";

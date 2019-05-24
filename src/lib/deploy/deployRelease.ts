@@ -10,25 +10,13 @@ import { Request } from "../../interfaces/Request";
 import { StatusMessage } from "../../interfaces/Status";
 import { getConfig } from "../../api";
 import { PrState, ClusterState } from "../../interfaces/Release";
-import { getRefId } from "../../lib/util/getRefId";
+
 import { getAction } from "../../lib/util/getAction";
 import { statusReporter } from "../../lib/util/statusReporter";
 import { getClusterByName } from "../cluster/checkCluster";
 import { createDeployment } from "../github/githubNotify";
+import {ensureRefId} from "../util/ensureRefId"
 
-const ensureRefId = (req: Request) => {
-  if (!req || !req.body || !getRefId(req.body)) {
-    throw new Error("invalid event passed");
-  }
-
-  const refId = getRefId(req.body);
-
-  if (!refId) {
-    throw new Error("refId not defined");
-  }
-
-  return refId;
-};
 
 const parseData = async (
   req: Request

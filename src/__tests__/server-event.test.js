@@ -5,7 +5,7 @@ import request from "supertest";
 import { eventJS } from "../__mocks__";
 // import { create } from "../events/create";
 // import { update } from "../events/update";
-import { close } from "../events/close";
+import { close } from "../lib/close";
 import { getRelease, getDeployment } from "../db/queries";
 require("dotenv-safe").config({ allowEmptyValues: true });
 
@@ -41,7 +41,7 @@ jest.mock("../events/update", () => ({
 */
 
 // mock close
-jest.mock("../events/close", () => ({
+jest.mock("../lib/close", () => ({
   close: jest.fn(() => {
     return true;
   })
