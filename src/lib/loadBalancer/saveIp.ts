@@ -4,6 +4,7 @@ import { pollLoadBalancer } from "./pollLoadBalancer";
 import { statusReporter } from "../util/statusReporter";
 import { updateDeploymentStatus } from "../github/githubNotify";
 import { Request } from "../../interfaces/Request";
+import { StatusMessage } from "../../interfaces/Status";
 
 const hasIp = async (req: Request, refId: string) => {
   const record = await getRelease({ refId });
@@ -29,9 +30,13 @@ export const saveIp = async ({
 
   if (record) {
     const clusterId = record.cluster_id;
-    await pollLoadBalancer(clusterId, "active", async (msg: string) => {
-      await statusReporter(req, msg);
-    });
+    await pollLoadBalancer(
+      clusterId,
+      "active",
+      async (msg: string, status: StatusMessage["state"] = "pending") => {
+        await statusReporter(req, msg, status);
+      }
+    );
 
     const ip = await getLoadBalancerIp(clusterId);
 

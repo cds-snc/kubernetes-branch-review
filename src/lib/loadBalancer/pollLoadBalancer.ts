@@ -1,10 +1,11 @@
 import { longPoll } from "../util/longPoll";
 import { getClusterName, getLoadBalancer } from "./getLoadBalancer";
+import { StatusMessage } from "../../interfaces/Status";
 
 export const pollLoadBalancer = async (
   clusterId: string,
   checkState: string = "active",
-  reporter: (msg: string) => void = () => {}
+  reporter: (msg: string, status?: StatusMessage["state"]) => void = () => {}
 ): Promise<void> => {
   return new Promise(async resolve => {
     const poll = Object.assign({}, longPoll);
@@ -14,7 +15,6 @@ export const pollLoadBalancer = async (
     poll.delay = 10000;
 
     const name = await getClusterName(clusterId);
-    console.log("cluster name", name);
 
     if (name instanceof Error) {
       return false;
@@ -39,7 +39,10 @@ export const pollLoadBalancer = async (
         loadBalancerMsg += " ✅";
       }
 
-      reporter(`current load balancer state ... ${loadBalancerMsg}`);
+      reporter(
+        `current load balancer state ... ${loadBalancerMsg}`,
+        "in_progress"
+      );
 
       if (loadBalancerState === checkState) {
         return result;
@@ -50,7 +53,7 @@ export const pollLoadBalancer = async (
       if (poll.counter >= timeout) {
         // bail
         const result = await getLoadBalancer(name);
-        reporter(`poll load balancer timed out after ${timeout}`);
+        reporter(`poll load balancer timed out after ${timeout}`, "failure");
         poll.clear();
         return result;
       }
@@ -59,7 +62,7 @@ export const pollLoadBalancer = async (
     poll.eventEmitter.on(`done-${id}`, result => {
       if (poll.id === `${prefix}-${clusterId}`) {
         const loadBalancerState = result.status;
-        reporter(`⚡ done polling ${loadBalancerState} ⚡ `);
+        reporter(`⚡ done polling ${loadBalancerState} ⚡ `, "success");
         poll.clear();
         resolve(result);
       }

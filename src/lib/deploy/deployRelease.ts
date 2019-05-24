@@ -91,13 +91,18 @@ export const deployRelease = async (
 
   await startDeploy(req);
   await checkAndCreateCluster(req);
-  await statusReporter(req, "Cluster deployed, building app ...");
+  await statusReporter(req, "Cluster deployed, building app...", "in_progress");
   await saveConfig(req, refId, prState);
+  await statusReporter(
+    req,
+    "Cleanup + checking out updated code...",
+    "in_progress"
+  );
   await checkoutAndUpdateContainers(await update(req));
   await saveIpAndUpdate(req, refId);
   return {
     state: "success",
-    description: "Branch review app deployed"
+    description: "Branch review deployed"
   };
 };
 

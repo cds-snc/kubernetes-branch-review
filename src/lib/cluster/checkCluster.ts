@@ -9,7 +9,7 @@ import { statusReporter } from "../../lib/util/statusReporter";
 const waitForProvisioningCluster = async (req: Request, clusterId: string) => {
   const data = await pollCluster(clusterId, "running", async (msg: string) => {
     // update github
-    await statusReporter(req, msg);
+    await statusReporter(req, msg, "success");
   });
 
   if (data && data.kubernetes_cluster.state === "running") {

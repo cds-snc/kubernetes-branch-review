@@ -57,7 +57,7 @@ export const updateStatus = async (
       owner: repoOwner,
       repo: repoName,
       sha: sha,
-      context: "K8's branch deploy"
+      context: "K8s branch review"
     },
     await getTargetUrl(status, refId)
   );

@@ -2,6 +2,7 @@ const { spawnSync } = require("child_process");
 const DIR = process.env.CODE_DIR || "/tmp";
 
 export const cleanup = (name: string): true => {
+  
   console.log(`cleanup rm -rf ${name}`);
 
   const cleanup = spawnSync("rm", ["-rf", name], {

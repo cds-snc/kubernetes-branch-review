@@ -1,11 +1,12 @@
 import { longPoll } from "../util/longPoll";
 import { getCluster } from "../../api";
 import { Cluster } from "../../interfaces/Cluster";
+import { StatusMessage } from "../../interfaces/Status";
 
 export const pollCluster = async (
   clusterId: string,
   checkState: string = "running",
-  reporter: (msg: string) => void = () => {}
+  reporter: (msg: string, status?: StatusMessage["state"]) => void = () => {}
 ): Promise<void | { kubernetes_cluster: Cluster }> => {
   return new Promise(resolve => {
     const poll = Object.assign({}, longPoll);
@@ -19,7 +20,7 @@ export const pollCluster = async (
 
       if (result) {
         const clusterState = result.kubernetes_cluster.status.state;
-        reporter(`current cluster state ... ${clusterState} ⏱️`);
+        reporter(`current cluster state ... ${clusterState} ⏱️`, "in_progress");
 
         if (clusterState === checkState) {
           return result;
@@ -29,7 +30,7 @@ export const pollCluster = async (
 
         if (poll.counter >= timeout) {
           // bail
-          reporter(`poll cluster timed out after ${timeout}`);
+          reporter(`poll cluster timed out after ${timeout}`, "failure");
           poll.clear();
           return result;
         }
@@ -40,7 +41,7 @@ export const pollCluster = async (
       if (poll.id === `${prefix}-${clusterId}`) {
         const clusterState = result.kubernetes_cluster.status.state;
         if (reporter) {
-          reporter(`current cluster state ... ${clusterState}`);
+          reporter(`current cluster state ... ${clusterState}`, "in_progress");
         }
         poll.clear();
         resolve(result);
