@@ -91,12 +91,12 @@ export const deployRelease = async (
 
   await startDeploy(req);
   await checkAndCreateCluster(req);
-  await statusReporter(req, "Cluster deployed, building app...", "in_progress");
+  await statusReporter(req, "Cluster deployed, building app...", "pending");
   await saveConfig(req, refId, prState);
   await statusReporter(
     req,
     "Cleanup + checking out updated code...",
-    "in_progress"
+    "pending"
   );
   await checkoutAndUpdateContainers(await update(req));
   await saveIpAndUpdate(req, refId);

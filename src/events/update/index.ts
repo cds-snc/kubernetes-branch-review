@@ -40,7 +40,7 @@ export const update = async (req: Request): Promise<Release> => {
       // set deployment to in progress
       await updateDeploymentStatus(
         body,
-        { state: "in_progress", description: "updating deployment..." },
+        { state: "pending", description: "updating deployment..." },
         refId
       );
 

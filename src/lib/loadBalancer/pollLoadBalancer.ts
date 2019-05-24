@@ -41,7 +41,7 @@ export const pollLoadBalancer = async (
 
       reporter(
         `current load balancer state ... ${loadBalancerMsg}`,
-        "in_progress"
+        "pending"
       );
 
       if (loadBalancerState === checkState) {

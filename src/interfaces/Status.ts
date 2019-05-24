@@ -1,5 +1,5 @@
 export interface StatusMessage {
-  state: "error" | "failure" | "pending" | "success" | "in_progress" | "inactive";
+  state: "error" | "failure" | "pending" | "success" | "inactive";
   description?: string;
   target_url?: string;
 }
