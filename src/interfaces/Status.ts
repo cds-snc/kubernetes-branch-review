@@ -14,4 +14,5 @@ export interface DeploymentMessage {
     | "pending"
     | "success";
   description?: string;
+  target_url?: string;
 }
