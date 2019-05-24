@@ -16,9 +16,7 @@ import { statusReporter } from "../../lib/util/statusReporter";
 import { getClusterByName } from "../cluster/checkCluster";
 import { createDeployment } from "../github/githubNotify";
 
-const parseData = async (
-  req: Request
-): Promise<{ refId: string; sha: string; prState: string }> => {
+const ensureRefId = (req: Request) => {
   if (!req || !req.body || !getRefId(req.body)) {
     throw new Error("invalid event passed");
   }
@@ -29,7 +27,14 @@ const parseData = async (
     throw new Error("refId not defined");
   }
 
-  let release = await getRelease({ refId });
+  return refId;
+};
+
+const parseData = async (
+  req: Request
+): Promise<{ refId: string; sha: string; prState: string }> => {
+  const refId = ensureRefId(req);
+  const release = await getRelease({ refId });
 
   if (!release || !release.sha) {
     throw new Error("release not found");
