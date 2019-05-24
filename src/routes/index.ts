@@ -65,9 +65,9 @@ export const enforceRefId = (req: Request, res: Response) => {
   return refId;
 };
 
-const isCloseEvent = async (req: Request, res: Response) => {
+const isClosingPush = (req: Request, res: Response) => {
   const body = req.body;
-  const action = getAction(req);
+
   // ignore closing push
   if (body.after && body.after === "0000000000000000000000000000000000000000") {
     returnStatus(
@@ -86,6 +86,12 @@ const isCloseEvent = async (req: Request, res: Response) => {
     return true;
   }
 
+  return false;
+};
+
+const isClosedAction = async (req: Request, res: Response) => {
+  const body = req.body;
+  const action = getAction(req);
   // handle closed event
   if (action === "closed") {
     await close(req);
@@ -102,6 +108,15 @@ const isCloseEvent = async (req: Request, res: Response) => {
       }
     );
 
+    return true;
+  }
+};
+
+const isCloseEvent = async (req: Request, res: Response) => {
+  const closePush = isClosingPush(req, res);
+  const closedAction = isClosedAction(req, res);
+
+  if (closePush || closedAction) {
     return true;
   }
 
