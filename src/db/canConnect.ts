@@ -3,7 +3,7 @@ import { returnStatus } from "../lib/util/returnStatus";
 import { Request } from "../interfaces/Request";
 import { Response } from "express";
 
-export const canConnect = async (
+export const dbCanConnect = async (
   req: Request,
   res: Response
 ): Promise<boolean> => {
@@ -25,7 +25,7 @@ export const canConnect = async (
       }
     );
 
-    return false;
+    throw new Error(description);
   }
 
   return true;

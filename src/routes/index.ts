@@ -1,7 +1,7 @@
 import express from "express";
 import { close } from "../lib/close";
 import { getRelease } from "../db/queries";
-import { canConnect } from "../db/canConnect";
+import { dbCanConnect } from "../db/canConnect";
 import { getRefId } from "../lib/util/getRefId";
 import { getAction } from "../lib/util/getAction";
 import { returnStatus } from "../lib/util/returnStatus";
@@ -46,40 +46,31 @@ export const setupWorker = (
   return w;
 };
 
-export const main = async (req: Request, res: Response) => {
+export const enforceRefId = (req: Request, res: Response) => {
   const body = req.body;
-  const action = getAction(req);
   const refId = getRefId(body);
-  const eventInfo = handleEvent(req);
-  const defaultMessage = "✅ event received";
-
-  if (!(await canConnect(req, res))) {
-    return;
-  }
-
   // do we have a refId?
   if (!refId) {
     let description = "no refId found 🛑";
-    return returnStatus(
+    returnStatus(
       body,
       res,
       { state: "error", description },
       { state: "error", description }
     );
+
+    throw new Error(description);
   }
 
-  // check if we want to handle this type of event
-  if (!eventInfo.handleEvent) {
-    res.send(`✅ event ignored ${eventInfo.type}`);
-    return;
-  }
+  return refId;
+};
 
-  console.log(`✅ version: ${getVersion()}`);
-  console.log(`✅ event: ${eventInfo.type}  ✅ refId: ${refId} `);
-
+const isCloseEvent = async (req: Request, res: Response) => {
+  const body = req.body;
+  const action = getAction(req);
   // ignore closing push
   if (body.after && body.after === "0000000000000000000000000000000000000000") {
-    return returnStatus(
+    returnStatus(
       body,
       res,
       {
@@ -91,12 +82,14 @@ export const main = async (req: Request, res: Response) => {
         description: "closed"
       }
     );
+
+    return true;
   }
 
   // handle closed event
   if (action === "closed") {
     await close(req);
-    return returnStatus(
+    returnStatus(
       body,
       res,
       {
@@ -108,20 +101,51 @@ export const main = async (req: Request, res: Response) => {
         description: "closed"
       }
     );
+
+    return true;
   }
+
+  return false;
+};
+
+const isBeforePrEvent = async (req: Request, res: Response) => {
+  const defaultMessage = "✅ event received";
+  let beforePR = false;
 
   // handle events before a PR
   if (isBeforePr(req)) {
     await beforePr(req);
     res.send(defaultMessage);
+    beforePR = true;
+  }
+
+  return beforePR;
+};
+
+export const main = async (req: Request, res: Response) => {
+  const refId = enforceRefId(req, res);
+  const eventInfo = handleEvent(req);
+  const defaultMessage = "✅ event received";
+
+  await dbCanConnect(req, res);
+
+  // check if we want to handle this type of event
+  if (!eventInfo.handleEvent) {
+    res.send(`✅ event ignored ${eventInfo.type}`);
     return;
   }
+
+  console.log(`✅ version: ${getVersion()}`);
+  console.log(`✅ event: ${eventInfo.type}  ✅ refId: ${refId} `);
+
+  const closed = await isCloseEvent(req, res);
+  const beforePR = await isBeforePrEvent(req, res);
 
   // handle deployment
   let release = await getRelease({ refId });
 
   // hand off to Worker
-  if (isMainThread && checkEnv()) {
+  if (!closed && !beforePR && isMainThread && checkEnv()) {
     // stop existing worker + start a new worker
     if (refId && workers[refId]) {
       //@ts-ignore
