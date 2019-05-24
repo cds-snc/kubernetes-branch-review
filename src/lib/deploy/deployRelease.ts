@@ -1,7 +1,7 @@
 import { saveIpAndUpdate } from "../loadBalancer/saveIp";
 import { saveReleaseToDB, getRelease } from "../../db/queries";
 import { checkAndCreateCluster } from "../cluster/checkCluster";
-import { update } from "../../events/update";
+import { updateStatus } from "./updateStatus";
 import { returnStatus } from "../util/returnStatus";
 import { noteError } from "../util/note";
 import { getName } from "../util/getName";
@@ -19,11 +19,11 @@ import { createDeployment } from "../github/githubNotify";
 const parseData = async (
   req: Request
 ): Promise<{ refId: string; sha: string; prState: string }> => {
-  if (!req || !req.body) {
+  if (!req || !req.body || !getRefId(req.body)) {
     throw new Error("invalid event passed");
   }
-  const body = req.body;
-  const refId = getRefId(body);
+
+  const refId = getRefId(req.body);
 
   if (!refId) {
     throw new Error("refId not defined");
@@ -96,7 +96,7 @@ export const deployRelease = async (req: Request): Promise<StatusMessage> => {
     "Cleanup + checking out updated code...",
     "pending"
   );
-  await checkoutAndUpdateContainers(await update(req));
+  await checkoutAndUpdateContainers(await updateStatus(req, refId));
   await saveIpAndUpdate(req, refId);
   return {
     state: "success",

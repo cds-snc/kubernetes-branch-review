@@ -20,7 +20,7 @@ export const pollCluster = async (
 
       if (result) {
         const clusterState = result.kubernetes_cluster.status.state;
-        reporter(`current cluster state ... ${clusterState} ⏱️`, "pending");
+        reporter(`current cluster state... ${clusterState} ⏱️`, "pending");
 
         if (clusterState === checkState) {
           return result;

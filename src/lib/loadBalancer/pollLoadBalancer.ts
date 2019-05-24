@@ -40,7 +40,7 @@ export const pollLoadBalancer = async (
       }
 
       reporter(
-        `current load balancer state ... ${loadBalancerMsg}`,
+        `current load balancer state... ${loadBalancerMsg}`,
         "pending"
       );
 
