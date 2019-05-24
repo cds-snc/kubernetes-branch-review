@@ -39,21 +39,16 @@ export const pollLoadBalancer = async (
         loadBalancerMsg += " ✅";
       }
 
-      reporter(
-        `current load balancer state... ${loadBalancerMsg}`,
-        "pending"
-      );
+      reporter(`current load balancer state... ${loadBalancerMsg}`, "pending");
 
       if (loadBalancerState === checkState) {
         return result;
       }
 
-      const timeout = 300;
-
-      if (poll.counter >= timeout) {
+      if (poll.counter >= 300) {
         // bail
         const result = await getLoadBalancer(name);
-        reporter(`poll load balancer timed out after ${timeout}`, "failure");
+        reporter(`poll load balancer timed out after`, "failure");
         poll.clear();
         return result;
       }

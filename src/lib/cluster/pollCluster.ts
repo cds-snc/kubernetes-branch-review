@@ -26,11 +26,8 @@ export const pollCluster = async (
           return result;
         }
 
-        const timeout = 300;
-
-        if (poll.counter >= timeout) {
-          // bail
-          reporter(`poll cluster timed out after ${timeout}`, "failure");
+        if (poll.counter >= 300) {
+          reporter(`poll cluster timed out `, "failure");
           poll.clear();
           return result;
         }
