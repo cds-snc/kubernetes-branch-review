@@ -1,6 +1,6 @@
 import { dbConnect } from "./connect";
 import { getFullNameFromRefId } from "../lib/util/getRefId";
-const { Model } = require("./model");
+import { Model } from "./model";
 import { Release } from "../interfaces/Release";
 
 export const saveReleaseToDB = async (
