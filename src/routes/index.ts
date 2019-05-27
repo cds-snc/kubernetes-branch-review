@@ -1,20 +1,20 @@
-import express from "express";
-import { close } from "../lib/close";
+import express, { Response } from "express";
 import { getRelease } from "../db/queries";
 import { dbCanConnect } from "../db/canConnect";
-import { getRefId } from "../lib/util/getRefId";
-import { getAction } from "../lib/util/getAction";
-import { returnStatus } from "../lib/util/returnStatus";
+
 import { isBeforePr, beforePr } from "../lib/util/beforePr";
 import { getVersion } from "../lib/util/getVersion";
 import { handleEvent } from "../lib/util/handleEvent";
 import { checkEnv } from "../lib/util/checkEnv";
 import { noteError } from "../lib/util/note";
+import { enforceRefId } from "../lib/util/enforceRefId";
+import { isCloseEvent } from "../lib/close/isCloseEvent";
+
 import { Worker, isMainThread } from "worker_threads";
+
 import { ClusterWorker } from "../interfaces/ClusterWorker";
 import { Request } from "../interfaces/Request";
 import { Release } from "../interfaces/Release";
-import { Response } from "express";
 
 let workers: ClusterWorker = {};
 
@@ -44,83 +44,6 @@ export const setupWorker = (
   });
 
   return w;
-};
-
-export const enforceRefId = (req: Request, res: Response) => {
-  const body = req.body;
-  const refId = getRefId(body);
-  // do we have a refId?
-  if (!refId) {
-    let description = "no refId found 🛑";
-    returnStatus(
-      body,
-      res,
-      { state: "error", description },
-      { state: "error", description }
-    );
-
-    throw new Error(description);
-  }
-
-  return refId;
-};
-
-const isClosingPush = (req: Request, res: Response) => {
-  const body = req.body;
-
-  // ignore closing push
-  if (body.after && body.after === "0000000000000000000000000000000000000000") {
-    returnStatus(
-      body,
-      res,
-      {
-        state: "success",
-        description: "Closing push ignored"
-      },
-      {
-        state: "inactive",
-        description: "closed"
-      }
-    );
-
-    return true;
-  }
-
-  return false;
-};
-
-const isClosedAction = async (req: Request, res: Response) => {
-  const body = req.body;
-  const action = getAction(req);
-  // handle closed event
-  if (action === "closed") {
-    await close(req);
-    returnStatus(
-      body,
-      res,
-      {
-        state: "success",
-        description: "closed"
-      },
-      {
-        state: "inactive",
-        description: "closed"
-      }
-    );
-
-    return true;
-  }
-};
-
-const isCloseEvent = async (req: Request, res: Response) => {
-  const closePush = isClosingPush(req, res);
-  const closedAction = isClosedAction(req, res);
-
-  if (closePush || closedAction) {
-    return true;
-  }
-
-  return false;
 };
 
 const isBeforePrEvent = async (req: Request, res: Response) => {
@@ -167,11 +90,13 @@ export const main = async (req: Request, res: Response) => {
       await terminate(workers[refId], refId);
     }
 
+    res.send(defaultMessage);
+
     //@ts-ignore
     workers[refId] = setupWorker({ body: req.body }, refId, release);
   }
 
-  res.send(defaultMessage);
+  // if not res send ??
 };
 
 const router = express.Router();

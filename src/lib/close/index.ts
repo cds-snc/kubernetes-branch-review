@@ -9,6 +9,7 @@ import { Request } from "../../interfaces/Request";
 import { PrState, ClusterState } from "../../interfaces/Release";
 import { ensureRefId } from "../util/ensureRefId";
 import { getClusterByName } from "../cluster/checkCluster";
+import { getName } from "../util/getName";
 
 export const deleteClusterAndUpdate = async (
   clusterId: string,
@@ -47,9 +48,6 @@ export const cleanupLoadBalancer = async (clusterId: string) => {
 
   const balancer = await getLoadBalancer(name);
 
-  console.log("== balancer ==");
-  console.log(balancer);
-
   if (!balancer || balancer instanceof Error || !balancer.id) {
     return false;
   }
@@ -61,10 +59,9 @@ export const close = async (req: Request): Promise<string | false> => {
   const body = req.body;
   const sha = body.pull_request.head.sha;
   const refId = ensureRefId(req);
-
   cleanup(sha);
   await closeRelease(req, sha);
-
+  const name = getName(req);
   const cluster = await getClusterByName(name);
 
   if (cluster && cluster.id) {

@@ -55,6 +55,8 @@ const saveConfig = async (req: Request, refId: string, prState: string) => {
   const name = getName(req);
   const cluster = await getClusterByName(name);
 
+  
+
   if (cluster && cluster.id) {
     const id = cluster.id;
     const state = cluster.status.state;

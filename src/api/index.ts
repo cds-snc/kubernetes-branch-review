@@ -137,5 +137,5 @@ export const getLoadBalancers = async (): Promise<{
 };
 
 export const deleteLoadBalancer = async (id: string): Promise<void> => {
-  await fetchEndpoint("delete", `${baseUrl}/load_balancers/${id}`);
+  await fetchEndpoint("delete", `${baseUrl}/load_balancers/${id}`, false);
 };

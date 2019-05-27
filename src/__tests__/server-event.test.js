@@ -58,58 +58,6 @@ jest.mock("../db/queries", () => ({
   getRelease: jest.fn()
 }));
 
-// create event
-test("returns 200 status code + calls create", async () => {
-  const event = await eventJS("create_a_pr");
-
-  getDeployment.mockReturnValueOnce({
-    ip: "123"
-  });
-
-  getRelease.mockReturnValueOnce({
-    refId: "abcd",
-    sha: "efgh",
-    pr_state: "none"
-  });
-
-  await request(server)
-    .post("/")
-    .send(event)
-    .set("X-GitHub-Event", "pull_request")
-    .set("Content-Type", "application/json")
-    .expect(200);
-
-  // this happens in the worker now
-  // expect(create).toHaveBeenCalledTimes(1);
-});
-
-// update event
-test("returns 200 status code + calls update", async () => {
-  getDeployment.mockReturnValueOnce({
-    ip: "123"
-  });
-
-  getRelease.mockReturnValueOnce({
-    refId: "abcd",
-    sha: "efgh",
-    pr_state: "open",
-    cluster_state: "running",
-    cluster_id: "ijkl"
-  });
-
-  const event = await eventJS("update_to_branch");
-  await request(server)
-    .post("/")
-    .send(event)
-    .set("X-GitHub-Event", "pull_request")
-    .set("Content-Type", "application/json")
-    .expect(200);
-
-  expect(getRelease).toHaveBeenCalledTimes(1);
-  // this happens in the worker now
-  // expect(update).toHaveBeenCalledTimes(1);
-});
-
 // closed event
 test("returns 200 status code + calls close", async () => {
   const event = await eventJS("closed_a_pr");
