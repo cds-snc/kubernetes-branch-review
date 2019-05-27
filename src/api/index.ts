@@ -136,6 +136,7 @@ export const getLoadBalancers = async (): Promise<{
   }
 };
 
+// @todo handle case where deleting and load balancer isn't fully ready yet
 export const deleteLoadBalancer = async (id: string): Promise<void> => {
   await fetchEndpoint("delete", `${baseUrl}/load_balancers/${id}`, false);
 };
