@@ -1,8 +1,11 @@
 import { updateDeploymentStatus } from "../github/githubNotify";
 import { updateStatus } from "../github/githubStatus";
 import { getRefId } from "./getRefId";
-import { RequestBody } from "../../interfaces/Request";
-import { StatusMessage, DeploymentMessage } from "../../interfaces/Status";
+import {
+  StatusMessage,
+  DeploymentMessage,
+  RequestBody
+} from "../../interfaces";
 import { Response } from "express";
 
 export const returnStatus = async (

@@ -1,20 +1,18 @@
 import express, { Response } from "express";
-import { getRelease } from "../db/queries";
-import { dbCanConnect } from "../db/canConnect";
-
-import { isBeforePr, beforePr } from "../lib/util/beforePr";
-import { getVersion } from "../lib/util/getVersion";
-import { handleEvent } from "../lib/util/handleEvent";
-import { checkEnv } from "../lib/util/checkEnv";
-import { noteError } from "../lib/util/note";
-import { enforceRefId } from "../lib/util/enforceRefId";
-import { isCloseEvent } from "../lib/close/isCloseEvent";
-
+import {
+  getVersion,
+  handleEvent,
+  checkEnv,
+  noteError,
+  enforceRefId,
+  isCloseEvent,
+  isBeforePr,
+  beforePr,
+  getRelease,
+  dbCanConnect
+} from "../lib";
+import { ClusterWorker, Request, Release } from "../interfaces";
 import { Worker, isMainThread } from "worker_threads";
-
-import { ClusterWorker } from "../interfaces/ClusterWorker";
-import { Request } from "../interfaces/Request";
-import { Release } from "../interfaces/Release";
 
 let workers: ClusterWorker = {};
 

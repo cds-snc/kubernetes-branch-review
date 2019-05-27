@@ -5,8 +5,7 @@ import {
 } from "../github/githubNotify";
 
 import { getSha } from "../util/getSha";
-import { Request } from "../../interfaces/Request";
-import { Release } from "../../interfaces/Release";
+import { Request, Release } from "../../interfaces";
 
 export const updateStatus = async (
   req: Request,
@@ -27,7 +26,6 @@ export const updateStatus = async (
     sha: getSha(body)
   });
 
-  
   // set deployment to in progress
   await updateDeploymentStatus(
     body,

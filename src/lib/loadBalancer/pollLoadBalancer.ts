@@ -1,6 +1,6 @@
 import { longPoll } from "../util/longPoll";
 import { getClusterName, getLoadBalancer } from "./getLoadBalancer";
-import { StatusMessage } from "../../interfaces/Status";
+import { StatusMessage } from "../../interfaces";
 
 export const pollLoadBalancer = async (
   clusterId: string,
@@ -32,7 +32,7 @@ export const pollLoadBalancer = async (
       if (result && result.status) {
         loadBalancerState = result.status;
       }
-      
+
       let loadBalancerMsg = loadBalancerState || "⏱️";
 
       if (loadBalancerMsg === "active") {

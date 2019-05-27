@@ -1,5 +1,5 @@
 import { isMaster } from "./isMaster";
-import { RequestBody } from "../../interfaces/Request";
+import { RequestBody } from "../../interfaces";
 
 const setFromEventRef = (event: RequestBody) => {
   const ref = event.ref.split("/");
@@ -21,7 +21,7 @@ export const getRefId = (event: RequestBody): false | string => {
     return false;
   }
 
- const fullName = event.repository.full_name;
+  const fullName = event.repository.full_name;
 
   if (event.action) {
     refId = event.pull_request.head.ref;

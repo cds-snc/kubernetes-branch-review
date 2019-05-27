@@ -1,5 +1,5 @@
-import { getRefId } from "../../lib/util/getRefId";
-import { Request } from "../../interfaces/Request";
+import { getRefId } from "../";
+import { Request } from "../../interfaces";
 
 export const ensureRefId = (req: Request) => {
   if (!req || !req.body) {

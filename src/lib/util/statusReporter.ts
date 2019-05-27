@@ -1,7 +1,6 @@
 import { getRefId } from "./getRefId";
 import { updateStatus } from "../github/githubStatus";
-import { Request } from "../../interfaces/Request";
-import { StatusMessage } from "../../interfaces/Status";
+import { Request, StatusMessage } from "../../interfaces";
 
 export const statusReporter = async (
   req: Request,

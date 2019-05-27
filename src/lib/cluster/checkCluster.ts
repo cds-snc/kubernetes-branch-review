@@ -1,10 +1,7 @@
-import { getAllClusters } from "../../api";
-import { getName } from "../util/getName";
+import { getAllClusters, createCluster } from "../../api";
 import { pollCluster } from "./pollCluster";
-import { createCluster } from "../../api";
-import { Request } from "../../interfaces/Request";
-import { Cluster } from "../../interfaces/Cluster";
-import { statusReporter } from "../../lib/util/statusReporter";
+import { statusReporter, getName } from "../../lib";
+import { Request, Cluster } from "../../interfaces";
 
 const waitForProvisioningCluster = async (req: Request, clusterId: string) => {
   const data = await pollCluster(clusterId, "running", async (msg: string) => {

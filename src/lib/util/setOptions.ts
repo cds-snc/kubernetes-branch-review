@@ -1,4 +1,4 @@
-import { Options } from "../../interfaces/Options";
+import { Options } from "../../interfaces";
 
 export const defaultOptions = {
   name: "stage-cluster-01",

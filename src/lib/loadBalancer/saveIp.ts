@@ -3,8 +3,7 @@ import { getLoadBalancerIp } from "./getLoadBalancer";
 import { pollLoadBalancer } from "./pollLoadBalancer";
 import { statusReporter } from "../util/statusReporter";
 import { updateDeploymentStatus } from "../github/githubNotify";
-import { Request } from "../../interfaces/Request";
-import { StatusMessage } from "../../interfaces/Status";
+import { Request, StatusMessage } from "../../interfaces";
 
 const hasIp = async (req: Request, refId: string) => {
   const record = await getRelease({ refId });

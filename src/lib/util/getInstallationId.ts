@@ -1,4 +1,4 @@
-import { RequestBody } from "../../interfaces/Request";
+import { RequestBody } from "../../interfaces";
 
 let warned = false;
 

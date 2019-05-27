@@ -1,5 +1,5 @@
 const events = require("events");
-import { LongPoll } from "../../interfaces/LongPoll";
+import { LongPoll } from "../../interfaces";
 
 export const longPoll: LongPoll = {
   interval: null,

@@ -1,22 +1,25 @@
-import { saveIpAndUpdate } from "../loadBalancer/saveIp";
 import { saveReleaseToDB, getRelease } from "../../db/queries";
 import { checkAndCreateCluster } from "../cluster/checkCluster";
 import { updateStatus } from "./updateStatus";
-import { returnStatus } from "../util/returnStatus";
-import { noteError } from "../util/note";
-import { getName } from "../util/getName";
-import { checkoutAndUpdateContainers } from "./checkoutAndUpdateContainers";
-import { Request } from "../../interfaces/Request";
-import { StatusMessage } from "../../interfaces/Status";
+import {
+  saveIpAndUpdate,
+  noteError,
+  returnStatus,
+  getName,
+  getAction,
+  statusReporter,
+  getClusterByName,
+  ensureRefId
+} from "../index";
+import {
+  PrState,
+  ClusterState,
+  StatusMessage,
+  Request
+} from "../../interfaces";
 import { getConfig } from "../../api";
-import { PrState, ClusterState } from "../../interfaces/Release";
-
-import { getAction } from "../../lib/util/getAction";
-import { statusReporter } from "../../lib/util/statusReporter";
-import { getClusterByName } from "../cluster/checkCluster";
+import { checkoutAndUpdateContainers } from "./checkoutAndUpdateContainers";
 import { createDeployment } from "../github/githubNotify";
-import {ensureRefId} from "../util/ensureRefId"
-
 
 const parseData = async (
   req: Request
@@ -54,8 +57,6 @@ const saveConfig = async (req: Request, refId: string, prState: string) => {
   const deployment = await createDeployment(req.body);
   const name = getName(req);
   const cluster = await getClusterByName(name);
-
-  
 
   if (cluster && cluster.id) {
     const id = cluster.id;

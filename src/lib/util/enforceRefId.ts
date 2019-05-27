@@ -1,5 +1,4 @@
-import { getRefId } from "../util/getRefId";
-import { returnStatus } from "../util/returnStatus";
+import { getRefId, returnStatus } from "../";
 import { Request } from "../../interfaces/Request";
 import { Response } from "express";
 

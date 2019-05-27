@@ -1,7 +1,6 @@
-import { dbConnect } from "./connect";
-import { getFullNameFromRefId } from "../lib/util/getRefId";
+import { dbConnect, getFullNameFromRefId } from "../lib";
 import { Model } from "./model";
-import { Release } from "../interfaces/Release";
+import { Release } from "../interfaces";
 
 export const saveReleaseToDB = async (
   obj: Release

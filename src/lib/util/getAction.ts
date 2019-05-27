@@ -1,6 +1,6 @@
 import { isMaster } from "./isMaster";
-import { Request } from "../../interfaces/Request";
-import { isBeforePr } from "../util/beforePr";
+import { Request } from "../../interfaces";
+import { isBeforePr } from "../";
 
 // @todo - update return type with possible values
 export const getAction = (req: Request): string => {

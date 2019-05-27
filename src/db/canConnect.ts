@@ -1,6 +1,5 @@
-import { dbConnect } from "./connect";
-import { returnStatus } from "../lib/util/returnStatus";
-import { Request } from "../interfaces/Request";
+import { dbConnect, returnStatus } from "../lib";
+import { Request } from "../interfaces";
 import { Response } from "express";
 
 export const dbCanConnect = async (

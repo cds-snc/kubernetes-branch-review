@@ -1,7 +1,6 @@
 import { longPoll } from "../util/longPoll";
 import { getCluster } from "../../api";
-import { Cluster } from "../../interfaces/Cluster";
-import { StatusMessage } from "../../interfaces/Status";
+import { Cluster, StatusMessage } from "../../interfaces";
 
 export const pollCluster = async (
   clusterId: string,

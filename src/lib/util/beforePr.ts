@@ -1,7 +1,6 @@
 import { saveReleaseToDB } from "../../db/queries";
 import { getRefId } from "./getRefId";
-import { Request } from "../../interfaces/Request";
-import { PrState } from "../../interfaces/Release";
+import { Request, PrState } from "../../interfaces";
 
 export const isBeforePr = (req: Request): boolean => {
   const body = req.body;

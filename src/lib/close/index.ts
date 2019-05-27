@@ -1,15 +1,14 @@
 import { cleanup } from "../git";
-import { saveReleaseToDB } from "../../db/queries";
 import { deleteCluster, deleteLoadBalancer } from "../../api";
+import { PrState, ClusterState, Request } from "../../interfaces";
 import {
+  ensureRefId,
+  getName,
+  saveReleaseToDB,
   getClusterName,
-  getLoadBalancer
-} from "../loadBalancer/getLoadBalancer";
-import { Request } from "../../interfaces/Request";
-import { PrState, ClusterState } from "../../interfaces/Release";
-import { ensureRefId } from "../util/ensureRefId";
-import { getClusterByName } from "../cluster/checkCluster";
-import { getName } from "../util/getName";
+  getLoadBalancer,
+  getClusterByName
+} from "../../lib";
 
 export const deleteClusterAndUpdate = async (
   clusterId: string,
