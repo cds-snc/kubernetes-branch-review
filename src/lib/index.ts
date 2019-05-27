@@ -25,6 +25,9 @@ export {
   getLoadBalancer
 } from "./loadBalancer/getLoadBalancer";
 export { saveIpAndUpdate } from "./loadBalancer/saveIp";
+export {
+  deleteUnusedLoadBalancers
+} from "./loadBalancer/deleteUnusedLoadBalancers";
 export { getAction } from "./util/getAction";
 
 export default new octokit();
