@@ -1,8 +1,5 @@
-import { saveReleaseToDB, getRelease } from "../../db/queries";
-import {
-  updateDeploymentStatus,
-  createDeployment
-} from "../github/githubNotify";
+import { saveReleaseToDB, getRelease, getDeployment } from "../../db/queries";
+import { updateDeploymentStatus } from "../github/githubNotify";
 
 import { getSha } from "../util/getSha";
 import { Request, Release } from "../../interfaces";
@@ -13,16 +10,15 @@ export const updateStatus = async (
 ): Promise<Release> => {
   const body = req.body;
 
-  await updateDeploymentStatus(
-    body,
-    { state: "inactive", description: "closed deployment" },
-    refId
-  );
+  const deployment = await getDeployment({ refId: refId });
 
-  const deployment = await createDeployment(body);
+  if (!deployment) {
+    throw new Error("deployment not found");
+  }
+
   await saveReleaseToDB({
     refId,
-    deployment_id: deployment.id,
+    deployment_id: deployment.deployment_id,
     sha: getSha(body)
   });
 

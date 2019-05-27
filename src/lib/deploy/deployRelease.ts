@@ -1,4 +1,4 @@
-import { saveReleaseToDB, getRelease } from "../../db/queries";
+import { saveReleaseToDB, getRelease, getDeployment } from "../../db/queries";
 import { checkAndCreateCluster } from "../cluster/checkCluster";
 import { updateStatus } from "./updateStatus";
 import {
@@ -54,7 +54,25 @@ const startDeploy = async (req: Request) => {
 };
 
 const saveConfig = async (req: Request, refId: string, prState: string) => {
-  const deployment = await createDeployment(req.body);
+  //
+
+  let deployment = await getDeployment({ refId: refId });
+
+  if (!deployment || !deployment.deployment_id) {
+    const newDeployment = await createDeployment(req.body);
+
+    await saveReleaseToDB({
+      refId,
+      deployment_id: newDeployment.id
+    });
+
+    deployment = await getDeployment({ refId: refId });
+  }
+
+  if (!deployment) {
+    throw new Error("unable to get deployment");
+  }
+
   const name = getName(req);
   const cluster = await getClusterByName(name);
 
@@ -67,7 +85,7 @@ const saveConfig = async (req: Request, refId: string, prState: string) => {
       cluster_id: id,
       pr_state: PrState[prState as PrState],
       cluster_state: ClusterState[state as ClusterState],
-      deployment_id: deployment.id
+      deployment_id: deployment.deployment_id
     });
 
     const config = await getConfig(id);
