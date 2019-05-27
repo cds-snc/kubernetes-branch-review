@@ -10,5 +10,6 @@ export const statusReporter = async (
   const body = req.body;
   const refId = getRefId(body);
   if (!refId) return;
+  console.log(msg);
   await updateStatus(body, { state: status, description: msg }, refId);
 };

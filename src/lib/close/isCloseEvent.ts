@@ -56,6 +56,7 @@ export const isCloseEvent = async (req: Request, res: Response) => {
   const closedAction = await isClosedAction(req, res);
 
   if (closePush || closedAction) {
+    res.send("closed");
     return true;
   }
 

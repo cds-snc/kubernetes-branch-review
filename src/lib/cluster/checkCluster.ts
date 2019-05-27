@@ -66,7 +66,7 @@ export const clusterExists = async (req: Request): Promise<boolean> => {
   if (!cluster || !cluster.id || !cluster.status) return false;
 
   if (cluster.status.state === "provisioning") {
-    console.log("we found a cluster in a provisioning state");
+    console.log("found a cluster in a provisioning state...");
     const result = await waitForProvisioningCluster(req, cluster.id);
     console.log(result);
     return true;

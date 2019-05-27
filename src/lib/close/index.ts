@@ -54,6 +54,9 @@ export const cleanupLoadBalancer = async (clusterId: string) => {
   await deleteLoadBalancer(balancer.id);
 };
 
+// @todo
+// handle close prior to provisioning
+
 export const close = async (req: Request): Promise<string | false> => {
   const body = req.body;
   const sha = body.pull_request.head.sha;
