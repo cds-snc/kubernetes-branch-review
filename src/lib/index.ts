@@ -28,6 +28,8 @@ export { saveIpAndUpdate } from "./loadBalancer/saveIp";
 export {
   deleteUnusedLoadBalancers
 } from "./loadBalancer/deleteUnusedLoadBalancers";
+export { isFailedCheckRun } from "./util/isFailedCheckRun";
 export { getAction } from "./util/getAction";
+export { updateDeploymentStatus } from "./github/githubNotify";
 
 export default new octokit();

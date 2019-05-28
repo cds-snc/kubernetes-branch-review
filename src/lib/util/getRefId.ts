@@ -23,8 +23,10 @@ export const getRefId = (event: RequestBody): false | string => {
 
   const fullName = event.repository.full_name;
 
-  if (event.action) {
+  if (event.action && event.action !== "completed") {
     refId = event.pull_request.head.ref;
+  } else if (event.action && event.action === "completed") {
+    refId = event.check_run.head_sha;
   } else if (event.ref && !isMaster(event)) {
     refId = setFromEventRef(event);
   }

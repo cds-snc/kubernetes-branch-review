@@ -9,7 +9,8 @@ import {
   isBeforePr,
   beforePr,
   getRelease,
-  dbCanConnect
+  dbCanConnect,
+  isFailedCheckRun
 } from "../lib";
 import { ClusterWorker, Request, Release } from "../interfaces";
 import { Worker, isMainThread } from "worker_threads";
@@ -79,6 +80,13 @@ export const main = async (req: Request, res: Response) => {
 
   // handle deployment
   let release = await getRelease({ refId });
+
+  const failedRun = await isFailedCheckRun(req, refId);
+
+  if (failedRun) {
+    res.send(`❌failed check run`);
+    return;
+  }
 
   // hand off to Worker
   if (!closed && !beforePR && isMainThread && checkEnv()) {

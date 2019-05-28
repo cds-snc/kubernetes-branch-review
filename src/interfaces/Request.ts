@@ -18,7 +18,8 @@ export interface RequestBody {
   before?: string;
   after?: string;
   installation?: { id: string };
-  pull_request: PullRequest;
+  pull_request?: PullRequest;
+  check_run?: { head_sha: string };
 }
 
 export interface Request {

@@ -11,7 +11,7 @@ export const handleEvent = (
     console.log("headerEvent not found");
   }
 
-  const safeList = ["create", "push", "delete", "pull_request"];
+  const safeList = ["create", "push", "delete", "pull_request", "check_run"];
 
   if (safeList.includes(event)) {
     console.log(`✅ allow - ${event}`);
