@@ -15,4 +15,6 @@ export interface DeploymentMessage {
     | "success";
   description?: string;
   target_url?: string;
+  log_url?: string;
+  environment_url?: string;
 }

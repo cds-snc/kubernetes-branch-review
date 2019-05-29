@@ -19,7 +19,12 @@ export interface RequestBody {
   after?: string;
   installation?: { id: string };
   pull_request?: PullRequest;
-  check_run?: { head_sha: string };
+  check_run?: {
+    conclusion: string;
+    check_suite: {
+      pull_requests: [{ head: { ref: string } }];
+    };
+  };
 }
 
 export interface Request {

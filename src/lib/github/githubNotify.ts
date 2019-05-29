@@ -24,9 +24,9 @@ export const createDeployment = async (
       owner: repoOwner,
       repo: repoName,
       ref: sha,
-      environment: "staging",
-      payload: "from the app",
+      environment: "branch review",
       auto_merge: false,
+      transient_environment: true,
       required_contexts: []
     },
     status

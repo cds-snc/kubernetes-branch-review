@@ -27,6 +27,7 @@ export const getRelease = async (
   query = { refId: obj.refId }
 ): Promise<Release | false> => {
   await dbConnect();
+
   try {
     let record = await Model.findOne(query).exec();
     if (!record || !record.refId) return false;
@@ -41,6 +42,8 @@ export const getRelease = async (
 export const getDeployment = async (
   query: Release
 ): Promise<false | Release> => {
+  console.log(query);
+
   const release = await getRelease(query);
 
   if (!release) {

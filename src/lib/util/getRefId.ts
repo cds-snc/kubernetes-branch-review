@@ -26,7 +26,7 @@ export const getRefId = (event: RequestBody): false | string => {
   if (event.action && event.action !== "completed") {
     refId = event.pull_request.head.ref;
   } else if (event.action && event.action === "completed") {
-    refId = event.check_run.head_sha;
+    refId = event.check_run.check_suite.pull_requests[0].head.ref;
   } else if (event.ref && !isMaster(event)) {
     refId = setFromEventRef(event);
   }
