@@ -13,23 +13,22 @@ export const isFailedCheckRun = async (
     body &&
     body.check_run &&
     body.check_run.conclusion &&
-    body.check_run.conclusion !== "failure"
+    body.check_run.conclusion === "failure"
   ) {
-    return false;
+    const result = await updateDeploymentStatus(
+      body,
+      {
+        state: "inactive",
+        description: "failed checks",
+        log_url: "",
+        environment_url: ""
+      },
+      refId
+    );
+
+    console.log(result);
+    return true;
   }
 
-  const result = await updateDeploymentStatus(
-    body,
-    {
-      state: "inactive",
-      description: "failed checks",
-      log_url: "",
-      environment_url: ""
-    },
-    refId
-  );
-
-  console.log(result);
-
-  return true;
+  return false;
 };

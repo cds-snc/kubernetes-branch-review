@@ -81,12 +81,15 @@ export const main = async (req: Request, res: Response) => {
   // handle deployment
   let release = await getRelease({ refId });
 
+  /*
+  // @todo needs more testing re-add to handleEvent at that point
   const failedRun = await isFailedCheckRun(req, refId);
 
   if (failedRun) {
     res.send(`❌failed check run`);
     return;
   }
+  */
 
   // hand off to Worker
   if (!closed && !beforePR && isMainThread && checkEnv()) {

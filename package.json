@@ -1,7 +1,7 @@
 {
   "name": "@cdssnc/elenchos",
-  "version": "0.0.7",
-  "description": "CDS PR deploys",
+  "version": "0.0.8",
+  "description": "CDS K8s PR deploys",
   "main": "index.js",
   "scripts": {
     "dev": "tsc && node index",
