@@ -42,8 +42,6 @@ export const getRelease = async (
 export const getDeployment = async (
   query: Release
 ): Promise<false | Release> => {
-  console.log(query);
-
   const release = await getRelease(query);
 
   if (!release) {

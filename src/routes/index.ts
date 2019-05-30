@@ -76,7 +76,16 @@ export const main = async (req: Request, res: Response) => {
   console.log(`✅ event: ${eventInfo.type}  ✅ refId: ${refId} `);
 
   const closed = await isCloseEvent(req, res);
+
+  if (closed) {
+    return;
+  }
+
   const beforePR = await isBeforePrEvent(req, res);
+
+  if (beforePR) {
+    return;
+  }
 
   // handle deployment
   let release = await getRelease({ refId });
@@ -92,7 +101,7 @@ export const main = async (req: Request, res: Response) => {
   */
 
   // hand off to Worker
-  if (!closed && !beforePR && isMainThread && checkEnv()) {
+  if (isMainThread && checkEnv()) {
     // stop existing worker + start a new worker
     if (refId && workers[refId]) {
       //@ts-ignore

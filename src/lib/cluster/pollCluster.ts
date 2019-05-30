@@ -18,7 +18,21 @@ export const pollCluster = async (
       const result = await getCluster(clusterId);
 
       if (result) {
-        const clusterState = result.kubernetes_cluster.status.state;
+        let clusterState = "";
+
+        /* 
+        added to handle clearing the poll if it's running 
+        and the cluster has already been deleted
+
+        i.e. open a pr -> close a pr before cluster to spun up
+        */
+        try {
+          clusterState = result.kubernetes_cluster.status.state;
+        } catch (e) {
+          console.log("cleared cluster polling")
+          poll.clear();
+        }
+
         reporter(`current cluster state... ${clusterState} ⏱️`, "pending");
 
         if (clusterState === checkState) {

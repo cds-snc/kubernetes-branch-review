@@ -22,6 +22,9 @@ export const returnStatus = async (
 
   if (res) {
     console.log(status.description);
-    res.send(status.description);
+
+    if (!res.headersSent) {
+      res.send(status.description);
+    }
   }
 };

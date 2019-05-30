@@ -7,7 +7,8 @@ import {
   saveReleaseToDB,
   getClusterName,
   getLoadBalancer,
-  getClusterByName
+  getClusterByName,
+  noteError
 } from "../../lib";
 
 export const deleteClusterAndUpdate = async (
@@ -45,7 +46,14 @@ export const cleanupLoadBalancer = async (clusterId: string) => {
     return false;
   }
 
-  const balancer = await getLoadBalancer(name);
+  let balancer;
+
+  try {
+    balancer = await getLoadBalancer(name);
+  } catch (e) {
+    noteError(e.message);
+    return false;
+  }
 
   if (!balancer || balancer instanceof Error || !balancer.id) {
     return false;
@@ -67,8 +75,12 @@ export const close = async (req: Request): Promise<string | false> => {
   const cluster = await getClusterByName(name);
 
   if (cluster && cluster.id) {
-    await cleanupLoadBalancer(cluster.id);
-    await deleteClusterAndUpdate(cluster.id, refId, sha);
+    try {
+      cleanupLoadBalancer(cluster.id);
+    } catch (e) {
+      console.log(`cleanupLoadBalancer ${e.message}`);
+    }
+    deleteClusterAndUpdate(cluster.id, refId, sha);
   }
 
   return refId;
