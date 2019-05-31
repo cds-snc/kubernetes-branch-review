@@ -27,8 +27,9 @@ const getDockerImages = async (sha: string, refId: string) => {
 
   // Build all the modified docker images
   let images: Array<{}> = [];
-
-  asyncForEach(Object.keys(dockerfiles), async (dockerfile: string) => {
+  
+  console.log("Dockerfiles:", dockerfiles);
+  await asyncForEach(Object.keys(dockerfiles), async (dockerfile: string) => {
     const newName = await buildAndPush(
       dockerfile,
       dockerfiles[dockerfile.toString()],
