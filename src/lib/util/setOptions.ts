@@ -22,7 +22,7 @@ export const setOptions = (options: Options): Options => {
 
   if (options.name) {
     const tags = clusterOptions.node_pools[0].tags;
-    clusterOptions.node_pools[0].name = options.name.slice(-55);
+    clusterOptions.node_pools[0].name = options.name.slice(-55); // the name must be at most 55 characters
     clusterOptions.node_pools[0].tags = [...tags, options.name];
   }
 
