@@ -20,7 +20,7 @@ let workers: ClusterWorker = {};
 // terminate worker
 const terminate = async (worker: Worker, refId: string): Promise<void> => {
   console.log(`terminate worker for refId: ${refId}`);
-  (worker.terminate() as Promise<number>).then((code: number) => {
+  ((worker.terminate() as unknown) as Promise<number>).then((code: number) => {
     console.log("index.ts => exit code", code);
     delete workers[refId];
   });
